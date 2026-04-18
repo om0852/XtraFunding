@@ -122,7 +122,7 @@ export default function XrateFormPage() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1 className={styles.title}>AI Xrate Generator</h1>
+        <h1 className={styles.title}>Xrate</h1>
         <p className={styles.subtitle}>Generate a professional institutional-grade analysis using Gemini 3 Flash.</p>
       </div>
 

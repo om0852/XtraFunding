@@ -132,38 +132,54 @@ export default function AuthPage() {
 
   const renderLeftHalf = () => (
     <div className={styles.leftHalf}>
+      {/* BACKGROUND VIDEO */}
+      <video autoPlay loop muted playsInline className={styles.videoBackground}>
+        <source src="https://cdn.pixabay.com/video/2020/05/21/39695-424750278_large.mp4" type="video/mp4" />
+      </video>
+
+      <div className={styles.leftOverlay}></div>
+
       <Link href="/" className={styles.logo}>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M12 2L2 7.5L12 13L22 7.5L12 2Z" fill="#F5A623" />
           <path d="M2 16.5L12 22L22 16.5V11L12 16.5L2 11V16.5Z" fill="#F5A623" />
         </svg>
         XtraFunds
       </Link>
 
+      <div className={styles.leftContentWrapper}>
+
       <div className={styles.leftContent}>
-        <div className={styles.quote}>"The best investment is in a verified future."</div>
-        <div className={styles.subquote}>Join 1,200+ investors already building wealth through transparent startup funding.</div>
+        <h2 className={styles.quote}>The Future of Verified Investments</h2>
+        <p className={styles.subquote}>Experience the first fully transparent ecosystem for startup funding. AI-driven ratings, smart contract escrows, and robust blockchain verification.</p>
 
         <div className={styles.trustBadges}>
           <div className={styles.trustBadge}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5A623" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
-            Blockchain Verified
+            <div className={styles.trustIconWrap}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+            </div>
+            <span>Blockchain Verified</span>
           </div>
           <div className={styles.trustBadge}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5A623" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
-            AI Rated
+            <div className={styles.trustIconWrap}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2v20"></path><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+              </svg>
+            </div>
+            <span>AI XRate Analysis</span>
           </div>
           <div className={styles.trustBadge}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5A623" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
-            Escrow Protected
+            <div className={styles.trustIconWrap}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F5A623" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+            </div>
+            <span>Escrow Protected</span>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
@@ -175,7 +191,7 @@ export default function AuthPage() {
       <div className={styles.rightHalf}>
         {view === 'ROLE_SELECT' && (
           <div className={styles.formCard}>
-            <h1 className={styles.heading}>Welcome to XtraFunds</h1>
+            <h1 className={styles.heading}>Welcome to XtraFunding</h1>
             <p className={styles.subtext}>Choose how you want to continue</p>
 
             <div className={styles.roleContainer}>
