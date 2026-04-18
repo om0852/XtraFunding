@@ -43,7 +43,6 @@ export default function XRateDynamicReportPage() {
   
   const [report, setReport] = useState<ReportData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isDownloading, setIsDownloading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [openSections, setOpenSections] = useState<Record<number, boolean>>({
     1: true,
@@ -75,65 +74,14 @@ export default function XRateDynamicReportPage() {
     setOpenSections(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
-  const handleDownloadPDF = async () => {
-    if (!report) return;
-    
-    setIsDownloading(true);
-    
-    // Open all sections for capture
-    const currentSectionsState = { ...openSections };
+  const handlePrint = () => {
+    // Ensuring all sections are seen by the printer (handled by CSS but opening state helps too)
     setOpenSections({ 1: true, 2: true, 3: true, 4: true });
     
-    await new Promise(resolve => setTimeout(resolve, 800));
-
-    try {
-      const html2canvas = (await import('html2canvas')).default;
-      const { jsPDF } = await import('jspdf');
-
-      const element = document.getElementById('report-content');
-      if (!element) throw new Error('Report content not found');
-
-      const canvas = await html2canvas(element, {
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        backgroundColor: '#F8F9FC'
-      });
-
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-      
-      const imgProps = pdf.getImageProperties(imgData);
-      const imgWidth = pdfWidth;
-      const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
-      
-      let heightLeft = imgHeight;
-      let position = 0;
-
-      // First page
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pdfHeight;
-
-      // Additional pages
-      while (heightLeft > 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pdfHeight;
-      }
-
-      pdf.save(`XRate_Premium_Report_${report.startupName.replace(/\s+/g, '_')}.pdf`);
-      
-    } catch (err) {
-      console.error('PDF Generation Error:', err);
-      alert('Failed to generate PDF. Please try again.');
-    } finally {
-      setOpenSections(currentSectionsState);
-      setIsDownloading(false);
-    }
+    // Slight delay to ensure DOM updates before dialog
+    setTimeout(() => {
+      window.print();
+    }, 100);
   };
 
   if (loading) {
@@ -306,10 +254,9 @@ export default function XRateDynamicReportPage() {
         </div>
         <button 
           className={styles.btnDownload} 
-          onClick={handleDownloadPDF}
-          disabled={isDownloading}
+          onClick={handlePrint}
         >
-          {isDownloading ? 'Structuring PDF...' : 'Download Institutional Report'}
+          Export High-Fidelity PDF
         </button>
       </div>
     </div>
