@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 
 export interface IUser extends Document {
-  clerkId: string;
+  password: string;
   role: 'INVESTOR' | 'STARTUP';
   name: string;
   email: string;
@@ -23,7 +23,7 @@ export interface IUser extends Document {
 
 const UserSchema: Schema = new Schema(
   {
-    clerkId: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
     role: { type: String, enum: ['INVESTOR', 'STARTUP'], required: true },
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },

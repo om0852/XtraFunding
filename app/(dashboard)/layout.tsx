@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './layout.module.css';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 export default function InvestorLayout({
   children,
@@ -11,7 +11,39 @@ export default function InvestorLayout({
   children: React.ReactNode
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      router.push('/auth');
+      return;
+    }
+    
+    fetch(`/api/users/${userId}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setUser(data.data);
+        } else {
+          localStorage.removeItem('userId');
+          router.push('/auth');
+        }
+      })
+      .catch(err => console.error("Error fetching user data:", err));
+  }, [router]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('userId');
+    router.push('/auth');
+  };
+
+  const getInitials = (name: string) => {
+    if (!name) return 'U';
+    return name.split(' ').map((n) => n[0]).join('').substring(0, 2).toUpperCase();
+  };
 
   let pageTitle = "Dashboard";
   if (pathname.includes('/campaign')) pageTitle = "Explore Startups";
@@ -79,12 +111,12 @@ export default function InvestorLayout({
         </nav>
         
         <div className={styles.sidebarBottom}>
-          <div className={styles.avatar}>AM</div>
+          <div className={styles.avatar}>{user ? getInitials(user.name) : '...'}</div>
           <div className={styles.userInfo}>
-            <div className={styles.userName}>Arjun Mehta</div>
+            <div className={styles.userName}>{user ? user.name : 'Loading...'}</div>
             <div className={styles.userRole}>Investor</div>
           </div>
-          <button className={styles.logoutBtn}>
+          <button className={styles.logoutBtn} onClick={handleLogout}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
           </button>
         </div>
@@ -102,17 +134,17 @@ export default function InvestorLayout({
               <span className={styles.dot}></span>
             </button>
             <div className={styles.topAvatar} onClick={() => setIsProfileOpen(!isProfileOpen)}>
-              AM
+              {user ? getInitials(user.name) : <span style={{fontSize: '10px'}}>...</span>}
             </div>
             
             {/* PROFILE DROPDOWN */}
-            {isProfileOpen && (
+            {isProfileOpen && user && (
               <div className={styles.profileDropdown}>
                 <div className={styles.dropdownHeader}>
-                  <div className={styles.dropdownAvatar}>AM</div>
+                  <div className={styles.dropdownAvatar}>{getInitials(user.name)}</div>
                   <div className={styles.dropdownUserInfo}>
-                    <div className={styles.dropdownName}>Arjun Mehta</div>
-                    <div className={styles.dropdownRole}>arjun.mehta@example.com</div>
+                    <div className={styles.dropdownName}>{user.name}</div>
+                    <div className={styles.dropdownRole}>{user.email}</div>
                   </div>
                 </div>
                 
@@ -140,7 +172,7 @@ export default function InvestorLayout({
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
                     Tax Reports
                   </Link>
-                  <button className={styles.dropdownLogout}>
+                  <button className={styles.dropdownLogout} onClick={handleLogout}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                     Sign out
                   </button>
