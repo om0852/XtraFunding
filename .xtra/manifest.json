@@ -1,55 +1,55 @@
 {
   "projectId": "69e3518287fcbd45abbe32d4",
   "environment": "development",
-  "lastSyncedAt": "2026-04-18T19:57:28.524Z",
+  "lastSyncedAt": "2026-04-18T20:32:02.425Z",
   "secrets": {
     "MONGODB_URI": {
       "hash": "bdf467ca4d02eaf20fc5af5fd184393d32de0e0eff59d34d2d9fa0a36e8d5d60",
-      "updatedAt": "2026-04-18T19:57:28.528Z"
+      "updatedAt": "2026-04-18T20:32:02.431Z"
     },
     "POLYGON_RPC_URL": {
       "hash": "439f2a3f29b62545e0e7265ca9bb86e1b62657d09271dd284033caeb48fc6e84",
-      "updatedAt": "2026-04-18T19:57:28.528Z"
+      "updatedAt": "2026-04-18T20:32:02.432Z"
     },
     "CLERK_SECRET_KEY": {
       "hash": "b32815017faa857cb5c21f857fe56dfec70838732200270ff4be41a1bdbd0433",
-      "updatedAt": "2026-04-18T19:57:28.528Z"
+      "updatedAt": "2026-04-18T20:32:02.432Z"
     },
     "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY": {
       "hash": "3055dd2989d6483021e10d1edac81b71b2fc4678f5b4dd8061e8cd8ca049cb52",
-      "updatedAt": "2026-04-18T19:57:28.528Z"
+      "updatedAt": "2026-04-18T20:32:02.432Z"
     },
     "RAZORPAY_KEY_ID": {
       "hash": "508830cd20a1ac56c38413d960481f1aad5210bb09aa56fe539ca17a63dd83b4",
-      "updatedAt": "2026-04-18T19:57:28.528Z"
+      "updatedAt": "2026-04-18T20:32:02.432Z"
     },
     "PLATFORM_WALLET_PRIVATE_KEY": {
       "hash": "0f216bcafb1ce3877dd4b8727bf271d40c662f786f3c77a83034590be3fb6069",
-      "updatedAt": "2026-04-18T19:57:28.528Z"
+      "updatedAt": "2026-04-18T20:32:02.432Z"
     },
     "CONTRACT_ADDRESS": {
       "hash": "9936f979633a3749080f2c17730130c81aaebae437331d92eaf367554bc3bf95",
-      "updatedAt": "2026-04-18T19:57:28.528Z"
+      "updatedAt": "2026-04-18T20:32:02.432Z"
     },
     "JWT_SECRET": {
       "hash": "68b9f3fb47212d934194cdc4c285b3bcc559d0346267ec58d8a0fe7e015a29fb",
-      "updatedAt": "2026-04-18T19:57:28.528Z"
+      "updatedAt": "2026-04-18T20:32:02.432Z"
     },
     "RAZORPAY_KEY_SECRET": {
       "hash": "ab5df625bc76dbd4e163bed2dd888df828f90159bb93556525c31821b6541d46",
-      "updatedAt": "2026-04-18T19:57:28.528Z"
+      "updatedAt": "2026-04-18T20:32:02.432Z"
     },
     "PLATFORM_WALLET_ADDRESS": {
       "hash": "8df140907ce0356ee19ca96075acbe764350c6ca6090ccee20351e5827304374",
-      "updatedAt": "2026-04-18T19:57:28.528Z"
+      "updatedAt": "2026-04-18T20:32:02.432Z"
     },
     "GEMINI_API_KEY": {
       "hash": "552dc0a331dec1694e0da5f27806c38c823b60137eed905595ce783021eb32fd",
-      "updatedAt": "2026-04-18T19:57:28.528Z"
+      "updatedAt": "2026-04-18T20:32:02.432Z"
     },
     "BLOB_READ_WRITE_TOKEN": {
       "hash": "3b341f49c79ab40307b710c9e3b302e20eea22cc5de869df7c31755dc7168772",
-      "updatedAt": "2026-04-18T19:57:28.528Z"
+      "updatedAt": "2026-04-18T20:32:02.432Z"
     }
   }
 }

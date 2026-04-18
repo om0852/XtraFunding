@@ -14,6 +14,7 @@ export default function StartupLayout({
   const pathname = usePathname();
   const [user, setUser] = useState<any>(null);
   const [offerCount, setOfferCount] = useState<number>(0);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   useEffect(() => {
     const userId = localStorage.getItem('userId');
@@ -165,9 +166,52 @@ export default function StartupLayout({
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
               <span className={styles.dot}></span>
             </button>
-            <div className={styles.topAvatar}>
+            <div className={styles.topAvatar} onClick={() => setIsProfileOpen(!isProfileOpen)}>
               {user?.startupDetails?.companyName ? getInitials(user.startupDetails.companyName) : <span style={{fontSize: '10px'}}>...</span>}
             </div>
+
+            {/* PROFILE DROPDOWN */}
+            {isProfileOpen && (
+              <div className={styles.profileDropdown}>
+                <div className={styles.dropdownHeader}>
+                  <div className={styles.dropdownAvatar}>{user?.startupDetails?.companyName ? getInitials(user.startupDetails.companyName) : 'S'}</div>
+                  <div className={styles.dropdownUserInfo}>
+                    <div className={styles.dropdownName}>{user?.startupDetails?.companyName || user?.name || 'Startup Founder'}</div>
+                    <div className={styles.dropdownRole}>{user?.email || 'founder@startup.com'}</div>
+                  </div>
+                </div>
+                
+                <div className={styles.dropdownStats}>
+                  <div className={styles.dropdownStat}>
+                    <div className={styles.dropdownStatValue}>1</div>
+                    <div className={styles.dropdownStatLabel}>Campaign</div>
+                  </div>
+                  <div className={styles.dropdownStat}>
+                    <div className={styles.dropdownStatValue}>₹75,000</div>
+                    <div className={styles.dropdownStatLabel}>Raised</div>
+                  </div>
+                </div>
+                
+                <div className={styles.dropdownLinks}>
+                  <Link href="/startup/settings" className={styles.dropdownLink} onClick={() => setIsProfileOpen(false)}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    Settings
+                  </Link>
+                  <Link href="/startup/dashboard" className={styles.dropdownLink} onClick={() => setIsProfileOpen(false)}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+                    My Campaign
+                  </Link>
+                  <Link href="/startup/funds" className={styles.dropdownLink} onClick={() => setIsProfileOpen(false)}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path></svg>
+                    Fund Usage
+                  </Link>
+                  <button className={styles.dropdownLogout} onClick={handleLogout}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    Sign out
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </header>
 

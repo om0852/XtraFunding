@@ -83,6 +83,8 @@ export default function InvestorLayout({
   else if (pathname.includes('/investor/watchlist')) pageTitle = "Watchlist";
   else if (pathname.includes('/investor/reports')) pageTitle = "Reports";
   else if (pathname.includes('/investor/settings')) pageTitle = "Settings";
+  else if (pathname.includes('/investor/ai-matcher')) pageTitle = "AI Strategic Matcher";
+  else if (pathname.includes('/investor/profile-setup')) pageTitle = "Strategic Profile Setup";
 
   return (
     <div className={styles.layoutContainer}>
@@ -117,6 +119,13 @@ export default function InvestorLayout({
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20"/><path d="m17 5-5-3-5 3"/><path d="m17 19-5 3-5-3"/><path d="m2 12 5-3 5 3-5 3-5-3Z"/><path d="m12 12 5-3 5 3-5 3-5-3Z"/></svg>
             </span>
             XRaise Bidding
+          </Link>
+
+          <Link href="/investor/ai-matcher" className={`${styles.navItem} ${pathname === '/investor/ai-matcher' ? styles.navItemActive : ''}`}>
+            <span className={styles.navIcon} style={{color: '#6366f1'}}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
+            </span>
+            AI Strategic Match
           </Link>
 
           <div style={{marginTop: '12px', marginBottom: '8px', fontSize: '11px', fontWeight: '800', color: '#94A3B8', padding: '0 16px', letterSpacing: '0.5px'}}>MY PORTFOLIO</div>
