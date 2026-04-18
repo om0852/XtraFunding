@@ -1,12 +1,48 @@
-import React from 'react';
+"use client";
+
+import React, { useState, useEffect } from 'react';
 import styles from './layout.module.css';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function StartupLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const router = useRouter();
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      router.push('/auth');
+      return;
+    }
+    
+    fetch(`/api/users/${userId}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setUser(data.data);
+        } else {
+          localStorage.removeItem('userId');
+          router.push('/auth');
+        }
+      })
+      .catch(err => console.error("Error fetching user data:", err));
+  }, [router]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('userId');
+    router.push('/auth');
+  };
+
+  const getInitials = (name: string) => {
+    if (!name) return 'U';
+    return name.split(' ').map((n) => n[0]).join('').substring(0, 2).toUpperCase();
+  };
+
   return (
     <div className={styles.layoutContainer}>
       <aside className={styles.sidebar}>
@@ -60,12 +96,12 @@ export default function StartupLayout({
         </nav>
         
         <div className={styles.sidebarBottom}>
-          <div className={styles.avatar}>GH</div>
+          <div className={styles.avatar}>{user?.startupDetails?.companyName ? getInitials(user.startupDetails.companyName) : '...'}</div>
           <div className={styles.userInfo}>
-            <div className={styles.userName}>GreenHarvest AI</div>
-            <div className={styles.userRole}>Startup Founder</div>
+            <div className={styles.userName}>{user?.startupDetails?.companyName ? user.startupDetails.companyName : user?.name || 'Loading...'}</div>
+            <div className={styles.userRole}>{user ? user.name : 'Startup Founder'}</div>
           </div>
-          <button className={styles.logoutBtn}>
+          <button className={styles.logoutBtn} onClick={handleLogout}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
           </button>
         </div>
@@ -82,7 +118,9 @@ export default function StartupLayout({
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
               <span className={styles.dot}></span>
             </button>
-            <div className={styles.topAvatar}>GH</div>
+            <div className={styles.topAvatar}>
+              {user?.startupDetails?.companyName ? getInitials(user.startupDetails.companyName) : <span style={{fontSize: '10px'}}>...</span>}
+            </div>
           </div>
         </header>
 
