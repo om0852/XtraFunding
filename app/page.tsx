@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import styles from './page.module.css';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 
 export default function LandingPage() {
   const [activeFeatureModal, setActiveFeatureModal] = useState<string | null>(null);
@@ -123,7 +124,12 @@ export default function LandingPage() {
       {/* HERO SECTION */}
       <section className={styles.heroWrapper}>
         <div className={styles.hero}>
-          <div className={styles.heroContent}>
+          <motion.div 
+            className={styles.heroContent}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
             <div className={styles.heroBadge}>✨ The Future of Startup Funding</div>
             <h1 className={styles.heroHeading}>Invest in Tomorrow's Startups — <span className={styles.heroHighlight}>Transparently</span></h1>
             <p className={styles.heroSubheading}>
@@ -139,8 +145,13 @@ export default function LandingPage() {
                 No hidden fees · Blockchain-verified · SEBI compliant
               </p>
             </div>
-          </div>
-          <div className={styles.heroImageContainer}>
+          </motion.div>
+          <motion.div 
+            className={styles.heroImageContainer}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+          >
             <div className={styles.heroImageWrapper}>
               <div className={styles.cssDashboardMockup}>
                 <div className={styles.mockupHeader}>
@@ -177,17 +188,28 @@ export default function LandingPage() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* FEATURES SECTION */}
-      <section id="explore" className={styles.features}>
+      <motion.section 
+        id="explore" 
+        className={styles.features}
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8 }}
+      >
         <div className={styles.featuresLabel}>PLATFORM FEATURES</div>
         <h2 className={styles.featuresHeading}>Everything you need to invest with confidence</h2>
         
         <div className={styles.featuresGrid}>
-          <div className={styles.featureCard}>
+          <motion.div 
+            className={styles.featureCard}
+            whileHover={{ y: -10 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
             <div className={styles.featureImageContainer}>
               <img src="https://images.pexels.com/photos/3182773/pexels-photo-3182773.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Crowdfunding Analytics" className={styles.featureImage} />
             </div>
@@ -203,9 +225,13 @@ export default function LandingPage() {
               <p className={styles.featureDesc}>Crowdfund your startup or invest in multiple campaigns. Milestone-based fund release ensures accountability at every step.</p>
               <div className={`${styles.featureTag} ${styles.tagBlue}`}>Crowdfunding</div>
             </div>
-          </div>
+          </motion.div>
 
-          <div className={styles.featureCard}>
+          <motion.div 
+            className={styles.featureCard}
+            whileHover={{ y: -10 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
             <div className={styles.featureImageContainer}>
               <img src="https://images.pexels.com/photos/3183132/pexels-photo-3183132.jpeg?auto=compress&cs=tinysrgb&w=800" alt="AI Scoring Dashboard" className={styles.featureImage} />
             </div>
@@ -219,9 +245,13 @@ export default function LandingPage() {
               <p className={styles.featureDesc}>AI-powered startup credibility scoring. Get a full risk, growth, and market analysis report before you invest a single rupee.</p>
               <div className={`${styles.featureTag} ${styles.tagGold}`}>AI Scoring</div>
             </div>
-          </div>
+          </motion.div>
 
-          <div className={styles.featureCard}>
+          <motion.div 
+            className={styles.featureCard}
+            whileHover={{ y: -10 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
             <div className={styles.featureImageContainer}>
               <img src="https://images.pexels.com/photos/327540/pexels-photo-327540.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Negotiation and Contracts" className={styles.featureImage} />
             </div>
@@ -236,12 +266,18 @@ export default function LandingPage() {
               <p className={styles.featureDesc}>One-on-one negotiation between investor and founder. Make offers, counter-offers, and close deals safely on your terms.</p>
               <div className={`${styles.featureTag} ${styles.tagBlue}`}>Negotiation</div>
             </div>
-          </div>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
 
       {/* STATS BAR */}
-      <section className={styles.statsWrapper}>
+      <motion.section 
+        className={styles.statsWrapper}
+        initial={{ opacity: 0, scale: 0.98 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.6 }}
+      >
         <div className={styles.statsOverlay}>
           <div className={styles.statsContainer}>
             <div className={styles.statItem}>
@@ -262,10 +298,17 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* HOW IT WORKS */}
-      <section id="how-to-use" className={styles.howItWorks}>
+      <motion.section 
+        id="how-to-use" 
+        className={styles.howItWorks}
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8 }}
+      >
         <div className={styles.howHeader}>
           <h2 className={styles.howHeading}>How XtraFunds works</h2>
           <div className={styles.tabs}>
@@ -275,42 +318,54 @@ export default function LandingPage() {
         </div>
         
         <div className={styles.howContent}>
-          <div className={styles.timelineVertical}>
+          <motion.div 
+            className={styles.timelineVertical}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.2 } } }}
+          >
             <div className={styles.timelineVerticalLine}></div>
-            <div className={styles.stepVertical}>
+            <motion.div className={styles.stepVertical} variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }}>
               <div className={styles.stepCircle}>1</div>
               <div className={styles.stepText}>
                 <h3 className={styles.stepTitle}>Create Account</h3>
                 <p className={styles.stepDesc}>Sign up and complete KYC verification with our bank-grade security system.</p>
               </div>
-            </div>
-            <div className={styles.stepVertical}>
+            </motion.div>
+            <motion.div className={styles.stepVertical} variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }}>
               <div className={styles.stepCircle}>2</div>
               <div className={styles.stepText}>
                 <h3 className={styles.stepTitle}>Explore Startups</h3>
                 <p className={styles.stepDesc}>Browse AI-rated campaigns with full transparency and detailed market analysis reports.</p>
               </div>
-            </div>
-            <div className={styles.stepVertical}>
+            </motion.div>
+            <motion.div className={styles.stepVertical} variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }}>
               <div className={styles.stepCircle}>3</div>
               <div className={styles.stepText}>
                 <h3 className={styles.stepTitle}>Invest Securely</h3>
                 <p className={styles.stepDesc}>Pledge funds safely held in escrow using our verified blockchain architecture.</p>
               </div>
-            </div>
-            <div className={styles.stepVertical}>
+            </motion.div>
+            <motion.div className={styles.stepVertical} variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }}>
               <div className={styles.stepCircle}>4</div>
               <div className={styles.stepText}>
                 <h3 className={styles.stepTitle}>Track Returns</h3>
                 <p className={styles.stepDesc}>Monitor progress and receive automated milestone-based updates right on your dashboard.</p>
               </div>
-            </div>
-          </div>
-          <div className={styles.howImageContainer}>
+            </motion.div>
+          </motion.div>
+          <motion.div 
+            className={styles.howImageContainer}
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
             <img src="https://images.pexels.com/photos/3183197/pexels-photo-3183197.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Analytics Dashboard" className={styles.howImage} />
-          </div>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
 
       {/* FOOTER */}
       <footer id="about" className={styles.footer}>
