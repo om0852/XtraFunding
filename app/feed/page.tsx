@@ -177,7 +177,7 @@ export default function FeedPage() {
           ) : (
             posts.map(post => (
               <div key={post._id} className={styles.postCard}>
-                <Link href={`/startup/${post.author?._id || post.author}`} className={styles.postHeader}>
+                <Link href={`/profile/${post.author?._id || post.author}`} className={styles.postHeader}>
                   <div className={styles.avatar}>
                     {post.author?.name ? post.author.name.charAt(0) : 'U'}
                   </div>
