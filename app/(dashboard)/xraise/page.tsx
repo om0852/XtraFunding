@@ -37,10 +37,7 @@ export default function XRaisePage() {
         {/* PAGE HEADER */}
         <div className={styles.pageHeader}>
           <div>
-            <div className={styles.breadcrumb}>
-              <Link href="/investor/dashboard" className={styles.breadcrumbLink}>Dashboard</Link> &gt;{' '}
-              <Link href="/investor/dashboard" className={styles.breadcrumbLink}>XRaise Offers</Link> &gt; GreenHarvest AI
-            </div>
+
             <h1 className={styles.pageTitle}>XRaise Negotiation</h1>
           </div>
           <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
