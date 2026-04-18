@@ -110,6 +110,7 @@ export default function LandingPage() {
         <div className={styles.navLinks}>
           <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className={styles.navLink} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'inherit' }}>Home</button>
           <button onClick={() => document.getElementById('explore')?.scrollIntoView({ behavior: 'smooth' })} className={styles.navLink} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'inherit' }}>Explore</button>
+          <Link href="/feed" className={styles.navLink} style={{ textDecoration: 'none' }}>Feed</Link>
           <button onClick={() => document.getElementById('how-to-use')?.scrollIntoView({ behavior: 'smooth' })} className={styles.navLink} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'inherit' }}>How to Use</button>
           <button onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })} className={styles.navLink} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'inherit' }}>About</button>
         </div>

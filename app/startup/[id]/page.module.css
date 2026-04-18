@@ -1,0 +1,256 @@
+.container {
+  min-height: 100vh;
+  background: #F8F9FC;
+  display: flex;
+  flex-direction: column;
+}
+
+/* NAVBAR */
+.navbar {
+  background: #ffffff;
+  height: 72px;
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #1B3A6B;
+  font-size: 24px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.navLinks {
+  display: flex;
+  gap: 36px;
+}
+
+.navLink {
+  color: #6B7280;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.navLink:hover {
+  color: #1B3A6B;
+}
+
+.contentWrapper {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+  gap: 32px;
+  flex: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.sidebar {
+  width: 320px;
+  position: sticky;
+  top: 112px;
+  height: fit-content;
+}
+
+.mainContent {
+  flex: 1;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.profileCard {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  border: 1px solid #F3F4F6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.profileAvatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #F5A623 0%, #FFD485 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 36px;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 16px rgba(245, 166, 35, 0.2);
+}
+
+.profileName {
+  font-size: 24px;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.profileRole {
+  font-size: 14px;
+  font-weight: 700;
+  color: #F5A623;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 24px;
+}
+
+.profileDetailList {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-top: 1px solid #F3F4F6;
+  padding-top: 24px;
+}
+
+.detailItem {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.detailLabel {
+  color: #6B7280;
+  font-weight: 600;
+}
+
+.detailValue {
+  color: #111827;
+  font-weight: 700;
+}
+
+.sectionTitle {
+  font-size: 20px;
+  font-weight: 800;
+  color: #1B3A6B;
+  margin-bottom: 8px;
+  border-bottom: 2px solid #EBF2FF;
+  padding-bottom: 12px;
+}
+
+/* Post styles (copied from feed) */
+.postCard {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  border: 1px solid #F3F4F6;
+}
+
+.postHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.avatarSmall {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #F5A623 0%, #FFD485 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.authorInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.authorName {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.authorMeta {
+  font-size: 13px;
+  color: #6B7280;
+}
+
+.postContent {
+  font-size: 15px;
+  color: #374151;
+  line-height: 1.6;
+  margin-bottom: 16px;
+  white-space: pre-wrap;
+}
+
+.postImage {
+  width: 100%;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  object-fit: cover;
+  max-height: 400px;
+}
+
+.postActions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-top: 1px solid #F3F4F6;
+  padding-top: 16px;
+}
+
+.btnAction {
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #6B7280;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.btnAction:hover {
+  color: #1B3A6B;
+}
+
+.btnAction.liked {
+  color: #EA580C;
+}
+
+.loader {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+  color: #6B7280;
+  font-weight: 600;
+}
+.emptyState {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 40px;
+  text-align: center;
+  color: #6B7280;
+  font-weight: 500;
+  border: 1px solid #F3F4F6;
+}
