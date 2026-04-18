@@ -13,7 +13,10 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
       return NextResponse.json({ success: false, message: 'User not found' }, { status: 404 });
     }
 
-    const posts = await Post.find({ author: id }).sort({ createdAt: -1 }).populate('author', 'name profileMetadata startupDetails role');
+    const posts = await Post.find({ author: id })
+        .sort({ createdAt: -1 })
+        .populate('author', 'name profileMetadata startupDetails role')
+        .populate('comments.author', 'name role');
 
     return NextResponse.json({ success: true, data: { user, posts } }, { status: 200 });
   } catch (error: any) {

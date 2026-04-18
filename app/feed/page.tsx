@@ -96,6 +96,23 @@ export default function FeedPage() {
     }
   };
 
+  const submitComment = async (postId: string, commentContent: string) => {
+    if (!user) return alert('Please login to comment');
+    try {
+      const res = await fetch(`/api/posts/${postId}/comment`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user._id, content: commentContent })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setPosts(posts.map(p => p._id === postId ? { ...p, comments: data.data } : p));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const formatDate = (dateStr: string) => {
     const d = new Date(dateStr);
     return isNaN(d.getTime()) ? 'Just now' : d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
@@ -188,6 +205,35 @@ export default function FeedPage() {
                     </svg>
                     {post.likes.length} Likes
                   </button>
+                  <div className={styles.btnAction} style={{cursor: 'default'}}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                    {post.comments?.length || 0} Comments
+                  </div>
+                </div>
+
+                {/* COMMENTS SECTION */}
+                <div className={styles.commentsSection}>
+                  {post.comments?.map((comment: any, idx: number) => (
+                    <div key={idx} className={styles.commentItem}>
+                      <span className={styles.commentAuthor}>{comment.author?.name || 'User'}</span>
+                      <span className={styles.commentText}>{comment.content}</span>
+                    </div>
+                  ))}
+                  {user && (
+                    <div className={styles.commentForm}>
+                      <input 
+                        type="text" 
+                        placeholder="Type a comment and press Enter..."
+                        className={styles.commentInput}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' && e.currentTarget.value.trim()) {
+                             submitComment(post._id, e.currentTarget.value);
+                             e.currentTarget.value = '';
+                          }
+                        }}
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             ))

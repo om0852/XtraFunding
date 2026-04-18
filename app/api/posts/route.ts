@@ -11,6 +11,7 @@ export async function GET(req: NextRequest) {
     // Fetch posts, fully populating the author
     const posts = await Post.find()
       .populate('author', 'name profileMetadata startupDetails role')
+      .populate('comments.author', 'name role')
       .sort({ createdAt: -1 });
     
     return NextResponse.json({ success: true, count: posts.length, data: posts }, { status: 200 });

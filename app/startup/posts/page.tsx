@@ -32,6 +32,23 @@ export default function StartupPostsManagement() {
     fetchSelf();
   }, []);
 
+  const submitComment = async (postId: string, commentContent: string) => {
+    if (!user) return alert('Please login to comment');
+    try {
+      const res = await fetch(`/api/posts/${postId}/comment`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user._id, content: commentContent })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setPosts(posts.map(p => p._id === postId ? { ...p, comments: data.data } : p));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const handlePost = async () => {
     if (!content.trim() || !user) return;
     setIsPosting(true);
@@ -120,8 +137,37 @@ export default function StartupPostsManagement() {
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2">
                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                   </svg>
-                  {post.likes.length} Likes from Investors & Community
+                  {post.likes.length} Likes
                 </div>
+                <div className={styles.actionStat}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                  {post.comments?.length || 0} Comments
+                </div>
+              </div>
+
+              {/* COMMENTS SECTION */}
+              <div className={styles.commentsSection}>
+                {post.comments?.map((comment: any, idx: number) => (
+                  <div key={idx} className={styles.commentItem}>
+                    <span className={styles.commentAuthor}>{comment.author?.name || 'User'}</span>
+                    <span className={styles.commentText}>{comment.content}</span>
+                  </div>
+                ))}
+                {user && (
+                  <div className={styles.commentForm}>
+                    <input 
+                      type="text" 
+                      placeholder="Reply to this update..."
+                      className={styles.commentInput}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && e.currentTarget.value.trim()) {
+                           submitComment(post._id, e.currentTarget.value);
+                           e.currentTarget.value = '';
+                        }
+                      }}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           ))
