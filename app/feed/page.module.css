@@ -5,7 +5,7 @@
   flex-direction: column;
 }
 
-/* NAVBAR */
+/* ========== PREMIUM NAVBAR ========== */
 .navbar {
   background: #ffffff;
   height: 72px;
@@ -16,7 +16,8 @@
   align-items: center;
   padding: 0 40px;
   z-index: 1000;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  border-bottom: 1px solid rgba(0,0,0,0.04);
 }
 
 .logo {
@@ -31,40 +32,300 @@
 
 .navLinks {
   display: flex;
-  gap: 36px;
+  gap: 8px;
 }
 
 .navLink {
   color: #6B7280;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   text-decoration: none;
-  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  transition: all 0.2s;
 }
 
 .navLink:hover {
   color: #1B3A6B;
+  background: #F0F4FF;
 }
 
-/* FEED LAYOUT */
+.navLinkActive {
+  color: #1B3A6B;
+  background: #EBF2FF;
+}
+
+/* ========== NAV RIGHT / USER MENU ========== */
+.navRight {
+  display: flex;
+  align-items: center;
+}
+
+.userMenu {
+  position: relative;
+}
+
+.userBtn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: 1px solid #E5E7EB;
+  padding: 6px 14px 6px 6px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.userBtn:hover {
+  background: #F8F9FC;
+  border-color: #D1D5DB;
+}
+
+.navAvatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1B3A6B 0%, #3B82F6 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.navUserName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.loginBtn {
+  background: #F5A623;
+  color: #0A1628;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+  transition: transform 0.2s, filter 0.2s;
+}
+
+.loginBtn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+/* ========== DROPDOWN MENU ========== */
+.dropdownBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+}
+
+.dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  width: 260px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+  border: 1px solid #F3F4F6;
+  z-index: 1001;
+  overflow: hidden;
+  animation: slideDown 0.15s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.dropdownHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+}
+
+.dropdownAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1B3A6B 0%, #3B82F6 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.dropdownName {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.dropdownRole {
+  font-size: 12px;
+  color: #6B7280;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.dropdownDivider {
+  height: 1px;
+  background: #F3F4F6;
+}
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  text-decoration: none;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.15s;
+}
+
+.dropdownItem:hover {
+  background: #F8F9FC;
+  color: #1B3A6B;
+}
+
+.dropdownLogout {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  background: none;
+  border: none;
+  color: #DC2626;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+
+.dropdownLogout:hover {
+  background: #FEF2F2;
+}
+
+/* ========== FEED LAYOUT ========== */
 .feedWrapper {
   display: flex;
   justify-content: center;
-  padding: 40px;
-  gap: 32px;
+  padding: 32px 40px;
+  gap: 28px;
   flex: 1;
-  max-width: 1200px;
+  max-width: 1260px;
   margin: 0 auto;
   width: 100%;
 }
 
+/* ========== LEFT SIDEBAR ========== */
 .sidebar {
   width: 280px;
   position: sticky;
-  top: 112px;
+  top: 104px;
   height: fit-content;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
+.sidebarCard {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  border: 1px solid #F3F4F6;
+}
+
+.sidebarProfile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+}
+
+.sidebarAvatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1B3A6B 0%, #3B82F6 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+
+.sidebarProfileName {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.sidebarProfileRole {
+  font-size: 12px;
+  color: #6B7280;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sidebarTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: #9CA3AF;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 12px;
+}
+
+.sidebarNav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sidebarLink {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.sidebarLink:hover {
+  background: #EBF2FF;
+  color: #1B3A6B;
+}
+
+/* ========== MAIN FEED ========== */
 .mainFeed {
   flex: 1;
   max-width: 600px;
@@ -76,11 +337,11 @@
 .trending {
   width: 300px;
   position: sticky;
-  top: 112px;
+  top: 104px;
   height: fit-content;
 }
 
-/* COMPOSE POST */
+/* ========== COMPOSE POST ========== */
 .createPost {
   background: #ffffff;
   border-radius: 16px;
@@ -152,7 +413,7 @@
   cursor: not-allowed;
 }
 
-/* POST CARD */
+/* ========== POST CARD ========== */
 .postCard {
   background: #ffffff;
   border-radius: 16px;
@@ -243,21 +504,7 @@
   color: #EA580C;
 }
 
-.sidebarCard {
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-  border: 1px solid #F3F4F6;
-}
-
-.sidebarTitle {
-  font-size: 16px;
-  font-weight: 700;
-  color: #1B3A6B;
-  margin-bottom: 16px;
-}
-
+/* ========== TRENDING SIDEBAR ========== */
 .trendingItem {
   display: flex;
   flex-direction: column;
@@ -294,7 +541,7 @@
   font-weight: 600;
 }
 
-/* COMMENTS SECTION */
+/* ========== COMMENTS ========== */
 .commentsSection {
   margin-top: 16px;
   padding-top: 16px;
@@ -341,4 +588,26 @@
   outline: none;
   border-color: #F5A623;
   box-shadow: 0 0 0 2px rgba(245, 166, 35, 0.2);
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 1100px) {
+  .trending {
+    display: none;
+  }
+}
+
+@media (max-width: 860px) {
+  .sidebar {
+    display: none;
+  }
+  .feedWrapper {
+    padding: 20px 16px;
+  }
+  .navbar {
+    padding: 0 16px;
+  }
+  .navUserName {
+    display: none;
+  }
 }

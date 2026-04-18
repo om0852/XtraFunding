@@ -17,7 +17,10 @@ export async function GET(req: NextRequest) {
       .populate('comments.author', 'name role')
       .sort({ createdAt: -1 });
     
-    return NextResponse.json({ success: true, count: posts.length, data: posts }, { status: 200 });
+    // Filter out orphaned posts whose author no longer exists in the DB
+    const validPosts = posts.filter((p: any) => p.author !== null);
+    
+    return NextResponse.json({ success: true, count: validPosts.length, data: validPosts }, { status: 200 });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
@@ -26,6 +29,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     await dbConnect();
+    User.init();
     
     const formData = await req.formData();
     const authorId = formData.get('authorId') as string;
@@ -34,6 +38,12 @@ export async function POST(req: NextRequest) {
     
     if (!authorId || !content) {
        return NextResponse.json({ success: false, message: 'Author ID and content are required' }, { status: 400 });
+    }
+
+    // Validate the author actually exists in the DB
+    const authorExists = await User.findById(authorId);
+    if (!authorExists) {
+      return NextResponse.json({ success: false, message: 'Author not found. Please login again.' }, { status: 404 });
     }
 
     let storageUrl = '';
