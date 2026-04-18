@@ -13,6 +13,7 @@ export default function StartupLayout({
   const router = useRouter();
   const pathname = usePathname();
   const [user, setUser] = useState<any>(null);
+  const [offerCount, setOfferCount] = useState<number>(0);
 
   useEffect(() => {
     const userId = localStorage.getItem('userId');
@@ -21,7 +22,7 @@ export default function StartupLayout({
         .then(res => res.json())
         .then(data => {
           if (data.success) {
-            setUser(data.data);
+            setUser(data.data.user);
           } else {
             localStorage.removeItem('userId');
           }
@@ -29,6 +30,31 @@ export default function StartupLayout({
         .catch(err => console.error("Error fetching user data:", err));
     }
   }, []);
+
+  useEffect(() => {
+    if (user?._id) {
+      const fetchOfferCount = async () => {
+        try {
+          const res = await fetch(`/api/negotiations?startupId=${user._id}`);
+          const data = await res.json();
+          if (data.success) {
+            // Count negotiations where the last offer sender was the investor and status is 'Negotiating'
+            const pendingOffers = data.data.filter((neg: any) => 
+              neg.status === 'Negotiating' && 
+              neg.offers.length > 0 && 
+              neg.offers[neg.offers.length - 1].sender === 'INVESTOR'
+            );
+            setOfferCount(pendingOffers.length);
+          }
+        } catch (err) {
+          console.error("Error fetching offer count:", err);
+        }
+      };
+
+      fetchOfferCount();
+      // Optional: Refresh count periodically or on some events
+    }
+  }, [user]);
 
   const handleLogout = () => {
     localStorage.removeItem('userId');
@@ -52,7 +78,7 @@ export default function StartupLayout({
         </div>
         
         <nav className={styles.nav}>
-          <Link href="/startup/dashboard" className={`${styles.navItem} ${styles.navItemActive}`}>
+          <Link href="/startup/dashboard" className={`${styles.navItem} ${pathname === '/startup/dashboard' ? styles.navItemActive : ''}`}>
             <span className={styles.navIcon}>
                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 19 2 12 11 5 11 19"></polygon><path d="M22 12A10 10 0 0 0 12 2v20a10 10 0 0 0 10-10z"></path></svg>
             </span>
@@ -71,15 +97,15 @@ export default function StartupLayout({
             My Posts
           </Link>
           
-          <Link href="/xverify" className={`${styles.navItem} ${pathname === '/xverify' ? styles.navItemActive : ''}`}>
+          <Link href="/startup/xverify" className={`${styles.navItem} ${pathname.includes('/xverify') ? styles.navItemActive : ''}`}>
             <span className={styles.navIcon}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
             </span>
             XVerify Docs
           </Link>
-          <Link href="/xrate" className={`${styles.navItem} ${pathname === '/xrate' ? styles.navItemActive : ''}`}>
+          <Link href="/startup/xrate" className={`${styles.navItem} ${pathname.includes('/xrate') ? styles.navItemActive : ''}`}>
             <span className={styles.navIcon}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
             </span>
             XRate AI
           </Link>
@@ -89,12 +115,12 @@ export default function StartupLayout({
             </span>
             Milestone Tracker
           </Link>
-          <Link href="/xraise" className={styles.navItem}>
+          <Link href="/startup/xraise" className={`${styles.navItem} ${pathname.includes('/xraise') ? styles.navItemActive : ''}`}>
             <span className={styles.navIcon}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>
+               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>
             </span>
             Offers Received
-            <span className={styles.badge}>2</span>
+            {offerCount > 0 && <span className={styles.badge}>{offerCount}</span>}
           </Link>
           <Link href="/startup/funds" className={styles.navItem}>
             <span className={styles.navIcon}>
@@ -124,7 +150,13 @@ export default function StartupLayout({
 
       <div className={styles.mainWrapper}>
         <header className={styles.topbar}>
-          <div className={styles.pageTitle}>Dashboard</div>
+          <div className={styles.pageTitle}>
+            {pathname.includes('/dashboard') ? 'Dashboard' : 
+             pathname.includes('/xverify') ? 'Verification' : 
+             pathname.includes('/xrate') ? 'AI Analysis' : 
+             pathname.includes('/xraise') ? 'Deal Room' : 
+             pathname.includes('/posts') ? 'My Posts' : 'Startup'}
+          </div>
           <div className={styles.topbarActions}>
             <button className={styles.iconBtn}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>

@@ -14,6 +14,7 @@ export default function InvestorLayout({
   const router = useRouter();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const [offerCount, setOfferCount] = useState<number>(0);
 
   useEffect(() => {
     const userId = localStorage.getItem('userId');
@@ -22,7 +23,7 @@ export default function InvestorLayout({
         .then(res => res.json())
         .then(data => {
           if (data.success) {
-            setUser(data.data);
+            setUser(data.data.user);
           } else {
             localStorage.removeItem('userId');
           }
@@ -30,6 +31,30 @@ export default function InvestorLayout({
         .catch(err => console.error("Error fetching user data:", err));
     }
   }, []);
+
+  useEffect(() => {
+    if (user?._id) {
+      const fetchOfferCount = async () => {
+        try {
+          const res = await fetch(`/api/negotiations?investorId=${user._id}`);
+          const data = await res.json();
+          if (data.success) {
+            // Count negotiations where the last offer sender was the startup and status is 'Negotiating'
+            const pendingOffers = data.data.filter((neg: any) => 
+              neg.status === 'Negotiating' && 
+              neg.offers.length > 0 && 
+              neg.offers[neg.offers.length - 1].sender === 'STARTUP'
+            );
+            setOfferCount(pendingOffers.length);
+          }
+        } catch (err) {
+          console.error("Error fetching offer count:", err);
+        }
+      };
+
+      fetchOfferCount();
+    }
+  }, [user]);
 
   const handleLogout = () => {
     localStorage.removeItem('userId');
@@ -48,7 +73,6 @@ export default function InvestorLayout({
   else if (pathname.includes('/investor/watchlist')) pageTitle = "Watchlist";
   else if (pathname.includes('/investor/reports')) pageTitle = "Reports";
   else if (pathname.includes('/investor/settings')) pageTitle = "Settings";
-  else if (pathname.includes('/xverify')) pageTitle = "";
 
   return (
     <div className={styles.layoutContainer}>
@@ -68,29 +92,24 @@ export default function InvestorLayout({
             </span>
             Dashboard
           </Link>
-          <Link href="/campaign" className={`${styles.navItem} ${pathname.includes('/campaign') ? styles.navItemActive : ''}`}>
+          
+          <div style={{marginTop: '12px', marginBottom: '8px', fontSize: '11px', fontWeight: '800', color: '#94A3B8', padding: '0 16px', letterSpacing: '0.5px'}}>DISCOVER</div>
+          
+          <Link href="/campaign" className={`${styles.navItem} ${pathname === '/campaign' ? styles.navItemActive : ''}`}>
             <span className={styles.navIcon}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
             </span>
-            Explore Startups
+            XFund Standard
           </Link>
 
-          {user?.role === 'STARTUP' && (
-            <>
-              <Link href="/xverify" className={`${styles.navItem} ${pathname === '/xverify' ? styles.navItemActive : ''}`}>
-                <span className={styles.navIcon}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-                </span>
-                XVerify Docs
-              </Link>
-              <Link href="/xrate" className={`${styles.navItem} ${pathname === '/xrate' ? styles.navItemActive : ''}`}>
-                <span className={styles.navIcon}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
-                </span>
-                XRate AI
-              </Link>
-            </>
-          )}
+          <Link href="/campaign" className={`${styles.navItem} ${pathname.includes('/xraise/explore') ? styles.navItemActive : ''}`}>
+            <span className={styles.navIcon} style={{color: '#F5A623'}}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20"/><path d="m17 5-5-3-5 3"/><path d="m17 19-5 3-5-3"/><path d="m2 12 5-3 5 3-5 3-5-3Z"/><path d="m12 12 5-3 5 3-5 3-5-3Z"/></svg>
+            </span>
+            XRaise Bidding
+          </Link>
+
+          <div style={{marginTop: '12px', marginBottom: '8px', fontSize: '11px', fontWeight: '800', color: '#94A3B8', padding: '0 16px', letterSpacing: '0.5px'}}>MY PORTFOLIO</div>
 
           <Link href="/investor/investments" className={`${styles.navItem} ${pathname.includes('/investor/investments') ? styles.navItemActive : ''}`}>
             <span className={styles.navIcon}>
@@ -98,12 +117,12 @@ export default function InvestorLayout({
             </span>
             My Investments
           </Link>
-          <Link href="/xraise" className={`${styles.navItem} ${pathname.includes('/xraise') ? styles.navItemActive : ''}`}>
+          <Link href="/investor/xraise" className={`${styles.navItem} ${pathname === '/investor/xraise' ? styles.navItemActive : ''}`}>
             <span className={styles.navIcon}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
             </span>
-            XRaise Offers
-            <span className={styles.badge}>3</span>
+            Active Deal Rooms
+            {offerCount > 0 && <span className={styles.badge}>{offerCount}</span>}
           </Link>
           <Link href="/investor/watchlist" className={`${styles.navItem} ${pathname.includes('/investor/watchlist') ? styles.navItemActive : ''}`}>
             <span className={styles.navIcon}>
