@@ -10,8 +10,12 @@ export interface ICampaign extends Document {
   fundingGoal: number;
   amountRaised: number;
   minimumInvestment: number;
-  equityOffered: number;
+  equityOffered?: number;
+  fundingType: 'Equity' | 'Debt';
+  interestRate?: number;
+  repaymentMonths?: number;
   status: 'Draft' | 'Active' | 'Funded' | 'Closed';
+  disbursed: boolean;
   endDate: Date;
   location: string;
   imageUrl?: string;
@@ -34,12 +38,21 @@ const CampaignSchema: Schema = new Schema(
     fundingGoal: { type: Number, required: true },
     amountRaised: { type: Number, default: 0 },
     minimumInvestment: { type: Number, required: true },
-    equityOffered: { type: Number, required: true },
+    equityOffered: { type: Number },
+    fundingType: { 
+      type: String, 
+      enum: ['Equity', 'Debt'], 
+      required: true,
+      default: 'Equity'
+    },
+    interestRate: { type: Number },
+    repaymentMonths: { type: Number },
     status: { 
       type: String, 
       enum: ['Draft', 'Active', 'Funded', 'Closed'], 
       default: 'Draft' 
     },
+    disbursed: { type: Boolean, default: false },
     endDate: { type: Date, required: true },
     location: { type: String, required: true },
     imageUrl: { type: String },
