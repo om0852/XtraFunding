@@ -385,7 +385,7 @@ export default function AuthPage() {
               </div>
             </div>
 
-            <button type="submit" className={styles.btnGold}>Sign In</button>
+            <Link href="/investor/dashboard"><button type="button" className={styles.btnGold}>Sign In</button></Link>
             
             <div className={styles.divider}>OR</div>
             
@@ -425,7 +425,7 @@ export default function AuthPage() {
               Didn't receive it? {timer > 0 ? `Resend in 00:${timer.toString().padStart(2, '0')}` : <button className={styles.link} onClick={() => setTimer(30)}>Resend now</button>}
             </div>
 
-            <button className={styles.btnGold}>Verify</button>
+            <Link href={role === 'startup' ? "/startup/dashboard" : "/investor/dashboard"}><button className={styles.btnGold}>Verify & Continue (Demo)</button></Link>
           </div>
         )}
       </div>

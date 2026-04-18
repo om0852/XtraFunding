@@ -98,7 +98,7 @@ export default function Dashboard() {
       <div className={styles.sectionWrapper} style={{ backgroundColor: 'transparent', border: 'none', padding: 0 }}>
         <div className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle}>Trending on XFund</h2>
-          <Link href="/explore" className={styles.linkGold}>Browse All</Link>
+          <Link href="/campaign" className={styles.linkGold}>Browse All</Link>
         </div>
         <div className={styles.startupGrid}>
           {/* Card 1 */}
@@ -114,7 +114,7 @@ export default function Dashboard() {
             <div className={styles.fundingText}>₹8.2L raised of ₹15L</div>
             <div className={styles.cardBottom}>
               <span className={styles.minText}>Min ₹5,000</span>
-              <button className={styles.btnInvest}>Invest Now</button>
+              <Link href="/campaign"><button className={styles.btnInvest}>Invest Now</button></Link>
             </div>
           </div>
           {/* Card 2 */}
@@ -130,7 +130,7 @@ export default function Dashboard() {
             <div className={styles.fundingText}>₹15L raised of ₹20L</div>
             <div className={styles.cardBottom}>
               <span className={styles.minText}>Min ₹10,000</span>
-              <button className={styles.btnInvest}>Invest Now</button>
+              <Link href="/campaign"><button className={styles.btnInvest}>Invest Now</button></Link>
             </div>
           </div>
           {/* Card 3 */}
@@ -146,7 +146,7 @@ export default function Dashboard() {
             <div className={styles.fundingText}>₹2L raised of ₹10L</div>
             <div className={styles.cardBottom}>
               <span className={styles.minText}>Min ₹2,000</span>
-              <button className={styles.btnInvest}>Invest Now</button>
+              <Link href="/campaign"><button className={styles.btnInvest}>Invest Now</button></Link>
             </div>
           </div>
         </div>

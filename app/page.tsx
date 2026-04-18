@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './page.module.css';
+import Link from 'next/link';
 
 export default function LandingPage() {
   return (
@@ -14,14 +15,14 @@ export default function LandingPage() {
           XFund
         </div>
         <div className={styles.navLinks}>
-          <a href="#" className={styles.navLink}>Home</a>
-          <a href="#" className={styles.navLink}>Explore</a>
-          <a href="#" className={styles.navLink}>How it Works</a>
-          <a href="#" className={styles.navLink}>About</a>
+          <Link href="/" className={styles.navLink}>Home</Link>
+          <Link href="/auth" className={styles.navLink}>Explore</Link>
+          <Link href="#" className={styles.navLink}>How it Works</Link>
+          <Link href="#" className={styles.navLink}>About</Link>
         </div>
         <div className={styles.navActions}>
-          <button className={styles.btnLogin}>Login</button>
-          <button className={styles.btnGetStarted}>Get Started</button>
+          <Link href="/auth"><button className={styles.btnLogin}>Login</button></Link>
+          <Link href="/auth"><button className={styles.btnGetStarted}>Get Started</button></Link>
         </div>
       </nav>
 
@@ -32,8 +33,8 @@ export default function LandingPage() {
           XFund connects verified startups with smart investors through transparent fund tracking, AI-powered ratings, and milestone-based releases.
         </p>
         <div className={styles.heroActions}>
-          <button className={styles.btnStartInvesting}>Start Investing</button>
-          <button className={styles.btnListStartup}>List Your Startup</button>
+          <Link href="/auth"><button className={styles.btnStartInvesting}>Start Investing</button></Link>
+          <Link href="/auth"><button className={styles.btnListStartup}>List Your Startup</button></Link>
         </div>
         <p className={styles.heroTrust}>No hidden fees · Blockchain-verified · SEBI compliant</p>
       </section>

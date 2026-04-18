@@ -28,7 +28,7 @@ export default function XRateReportPage() {
         </Link>
         <div className={styles.navLinks}>
           <Link href="/" className={styles.navLink}>Home</Link>
-          <Link href="/explore" className={styles.navLink}>Explore</Link>
+          <Link href="/campaign" className={styles.navLink}>Explore</Link>
           <Link href="/how-it-works" className={styles.navLink}>How it Works</Link>
           <Link href="/about" className={styles.navLink}>About</Link>
         </div>

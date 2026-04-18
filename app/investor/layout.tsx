@@ -25,7 +25,7 @@ export default function InvestorLayout({
             </span>
             Dashboard
           </Link>
-          <Link href="/explore" className={styles.navItem}>
+          <Link href="/campaign" className={styles.navItem}>
             <span className={styles.navIcon}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
             </span>
@@ -37,7 +37,7 @@ export default function InvestorLayout({
             </span>
             My Investments
           </Link>
-          <Link href="/investor/xraise" className={styles.navItem}>
+          <Link href="/xraise" className={styles.navItem}>
             <span className={styles.navIcon}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 10V14C8 16.2091 9.79086 18 12 18C14.2091 18 16 16.2091 16 14V10L12 6L8 10Z"></path><line x1="12" y1="14" x2="8" y2="14"></line></svg>
             </span>
