@@ -55,6 +55,57 @@
   animation: pulse 2s infinite;
 }
 
+.dotGreen {
+  width: 10px;
+  height: 10px;
+  background-color: #10B981;
+  border-radius: 50%;
+}
+
+.badgeYourTurn {
+  background: #DBEAFE;
+  border: 1px solid #BFDBFE;
+  color: #1D4ED8;
+  font-size: 13px;
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-weight: 700;
+  display: inline-block;
+  animation: pulseBlue 2s infinite;
+}
+
+@keyframes pulseBlue {
+  0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+}
+
+.btnReject {
+  background: #ffffff;
+  color: #EF4444;
+  border: 2px solid #FEE2E2;
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btnReject:hover {
+  background: #FEF2F2;
+  border-color: #EF4444;
+}
+
+.loading, .error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+  font-size: 18px;
+  color: #64748B;
+}
+
 @keyframes pulse {
   0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
   70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(245, 158, 11, 0); }
@@ -661,6 +712,111 @@ select.textInput {
 .btnSolidBlue:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(15, 23, 42, 0.3);
+}
+
+.paymentPrompt {
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.paymentPrompt h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1E40AF;
+  margin-bottom: 8px;
+}
+
+.paymentPrompt p {
+  font-size: 14px;
+  color: #3B82F6;
+  margin-bottom: 20px;
+}
+
+.btnPayNow {
+  background: linear-gradient(135deg, #2563EB, #1D4ED8);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 28px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.btnPayNow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+}
+
+.successBannerSmall {
+  background: #ECFDF5;
+  border: 1px solid #10B981;
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.successIconSmall {
+  width: 32px;
+  height: 32px;
+  background: #10B981;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.successTitleSmall {
+  font-size: 15px;
+  font-weight: 700;
+  color: #064E3B;
+}
+
+.successSubSmall {
+  font-size: 13px;
+  color: #059669;
+}
+
+.startupPaymentStatus {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  background: #F8FAFC;
+  border-radius: 10px;
+  border: 1px solid #E2E8F0;
+}
+
+.statusLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748B;
+}
+
+.statusAwaiting {
+  font-size: 14px;
+  font-weight: 700;
+  color: #D97706;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.statusPaid {
+  font-size: 14px;
+  font-weight: 700;
+  color: #10B981;
 }
 
 @media (max-width: 900px) {

@@ -14,6 +14,7 @@ export interface ICampaign extends Document {
   fundingType: 'Equity' | 'Debt';
   interestRate?: number;
   repaymentMonths?: number;
+  fundingModel: 'XFund' | 'XRaise';
   status: 'Draft' | 'Active' | 'Funded' | 'Closed';
   disbursed: boolean;
   endDate: Date;
@@ -47,6 +48,12 @@ const CampaignSchema: Schema = new Schema(
     },
     interestRate: { type: Number },
     repaymentMonths: { type: Number },
+    fundingModel: { 
+      type: String, 
+      enum: ['XFund', 'XRaise'], 
+      required: true,
+      default: 'XFund'
+    },
     status: { 
       type: String, 
       enum: ['Draft', 'Active', 'Funded', 'Closed'], 

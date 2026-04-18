@@ -1,306 +1,305 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './page.module.css';
 import Link from 'next/link';
+import { useSearchParams, useRouter } from 'next/navigation';
 
 export default function XRaisePage() {
-  const [dealClosed, setDealClosed] = useState(false);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const negId = searchParams.get('id');
+  
+  const [negotiation, setNegotiation] = useState<any>(null);
+  const [investment, setInvestment] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPaying, setIsPaying] = useState(false);
+
+  // Form states
   const [offerAmount, setOfferAmount] = useState('');
   const [equityPct, setEquityPct] = useState('');
-  const [offerType, setOfferType] = useState('');
+  const [offerType, setOfferType] = useState('Equity');
   const [terms, setTerms] = useState('');
-  
-  const numAmount = parseInt(offerAmount.replace(/\D/g, ''), 10) || 0;
-  const numEq = parseFloat(equityPct) || 0;
-  
-  const isAmountError = numAmount > 0 && numAmount < 10000;
-  const isEqError = (numEq > 0 && (numEq < 0.1 || numEq > 49));
-  
-  // Form requires fields to be not empty and valid
-  const canSubmit = !isAmountError && !isEqError && numAmount >= 10000 && numEq >= 0.1 && numEq <= 49 && offerType !== '';
 
-  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value.replace(/\D/g, '');
-    setOfferAmount(val);
+  useEffect(() => {
+    const userId = localStorage.getItem('userId');
+    setCurrentUserId(userId);
+
+    const fetchData = async () => {
+      if (!negId) return;
+      try {
+        const res = await fetch(`/api/negotiations/${negId}`);
+        const data = await res.json();
+        if (data.success) {
+          setNegotiation(data.data);
+          
+          // Pre-fill form with latest values
+          const latest = data.data.offers[data.data.offers.length - 1];
+          setOfferAmount(latest.amount.toString());
+          setEquityPct(latest.equity.toString());
+          setOfferType(latest.instrumentType);
+
+          // If deal accepted, check investment status
+          if (data.data.status === 'Accepted') {
+            const invRes = await fetch(`/api/investments/query?campaignId=${data.data.campaignId._id}&investorId=${data.data.investorId._id}`);
+            const invData = await invRes.json();
+            if (invData.success) {
+              setInvestment(invData.data);
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Fetch error:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [negId]);
+
+  const handleAction = async (action: 'COUNTER' | 'ACCEPT' | 'REJECT') => {
+    if (!negotiation) return;
+    setIsSubmitting(true);
+
+    try {
+      const isInvestor = currentUserId === negotiation.investorId._id;
+      const payload: any = {};
+
+      if (action === 'COUNTER') {
+        payload.offer = {
+          sender: isInvestor ? 'INVESTOR' : 'STARTUP',
+          amount: Number(offerAmount),
+          equity: Number(equityPct),
+          instrumentType: offerType,
+          expiryDays: 7,
+          terms: terms || 'Terms as discussed.'
+        };
+      } else if (action === 'ACCEPT') {
+        payload.status = 'Accepted';
+      } else if (action === 'REJECT') {
+        payload.status = 'Rejected';
+      }
+
+      const res = await fetch(`/api/negotiations/${negId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) {
+        setNegotiation(data.data);
+        if (action === 'COUNTER') setTerms('');
+        
+        // Refresh investment if accepted
+        if (action === 'ACCEPT') {
+          const invRes = await fetch(`/api/investments/query?campaignId=${data.data.campaignId._id}&investorId=${data.data.investorId._id}`);
+          const invData = await invRes.json();
+          if (invData.success) setInvestment(invData.data);
+        }
+
+        alert(`Successfully ${action === 'COUNTER' ? 'sent counter offer' : action === 'ACCEPT' ? 'accepted deal' : 'rejected offer'}`);
+      } else {
+        alert(data.error || 'Failed to process action');
+      }
+    } catch (err) {
+      alert('An error occurred');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const handleDealCloseToggle = () => {
-    setDealClosed(!dealClosed);
+  const handlePayment = async () => {
+    if (!investment) return;
+    setIsPaying(true);
+    
+    try {
+      // Mock payment delay
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      const res = await fetch(`/api/investments/${investment._id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'Completed' })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setInvestment(data.data);
+        alert('Payment processed successfully! Funds are now in Escrow.');
+      }
+    } catch (err) {
+      alert('Payment failed');
+    } finally {
+      setIsPaying(false);
+    }
   };
+
+  if (loading) return <div className={styles.loading}>Loading Deal Room...</div>;
+  if (!negotiation) return <div className={styles.error}>Negotiation not found.</div>;
+
+  const isInvestor = currentUserId === negotiation.investorId._id;
+  const isStartup = currentUserId === negotiation.startupId._id;
+  const latestOffer = negotiation.offers[negotiation.offers.length - 1];
+  const dealClosed = negotiation.status === 'Accepted';
+  const lastSender = latestOffer.sender;
+  const isMyTurn = (isInvestor && lastSender === 'STARTUP') || (isStartup && lastSender === 'INVESTOR');
 
   return (
     <div className={styles.pageContainer}>
-
       <main className={styles.mainContent}>
         
-        {/* PAGE HEADER */}
         <div className={styles.pageHeader}>
-          <div>
-
-            <h1 className={styles.pageTitle}>XRaise Negotiation</h1>
-          </div>
-          <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-            <button onClick={handleDealCloseToggle} style={{ color: '#F5A623', background: 'none', border: '1px solid #F5A623', borderRadius: '4px', cursor: 'pointer', padding: '4px 8px', fontSize: '12px' }}>
-              [Toggle Deal State]
-            </button>
-            <div className={styles.statusBadge}>
-              <div className={styles.pulsingDot}></div>
-              Negotiating
-            </div>
+          <h1 className={styles.pageTitle}>XRaise Negotiation Room</h1>
+          <div className={styles.statusBadge}>
+            <div className={negotiation.status === 'Accepted' ? styles.dotGreen : styles.pulsingDot}></div>
+            {negotiation.status}
           </div>
         </div>
 
         {dealClosed && (
           <div className={styles.successBanner}>
-            <div className={styles.successIcon}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-            </div>
+            <div className={styles.successIcon}>✓</div>
             <div>
               <div className={styles.successTitle}>Deal Closed Successfully 🎉</div>
-              <div className={styles.successSub}>You and GreenHarvest AI have agreed on the final terms of ₹2,00,000 for 12% equity.</div>
+              <div className={styles.successSub}>
+                Terms agreed: ₹{latestOffer.amount.toLocaleString()} for {latestOffer.equity}% equity.
+              </div>
             </div>
           </div>
         )}
 
-        {/* TWO PANEL LAYOUT */}
         <div className={styles.gridTwoPanel}>
-          
-          {/* LEFT PANEL */}
           <div className={styles.panelLeft}>
-            
             <div className={styles.card}>
               <div className={styles.startupCardHeader}>
-                <div className={styles.startupLogo}>GH</div>
+                <div className={styles.startupLogo}>
+                  {negotiation.campaignId?.title ? negotiation.campaignId.title.substring(0, 2) : '??'}
+                </div>
                 <div>
-                  <div className={styles.startupName}>GreenHarvest AI</div>
-                  <div className={styles.sectorBadge}>AgriTech</div>
+                  <div className={styles.startupName}>{negotiation.campaignId?.title || 'Unknown Project'}</div>
+                  <div className={styles.sectorBadge}>{negotiation.campaignId?.sector || 'N/A'}</div>
                 </div>
               </div>
               <div className={styles.divider}></div>
-              
               <div className={styles.dataRow}>
-                <span className={styles.dataLabel}>Funding Ask</span>
-                <span className={styles.dataValue}>₹15,00,000</span>
+                <span className={styles.dataLabel}>Ask</span>
+                <span className={styles.dataValue}>₹{negotiation.campaignId.fundingGoal.toLocaleString()}</span>
               </div>
-              <div className={styles.dataRow}>
-                <span className={styles.dataLabel}>Equity Offered</span>
-                <span className={styles.dataValue}>8%</span>
-              </div>
-              <div className={styles.dataRow}>
-                <span className={styles.dataLabel}>XRate Score</span>
-                <span className={styles.xrateBadge}>74</span>
-              </div>
-              <div className={styles.dataRow}>
-                <span className={styles.dataLabel}>Stage</span>
-                <span className={styles.dataValue}>Seed</span>
-              </div>
-              
-              <Link href="/campaign" style={{textDecoration: 'none'}}>
-                <button className={styles.btnCampaign}>View Full Campaign</button>
+              <Link href={`/campaign/${negotiation.campaignId._id}`} style={{textDecoration: 'none'}}>
+                <button className={styles.btnCampaign}>View Campaign</button>
               </Link>
             </div>
 
             <div className={styles.card}>
-              <div className={styles.investorHeader}>
-                <div className={styles.investorAvatar}>RS</div>
-                <div>
-                  <div className={styles.investorName}>
-                    You (Rahul Sharma)
-                    <span className={styles.verifiedBadge}>Verified Investor</span>
-                  </div>
-                  <div className={styles.investorDetail}>Investment capacity: ₹5L — ₹25L</div>
-                </div>
+              <div className={styles.cardTitle}>Current Offer</div>
+              <div className={styles.dealAmount}>₹{latestOffer.amount.toLocaleString()}</div>
+              <div className={styles.dealEquity}>for {latestOffer.equity}% {latestOffer.instrumentType}</div>
+              <div className={lastSender === (isInvestor ? 'INVESTOR' : 'STARTUP') ? styles.badgeAwaiting : styles.badgeYourTurn}>
+                {lastSender === (isInvestor ? 'INVESTOR' : 'STARTUP') ? 'Awaiting Counter' : 'Your Turn to Respond'}
               </div>
             </div>
-
-            <div className={styles.card}>
-              <div className={styles.cardTitle}>Current Best Offer</div>
-              <div className={styles.dealAmount}>₹2,00,000</div>
-              <div className={styles.dealEquity}>for 12% equity</div>
-              <div className={styles.dealCountdown}>Expires in 18:24:06</div>
-            </div>
-
           </div>
 
-          {/* RIGHT PANEL */}
           <div className={styles.panelRight}>
-            
             {!dealClosed ? (
               <>
-                {/* OFFER THREAD */}
                 <div className={styles.card}>
                   <div className={styles.threadHeader}>
                     <div className={styles.threadTitle}>Offer History</div>
-                    <div className={styles.threadCount}>3 exchanges</div>
+                    <div className={styles.threadCount}>{negotiation.offers.length} exchanges</div>
                   </div>
 
                   <div className={styles.offerStack}>
-                    
-                    {/* Offer 1 (You) */}
-                    <div className={`${styles.offerMsg} ${styles.offerMsgYou}`}>
-                      <div className={styles.offerMsgHeader}>
-                        <div className={styles.offerSender}>
-                          <div className={`${styles.offerAvatarSmall} ${styles.avatarYou}`}>RS</div>
-                          <span className={styles.offerSenderName}>You · Rahul Sharma</span>
+                    {negotiation.offers.map((off: any, idx: number) => {
+                      const isMe = (isInvestor && off.sender === 'INVESTOR') || (isStartup && off.sender === 'STARTUP');
+                      return (
+                        <div key={idx} className={`${styles.offerMsg} ${isMe ? styles.offerMsgYou : styles.offerMsgFounder} ${idx === negotiation.offers.length - 1 ? styles.offerMsgLatest : ''}`}>
+                          <div className={styles.offerMsgHeader}>
+                            <span className={styles.offerSenderName}>
+                              {off.sender === 'INVESTOR' ? negotiation.investorId.name : 'Startup Founder'}
+                            </span>
+                            <span className={styles.offerTime}>{new Date(off.timestamp).toLocaleString()}</span>
+                          </div>
+                          <div className={styles.offerBodyVal}>₹{off.amount.toLocaleString()} for {off.equity}%</div>
+                          <p className={styles.offerTermsText}>{off.terms}</p>
                         </div>
-                        <span className={styles.offerTime}>Apr 10, 2025 · 2:34 PM</span>
-                      </div>
-                      <div className={`${styles.offerBodyVal} ${styles.valBlue}`}>₹1,50,000 for 10% equity</div>
-                      <div className={styles.offerTermsText}>Standard terms, no board seat, 18-month lock-in</div>
-                      <div className={styles.offerFooter}>
-                        <span className={`${styles.offerTag} ${styles.tagGray}`}>Initial Offer</span>
-                      </div>
-                    </div>
-
-                    {/* Offer 2 (Startup) */}
-                    <div className={`${styles.offerMsg} ${styles.offerMsgFounder}`}>
-                      <div className={styles.offerMsgHeader}>
-                        <div className={styles.offerSender}>
-                          <div className={`${styles.offerAvatarSmall} ${styles.avatarGH}`}>GH</div>
-                          <span className={styles.offerSenderName}>GreenHarvest AI · Founder</span>
-                        </div>
-                        <span className={styles.offerTime}>Apr 11, 2025 · 9:15 AM</span>
-                      </div>
-                      <div className={`${styles.offerBodyVal} ${styles.valGold}`}>₹1,50,000 for 14% equity</div>
-                      <div className={styles.offerTermsText}>Requesting board observer rights, 24-month lock-in</div>
-                      <div className={styles.offerFooter}>
-                        <span className={`${styles.offerTag} ${styles.tagAmber}`}>Counter Offer</span>
-                      </div>
-                    </div>
-
-                    {/* Offer 3 (You Latest) */}
-                    <div className={`${styles.offerMsg} ${styles.offerMsgLatest}`}>
-                      <div className={styles.offerMsgHeader}>
-                        <div className={styles.offerSender}>
-                          <div className={`${styles.offerAvatarSmall} ${styles.avatarYou}`}>RS</div>
-                          <span className={styles.offerSenderName}>You · Rahul Sharma</span>
-                        </div>
-                        <span className={styles.offerTime}>Apr 12, 2025 · 1:40 PM</span>
-                      </div>
-                      <div className={`${styles.offerBodyVal} ${styles.valBlue}`}>₹2,00,000 for 12% equity</div>
-                      <div className={styles.offerTermsText}>No board seat, 18-month lock-in, pro-rata rights</div>
-                      <div className={styles.offerFooter}>
-                        <span className={`${styles.offerTag} ${styles.tagBlue}`}>Latest Offer</span>
-                        <span className={styles.badgeAwaiting}>Awaiting Response</span>
-                      </div>
-                    </div>
-
+                      );
+                    })}
                   </div>
                 </div>
 
-                {/* FORM */}
-                <div className={styles.card}>
-                  <div className={styles.threadTitle} style={{ marginBottom: '8px' }}>Make a Counter Offer</div>
-                  
-                  <div className={styles.formGrid}>
-                    
-                    <div className={styles.inputGroup}>
-                      <label className={styles.inputLabel}>Offer Amount <span>*</span></label>
-                      <div className={styles.inputWrapper}>
-                        <span className={styles.inputPrefix}>₹</span>
-                        <input 
-                          type="text" 
-                          className={`${styles.textInput} ${styles.inputWithPrefix} ${isAmountError ? styles.textInputError : ''}`}
-                          placeholder="e.g. 200000"
-                          value={offerAmount}
-                          onChange={handleAmountChange}
-                        />
+                {isMyTurn && (
+                  <div className={styles.card}>
+                    <div className={styles.threadTitle}>Respond to Offer</div>
+                    <div className={styles.formGrid}>
+                      <div className={styles.inputGroup}>
+                        <label className={styles.inputLabel}>Amount (₹)</label>
+                        <input className={styles.textInput} value={offerAmount} onChange={e => setOfferAmount(e.target.value)} />
                       </div>
-                      {isAmountError && <span className={styles.errorText}>Minimum offer is ₹10,000</span>}
-                    </div>
-
-                    <div className={styles.inputGroup}>
-                      <label className={styles.inputLabel}>Equity / Royalty Percentage <span>*</span></label>
-                      <div className={styles.inputWrapper}>
-                        <input 
-                          type="number" 
-                          step="0.1"
-                          className={`${styles.textInput} ${styles.inputWithSuffix} ${isEqError ? styles.textInputError : ''}`}
-                          placeholder="e.g. 12"
-                          value={equityPct}
-                          onChange={e => setEquityPct(e.target.value)}
-                        />
-                        <span className={styles.inputSuffix}>%</span>
+                      <div className={styles.inputGroup}>
+                        <label className={styles.inputLabel}>Equity (%)</label>
+                        <input className={styles.textInput} value={equityPct} onChange={e => setEquityPct(e.target.value)} />
                       </div>
-                      {isEqError && <span className={styles.errorText}>Equity must be between 0.1% and 49%</span>}
+                      <div className={`${styles.inputGroup} ${styles.formFieldFull}`}>
+                        <label className={styles.inputLabel}>Message / Terms</label>
+                        <textarea className={styles.textInput} rows={3} value={terms} onChange={e => setTerms(e.target.value)} placeholder="Explain your counter offer..."></textarea>
+                      </div>
                     </div>
-
-                    <div className={`${styles.inputGroup} ${styles.formFieldFull}`}>
-                      <label className={styles.inputLabel}>Offer Type <span>*</span></label>
-                      <select 
-                        className={styles.textInput}
-                        value={offerType}
-                        onChange={e => setOfferType(e.target.value)}
-                      >
-                        <option value="" disabled>Select offer type</option>
-                        <option value="Equity stake">Equity stake</option>
-                        <option value="Revenue royalty">Revenue royalty</option>
-                        <option value="Convertible note">Convertible note</option>
-                        <option value="SAFE agreement">SAFE agreement</option>
-                      </select>
+                    <div className={styles.formActions}>
+                      <button className={styles.btnReject} onClick={() => handleAction('REJECT')} disabled={isSubmitting}>Reject & Close</button>
+                      <button className={styles.btnSolidBlue} onClick={() => handleAction('ACCEPT')} disabled={isSubmitting}>Accept Deal</button>
+                      <button className={styles.btnSend} onClick={() => handleAction('COUNTER')} disabled={isSubmitting}>Send Counter</button>
                     </div>
-
-                    <div className={`${styles.inputGroup} ${styles.formFieldFull}`}>
-                      <label className={styles.inputLabel}>Terms & Conditions</label>
-                      <textarea 
-                        className={styles.textInput} 
-                        rows={3} 
-                        maxLength={500}
-                        placeholder="Describe any specific terms, conditions, or requests... (e.g. board seat, lock-in period, pro-rata rights)"
-                        value={terms}
-                        onChange={e => setTerms(e.target.value)}
-                      ></textarea>
-                      <div className={styles.charCount}>{terms.length} / 500 characters</div>
-                    </div>
-
-                    <div className={styles.inputGroup}>
-                      <label className={styles.inputLabel}>This offer expires in <span>*</span></label>
-                      <select className={styles.textInput} defaultValue="48 hours">
-                        <option value="24 hours">24 hours</option>
-                        <option value="48 hours">48 hours</option>
-                        <option value="72 hours">72 hours</option>
-                        <option value="1 week">1 week</option>
-                      </select>
-                    </div>
-
-                    <div className={`${styles.inputGroup} ${styles.formFieldFull}`}>
-                      <label className={styles.inputLabel}>Additional Notes</label>
-                      <textarea 
-                        className={styles.textInput} 
-                        rows={2} 
-                        placeholder="Any message to the founder..."
-                      ></textarea>
-                    </div>
-
                   </div>
-
-                  <div className={styles.formActions}>
-                    <button className={styles.btnWithdraw}>Withdraw Current Offer</button>
-                    <button className={styles.btnSend} disabled={!canSubmit}>Send Offer</button>
-                  </div>
-                </div>
+                )}
               </>
             ) : (
-              // DEAL CLOSED STATE
               <div className={styles.card}>
-                <div className={styles.threadTitle} style={{ marginBottom: '24px' }}>Final Deal Terms</div>
-                
+                <div className={styles.threadTitle}>Final Agreement</div>
                 <div style={{ padding: '24px', background: '#F8F9FC', borderRadius: '8px', borderLeft: '4px solid #10B981', marginBottom: '24px' }}>
-                  <div className={styles.dealAmount}>₹2,00,000</div>
-                  <div className={styles.dealEquity}>for 12% equity</div>
-                  <p style={{ color: '#4B5563', fontSize: '14px', marginTop: '12px' }}>
-                    Agreed Terms: No board seat, 18-month lock-in, pro-rata rights
-                  </p>
+                  <div className={styles.dealAmount}>₹{latestOffer.amount.toLocaleString()}</div>
+                  <div className={styles.dealEquity}>for {latestOffer.equity}% equity</div>
                 </div>
-                
-                <div className={styles.successActions}>
-                  <button className={styles.btnOutlineGold}>Download Agreement PDF</button>
-                  <button className={styles.btnSolidBlue}>Proceed to Investment</button>
-                </div>
+
+                {isInvestor && investment?.status === 'Pending' && (
+                  <div className={styles.paymentPrompt}>
+                    <h3>Action Required: Fund the Deal</h3>
+                    <p>To finalize the agreement and move funds to escrow, please complete the payment.</p>
+                    <button 
+                      className={styles.btnPayNow} 
+                      onClick={handlePayment}
+                      disabled={isPaying}
+                    >
+                      {isPaying ? 'Processing Payment...' : 'Secure Deal & Transfer Funds'}
+                    </button>
+                  </div>
+                )}
+
+                {isInvestor && investment?.status === 'Completed' && (
+                  <div className={styles.successBannerSmall}>
+                    <div className={styles.successIconSmall}>✓</div>
+                    <div>
+                      <div className={styles.successTitleSmall}>Funds in Escrow</div>
+                      <div className={styles.successSubSmall}>Your investment of ₹{investment.amount.toLocaleString()} is safely held.</div>
+                    </div>
+                  </div>
+                )}
+
+                {isStartup && (
+                  <div className={styles.startupPaymentStatus}>
+                    <span className={styles.statusLabel}>Investor Payment Status:</span>
+                    <span className={investment?.status === 'Completed' ? styles.statusPaid : styles.statusAwaiting}>
+                      {investment?.status === 'Completed' ? 'Completed (Funds in Escrow)' : 'Awaiting Transfer...'}
+                    </span>
+                  </div>
+                )}
+
+                <button className={styles.btnSolidBlue} style={{ marginTop: '24px' }} onClick={() => router.push(isInvestor ? '/investor/dashboard' : '/startup/dashboard')}>
+                  Back to Dashboard
+                </button>
               </div>
             )}
-
           </div>
         </div>
       </main>

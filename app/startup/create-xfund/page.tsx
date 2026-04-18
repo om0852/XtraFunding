@@ -19,6 +19,7 @@ export default function CreateXFundPage() {
     minimumInvestment: '',
     endDate: '',
     location: '',
+    fundingModel: 'XFund' as 'XFund' | 'XRaise',
     fundingType: 'Equity' as 'Equity' | 'Debt',
     equityOffered: '',
     interestRate: '',
@@ -45,6 +46,7 @@ export default function CreateXFundPage() {
       const payload = {
         ...formData,
         founderId: userId,
+        fundingModel: formData.fundingModel,
         fundingGoal: Number(formData.fundingGoal),
         minimumInvestment: Number(formData.minimumInvestment),
         equityOffered: formData.fundingType === 'Equity' ? Number(formData.equityOffered) : undefined,
@@ -146,13 +148,33 @@ export default function CreateXFundPage() {
             />
           </div>
 
+          <div className={`${styles.inputGroup} ${styles.fieldFull}`}>
+            <label className={styles.label}>Goal Context (Funding Model)</label>
+            <div className={styles.typeSelector}>
+              <button 
+                type="button" 
+                className={`${styles.typeBtn} ${formData.fundingModel === 'XFund' ? styles.typeBtnActive : ''}`}
+                onClick={() => setFormData(prev => ({ ...prev, fundingModel: 'XFund' }))}
+              >
+                XFund (Crowdfunding)
+              </button>
+              <button 
+                type="button" 
+                className={`${styles.typeBtn} ${formData.fundingModel === 'XRaise' ? styles.typeBtnActive : ''}`}
+                onClick={() => setFormData(prev => ({ ...prev, fundingModel: 'XRaise' }))}
+              >
+                XRaise (One-to-One Bidding)
+              </button>
+            </div>
+          </div>
+
           <div className={styles.inputGroup}>
             <label className={styles.label}>Funding Goal (₹)</label>
             <input 
               name="fundingGoal"
               type="number" 
               className={styles.input} 
-              placeholder="e.g. 1500000" 
+              placeholder={formData.fundingModel === 'XRaise' ? "e.g. 1000000 (Target)" : "e.g. 1500000"} 
               required 
               value={formData.fundingGoal}
               onChange={handleChange}

@@ -8,29 +8,40 @@ import { useRouter } from 'next/navigation';
 export default function StartupDashboard() {
   const router = useRouter();
   const [campaign, setCampaign] = useState<any>(null);
+  const [negotiations, setNegotiations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchCampaign = async () => {
+    const fetchDashboardData = async () => {
       const userId = localStorage.getItem('userId');
-
+      if (!userId) {
+        router.push('/auth');
+        return;
+      }
 
       try {
         const res = await fetch('/api/campaigns');
         const data = await res.json();
         if (data.success) {
-          // Find the campaign for this founder
           const userCampaign = data.campaigns.find((c: any) => c.founderId === userId);
           setCampaign(userCampaign);
+
+          if (userCampaign && userCampaign.fundingModel === 'XRaise') {
+            const negRes = await fetch(`/api/negotiations?campaignId=${userCampaign._id}`);
+            const negData = await negRes.json();
+            if (negData.success) {
+              setNegotiations(negData.data);
+            }
+          }
         }
       } catch (err) {
-        console.error('Failed to fetch campaign', err);
+        console.error('Failed to fetch dashboard data', err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchCampaign();
+    fetchDashboardData();
   }, [router]);
 
   if (loading) return <div className={styles.loading}>Loading Dashboard...</div>;
@@ -41,7 +52,7 @@ export default function StartupDashboard() {
         <h1 className={styles.heading}>Campaign Overview</h1>
         {!campaign && (
           <Link href="/startup/create-xfund">
-            <button className={styles.btnCreate}>+ Create New XFund</button>
+            <button className={styles.btnCreate}>+ New Campaign</button>
           </Link>
         )}
       </div>
@@ -49,10 +60,10 @@ export default function StartupDashboard() {
       {!campaign ? (
         <div className={styles.emptyState}>
           <div className={styles.emptyIcon}>🚀</div>
-          <h2>No active XFund found</h2>
-          <p>You haven't launched a funding campaign yet. Start now to get discovered by investors.</p>
+          <h2>No active campaigns found</h2>
+          <p>You haven't launched a funding campaign yet.</p>
           <Link href="/startup/create-xfund">
-            <button className={styles.btnPrimaryLarge}>Launch your first XFund</button>
+            <button className={styles.btnPrimaryLarge}>Launch XFund or XRaise</button>
           </Link>
         </div>
       ) : (
@@ -61,51 +72,103 @@ export default function StartupDashboard() {
             <span className={styles.subtextTag}>{campaign.title}</span>
             <span className={styles.subtextTag}>{campaign.sector}</span>
             <span className={styles.subtextTag}>{campaign.stage}</span>
-            <span className={styles.subtextTagGold}>{campaign.fundingType} Model</span>
+            <span className={styles.subtextTagGold}>{campaign.fundingModel === 'XRaise' ? 'XRaise (Auction)' : 'XFund (Crowd)'}</span>
           </div>
 
-          <div className={styles.campaignCard}>
-            <div className={styles.campaignLeft}>
-              <div className={styles.fundingLabel}>Funding Progress</div>
-              <div>
-                <span className={styles.fundingAmount}>₹{campaign.amountRaised.toLocaleString()}</span>
-                <span className={styles.fundingGoal}> raised of ₹{campaign.fundingGoal.toLocaleString()} goal</span>
-              </div>
-              
-              <div className={styles.progressBarContainerLarge}>
-                <div 
-                  className={styles.progressBarFillLarge} 
-                  style={{ width: `${Math.min((campaign.amountRaised / campaign.fundingGoal) * 100, 100)}%` }}
-                ></div>
-              </div>
-              
-              <div className={styles.statsRow}>
-                <div className={`${styles.statItem} ${styles.statBlue}`}>
-                  {((campaign.amountRaised / campaign.fundingGoal) * 100).toFixed(1)}% Funded
+          {campaign.fundingModel === 'XFund' ? (
+            <div className={styles.campaignCard}>
+              <div className={styles.campaignLeft}>
+                <div className={styles.fundingLabel}>Funding Progress</div>
+                <div>
+                  <span className={styles.fundingAmount}>₹{campaign.amountRaised.toLocaleString()}</span>
+                  <span className={styles.fundingGoal}> raised of ₹{campaign.fundingGoal.toLocaleString()} goal</span>
                 </div>
-                <div className={styles.statDivider}></div>
-                <div className={`${styles.statItem} ${styles.statGray}`}>Active</div>
-                <div className={styles.statDivider}></div>
-                <div className={`${styles.statItem} ${styles.statAmber}`}>
-                  {campaign.status === 'Funded' ? 'Goal Reached! 🎉' : 'In Progress'}
+                
+                <div className={styles.progressBarContainerLarge}>
+                  <div 
+                    className={styles.progressBarFillLarge} 
+                    style={{ width: `${Math.min((campaign.amountRaised / campaign.fundingGoal) * 100, 100)}%` }}
+                  ></div>
+                </div>
+                
+                <div className={styles.statsRow}>
+                  <div className={`${styles.statItem} ${styles.statBlue}`}>
+                    {((campaign.amountRaised / campaign.fundingGoal) * 100).toFixed(1)}% Funded
+                  </div>
+                  <div className={styles.statDivider}></div>
+                  <div className={`${styles.statItem} ${styles.statGray}`}>Active</div>
+                  <div className={styles.statDivider}></div>
+                  <div className={`${styles.statItem} ${styles.statAmber}`}>
+                    {campaign.status === 'Funded' ? 'Goal Reached! 🎉' : 'In Progress'}
+                  </div>
+                </div>
+              </div>
+              
+              <div className={styles.campaignRight}>
+                <div className={styles.countdownCircle}>
+                  <div className={styles.countdownValue}>{campaign.status === 'Funded' ? '✓' : '!!'}</div>
+                  <div className={styles.countdownLabel}>{campaign.status}</div>
                 </div>
               </div>
             </div>
-            
-            <div className={styles.campaignRight}>
-              <div className={styles.countdownCircle}>
-                <div className={styles.countdownValue}>{campaign.status === 'Funded' ? '✓' : '!!'}</div>
-                <div className={styles.countdownLabel}>{campaign.status}</div>
-              </div>
+          ) : (
+            <div className={styles.tableWrapper} style={{ marginTop: 0 }}>
+              <h2 className={styles.tableTitle}>Deal Pipeline (Bids)</h2>
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th className={styles.th}>Investor</th>
+                    <th className={styles.th}>Latest Bid</th>
+                    <th className={styles.th}>Equity</th>
+                    <th className={styles.th}>Status</th>
+                    <th className={styles.th}>Exchanges</th>
+                    <th className={styles.th}>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {negotiations.length === 0 ? (
+                    <tr>
+                      <td colSpan={6} style={{ textAlign: 'center', padding: '40px' }}>
+                        No bids received yet.
+                      </td>
+                    </tr>
+                  ) : (
+                    negotiations.map((neg: any) => {
+                      const latestOffer = neg.offers[neg.offers.length - 1];
+                      return (
+                        <tr key={neg._id} className={styles.tr}>
+                          <td className={`${styles.td} ${styles.investorName}`}>{neg.investorId.name}</td>
+                          <td className={styles.td}>₹{latestOffer.amount.toLocaleString()}</td>
+                          <td className={styles.td}>{latestOffer.equity}%</td>
+                          <td className={styles.td}>
+                            <span className={
+                              neg.status === 'Accepted' ? styles.badgeGreen : 
+                              neg.status === 'Rejected' ? styles.badgeGray : styles.badgeAmber
+                            }>
+                              {neg.status}
+                            </span>
+                          </td>
+                          <td className={styles.td}>{neg.offers.length}</td>
+                          <td className={styles.td}>
+                            <Link href={`/xraise?id=${neg._id}`}>
+                              <button className={styles.btnReview}>Negotiate</button>
+                            </Link>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
             </div>
-          </div>
+          )}
 
           <div className={styles.gridTwoCol}>
             <div className={`${styles.card} ${styles.colLeft}`}>
               <h2 className={styles.cardTitle}>Funding Terms</h2>
               <div className={styles.termsBox}>
                 <div className={styles.termRow}>
-                  <span>Funding Model</span>
+                  <span>Funding Type</span>
                   <span className={styles.termVal}>{campaign.fundingType}</span>
                 </div>
                 {campaign.fundingType === 'Equity' ? (
@@ -126,8 +189,8 @@ export default function StartupDashboard() {
                   </>
                 )}
                 <div className={styles.termRow}>
-                  <span>Min Investment</span>
-                  <span className={styles.termVal}>₹{campaign.minimumInvestment}</span>
+                  <span>Target Funding</span>
+                  <span className={styles.termVal}>₹{campaign.fundingGoal.toLocaleString()}</span>
                 </div>
               </div>
             </div>
@@ -137,15 +200,15 @@ export default function StartupDashboard() {
               <div className={styles.disburseContent}>
                 {campaign.status === 'Funded' ? (
                   <div className={styles.successMsg}>
-                    <h3>Goal Achieved!</h3>
-                    <p>Total amount of ₹{campaign.amountRaised.toLocaleString()} is now being processed for disbursement.</p>
+                    <h3>Project Funded!</h3>
+                    <p>Total amount of ₹{campaign.amountRaised.toLocaleString()} is now being processed.</p>
                     <button className={styles.btnGoldFull}>Initiate Disbursement</button>
                   </div>
                 ) : (
                   <div className={styles.pendingMsg}>
-                    <p>Funds will be held in escrow until the goal of ₹{campaign.fundingGoal.toLocaleString()} is met.</p>
+                    <p>Funds will be delivered once a deal is struck (XRaise) or goal met (XFund).</p>
                     <div className={styles.remainingAmount}>
-                      ₹{(campaign.fundingGoal - campaign.amountRaised).toLocaleString()} remaining
+                      {campaign.fundingModel === 'XFund' ? `₹${(campaign.fundingGoal - campaign.amountRaised).toLocaleString()} remaining` : 'Awaiting best offer'}
                     </div>
                   </div>
                 )}

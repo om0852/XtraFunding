@@ -13,13 +13,27 @@ export default function CampaignDetailPage() {
   const [amount, setAmount] = useState('');
   const [isInvesting, setIsInvesting] = useState(false);
   
+  const [existingNegotiation, setExistingNegotiation] = useState<any>(null);
+
   useEffect(() => {
-    const fetchCampaign = async () => {
+    const fetchCampaignData = async () => {
       try {
         const res = await fetch(`/api/campaigns/${id}`);
         const data = await res.json();
         if (data.success) {
           setCampaign(data.data);
+          
+          // Check for existing negotiation if it's XRaise
+          if (data.data.fundingModel === 'XRaise') {
+            const userId = localStorage.getItem('userId');
+            if (userId) {
+              const negRes = await fetch(`/api/negotiations?campaignId=${id}&investorId=${userId}`);
+              const negData = await negRes.json();
+              if (negData.success && negData.data.length > 0) {
+                setExistingNegotiation(negData.data[0]);
+              }
+            }
+          }
         } else {
           console.error('Campaign not found');
         }
@@ -29,11 +43,50 @@ export default function CampaignDetailPage() {
         setLoading(false);
       }
     };
-    fetchCampaign();
+    fetchCampaignData();
   }, [id]);
 
   const numAmount = parseInt(amount.replace(/,/g, '')) || 0;
   const isError = campaign && numAmount > 0 && numAmount < campaign.minimumInvestment;
+
+  const handleStartNegotiation = async () => {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      alert('Please login to negotiate!');
+      return;
+    }
+
+    setIsInvesting(true);
+    try {
+      const res = await fetch('/api/negotiations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          investorId: userId,
+          startupId: campaign.founderId._id,
+          campaignId: id,
+          offer: {
+            sender: 'INVESTOR',
+            amount: numAmount || campaign.fundingGoal,
+            equity: campaign.equityOffered || 10,
+            instrumentType: 'Equity',
+            expiryDays: 7,
+            terms: 'Initial bid based on campaign terms. Open to negotiation.'
+          }
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        router.push(`/xraise?id=${data.data._id}`);
+      } else {
+        alert(data.error || 'Failed to start negotiation');
+      }
+    } catch (err) {
+      alert('An error occurred');
+    } finally {
+      setIsInvesting(false);
+    }
+  };
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value.replace(/\D/g, '');
@@ -166,38 +219,79 @@ export default function CampaignDetailPage() {
                 
                 {campaign.status !== 'Funded' ? (
                   <div className={styles.inputGroup}>
-                    <label className={styles.inputLabel}>Enter Investment Amount</label>
-                    <div className={styles.inputWrapper}>
-                      <span className={styles.inputPrefix}>₹</span>
-                      <input 
-                        type="text" 
-                        className={`${styles.amountInput} ${isError ? styles.amountInputError : ''}`}
-                        value={amount}
-                        onChange={handleAmountChange}
-                        placeholder="0"
-                      />
-                    </div>
-                    {isError && <div className={styles.errorText}>Min investment: ₹{campaign.minimumInvestment}</div>}
-                    
-                    <div className={styles.quickPills}>
-                      <button className={styles.quickPill} onClick={() => handlePillClick(campaign.minimumInvestment.toString())}>Min</button>
-                      <button className={styles.quickPill} onClick={() => handlePillClick('10000')}>₹10K</button>
-                      <button className={styles.quickPill} onClick={() => handlePillClick('50000')}>₹50K</button>
-                    </div>
-                    
-                    <div className={styles.btnInvestWrapper}>
-                      <button 
-                        className={styles.btnInvest} 
-                        disabled={isError || numAmount === 0 || isInvesting}
-                        onClick={handleInvest}
-                      >
-                        {isInvesting ? 'Processing...' : 'Invest Now'}
-                      </button>
-                    </div>
+                    {campaign.fundingModel === 'XFund' ? (
+                      <>
+                        <label className={styles.inputLabel}>Enter Investment Amount</label>
+                        <div className={styles.inputWrapper}>
+                          <span className={styles.inputPrefix}>₹</span>
+                          <input 
+                            type="text" 
+                            className={`${styles.amountInput} ${isError ? styles.amountInputError : ''}`}
+                            value={amount}
+                            onChange={handleAmountChange}
+                            placeholder="0"
+                          />
+                        </div>
+                        {isError && <div className={styles.errorText}>Min investment: ₹{campaign.minimumInvestment}</div>}
+                        
+                        <div className={styles.quickPills}>
+                          <button className={styles.quickPill} onClick={() => handlePillClick(campaign.minimumInvestment.toString())}>Min</button>
+                          <button className={styles.quickPill} onClick={() => handlePillClick('10000')}>₹10K</button>
+                          <button className={styles.quickPill} onClick={() => handlePillClick('50000')}>₹50K</button>
+                        </div>
+                        
+                        <div className={styles.btnInvestWrapper}>
+                          <button 
+                            className={styles.btnInvest} 
+                            disabled={isError || numAmount === 0 || isInvesting}
+                            onClick={handleInvest}
+                          >
+                            {isInvesting ? 'Processing...' : 'Invest Now'}
+                          </button>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        {existingNegotiation ? (
+                          <div className={styles.negotiationStatusCard}>
+                            <p>You have an active negotiation for this project.</p>
+                            <Link href={`/xraise?id=${existingNegotiation._id}`}>
+                              <button className={styles.btnInvest}>View Negotiation Thread</button>
+                            </Link>
+                          </div>
+                        ) : (
+                          <>
+                            <label className={styles.inputLabel}>Pitch your Bid (₹)</label>
+                            <div className={styles.inputWrapper}>
+                              <span className={styles.inputPrefix}>₹</span>
+                              <input 
+                                type="text" 
+                                className={styles.amountInput}
+                                value={amount}
+                                onChange={handleAmountChange}
+                                placeholder={campaign.fundingGoal.toLocaleString()}
+                              />
+                            </div>
+                            <p style={{ fontSize: '12px', color: '#64748b', margin: '8px 0' }}>
+                              You are starting a private negotiation with the founder.
+                            </p>
+                            <div className={styles.btnInvestWrapper}>
+                              <button 
+                                className={styles.btnInvest} 
+                                disabled={isInvesting}
+                                onClick={handleStartNegotiation}
+                              >
+                                {isInvesting ? 'Starting Deal...' : 'Start Negotiation'}
+                              </button>
+                            </div>
+                          </>
+                        )}
+                      </>
+                    )}
                     
                     <div className={styles.escrowText}>
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                      Funds held in escrow until target reached
+                      {campaign.fundingModel === 'XFund' ? 'Funds held in escrow until target reached' : 'Private & Secure Negotiation'}
                     </div>
                   </div>
                 ) : (
