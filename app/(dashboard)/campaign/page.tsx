@@ -27,28 +27,6 @@ export default function CampaignPage() {
 
   return (
     <div className={styles.pageContainer}>
-      <nav className={styles.navbar}>
-        <Link href="/" className={styles.navLogo}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2L2 7.5L12 13L22 7.5L12 2Z" fill="#F5A623"/>
-            <path d="M2 16.5L12 22L22 16.5V11L12 16.5L2 11V16.5Z" fill="#F5A623"/>
-          </svg>
-          XFund
-        </Link>
-        <div className={styles.navLinks}>
-          <Link href="/" className={styles.navLink}>Home</Link>
-          <Link href="/explore" className={styles.navLink}>Explore</Link>
-          <Link href="/how-it-works" className={styles.navLink}>How it Works</Link>
-        </div>
-        <div className={styles.navButtons}>
-          <Link href="/auth">
-            <button className={styles.btnLogin}>Login</button>
-          </Link>
-          <Link href="/auth">
-            <button className={styles.btnGetStarted}>Get Started</button>
-          </Link>
-        </div>
-      </nav>
 
       <main className={styles.mainContent}>
         {/* CAMPAIGN HEADER */}

@@ -31,25 +31,6 @@ export default function XRaisePage() {
 
   return (
     <div className={styles.pageContainer}>
-      <nav className={styles.navbar}>
-        <Link href="/" className={styles.navLogo}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2L2 7.5L12 13L22 7.5L12 2Z" fill="#F5A623"/>
-            <path d="M2 16.5L12 22L22 16.5V11L12 16.5L2 11V16.5Z" fill="#F5A623"/>
-          </svg>
-          XFund
-        </Link>
-        <div className={styles.navLinks}>
-          <Link href="/investor/dashboard" className={styles.navLink}>Dashboard</Link>
-          <Link href="/explore" className={styles.navLink}>Explore</Link>
-          <button onClick={handleDealCloseToggle} className={styles.navLink} style={{ color: '#F5A623', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
-            [Toggle Deal State]
-          </button>
-        </div>
-        <div className={styles.navButtons}>
-          <button className={styles.btnLogin}>Arjun Mehta</button>
-        </div>
-      </nav>
 
       <main className={styles.mainContent}>
         
@@ -62,9 +43,14 @@ export default function XRaisePage() {
             </div>
             <h1 className={styles.pageTitle}>XRaise Negotiation</h1>
           </div>
-          <div className={styles.statusBadge}>
-            <div className={styles.pulsingDot}></div>
-            Negotiating
+          <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+            <button onClick={handleDealCloseToggle} style={{ color: '#F5A623', background: 'none', border: '1px solid #F5A623', borderRadius: '4px', cursor: 'pointer', padding: '4px 8px', fontSize: '12px' }}>
+              [Toggle Deal State]
+            </button>
+            <div className={styles.statusBadge}>
+              <div className={styles.pulsingDot}></div>
+              Negotiating
+            </div>
           </div>
         </div>
 

@@ -1,0 +1,259 @@
+.container {
+  padding: 24px 32px 48px;
+  background-color: var(--background);
+  min-height: calc(100vh - 64px);
+}
+
+.breadcrumbHeader {
+  margin-bottom: 24px;
+}
+
+.breadcrumb {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* Stats Section */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.statCard {
+  background: var(--white);
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+}
+
+.statLabel {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.statValue {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: -0.02em;
+}
+
+.statValueGold {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* Grid Layout */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 24px;
+}
+
+.card {
+  background: var(--white);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.08);
+  border-color: rgba(27, 58, 107, 0.2);
+}
+
+.cardHeader {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.cardTop {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #EBF2FF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+}
+
+.name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.sector {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.xrateBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.xrateLabel {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.xrateValue {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.cardBody {
+  padding: 0 20px 20px;
+  flex: 1;
+}
+
+.tagline {
+  font-size: 14px;
+  color: #4B5563;
+  margin-bottom: 20px;
+  line-height: 1.5;
+  height: 42px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.progressSection {
+  margin-bottom: 16px;
+}
+
+.progressLabel {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.raised {
+  color: var(--primary);
+}
+
+.goal {
+  color: var(--text-secondary);
+}
+
+.progressBar {
+  height: 8px;
+  background: #E5E7EB;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 4px;
+}
+
+.metaRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-top: 1px solid #F3F4F6;
+}
+
+.metaItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.metaLabel {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.metaValue {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.cardFooter {
+  padding: 16px 20px;
+  background: #F9FAFB;
+  display: flex;
+  gap: 12px;
+}
+
+.btnView {
+  flex: 1;
+  padding: 10px;
+  background: var(--primary);
+  color: var(--white);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  transition: opacity 0.2s;
+}
+
+.btnView:hover {
+  opacity: 0.9;
+}
+
+.btnRemove {
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.btnRemove:hover {
+  color: var(--danger);
+  border-color: var(--danger);
+  background: #FEF2F2;
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

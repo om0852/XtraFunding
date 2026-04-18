@@ -1,21 +1,30 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #F8F9FC;
+  --foreground: #0D1117;
+  
+  /* Primary Fintech Palette */
+  --primary: #1B3A6B;
+  --accent: #F5A623;
+  --white: #ffffff;
+  --border: #E5E7EB;
+  
+  /* Text */
+  --text-primary: #0D1117;
+  --text-secondary: #6B7280;
+  
+  /* Status Colors */
+  --success: #10B981;
+  --warning: #F5A623;
+  --danger: #EF4444;
+  --info: #3B82F6;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-inter);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 * {
