@@ -19,8 +19,9 @@ export interface ICampaign extends Document {
   disbursed: boolean;
   endDate: Date;
   location: string;
-  imageUrl?: string;
   onChainCampaignId?: number;
+  paillierPublicKey?: { n: string; g: string };
+  encryptedTotalRaised?: string; // Tally of encrypted contributions
   createdAt: Date;
   updatedAt: Date;
 }
@@ -65,6 +66,11 @@ const CampaignSchema: Schema = new Schema(
     location: { type: String, required: true },
     imageUrl: { type: String },
     onChainCampaignId: { type: Number },
+    paillierPublicKey: {
+      n: { type: String },
+      g: { type: String }
+    },
+    encryptedTotalRaised: { type: String, default: '0' },
   },
   { timestamps: true }
 );
