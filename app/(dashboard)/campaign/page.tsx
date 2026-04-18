@@ -1,13 +1,19 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import styles from '@/app/(dashboard)/investor/dashboard/page.module.css';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 
-export default function ExplorePage() {
+function ExploreContent() {
+  const searchParams = useSearchParams();
+  const initialModel = (searchParams.get('model') as 'All' | 'XFund' | 'XRaise') || 'All';
+  const initialSearch = searchParams.get('search') || '';
+  
   const [campaigns, setCampaigns] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<'All' | 'XFund' | 'XRaise'>('All');
+  const [filter, setFilter] = useState<'All' | 'XFund' | 'XRaise'>(initialModel);
+  const [searchQuery, setSearchQuery] = useState(initialSearch);
 
   useEffect(() => {
     const fetchCampaigns = async () => {
@@ -26,9 +32,31 @@ export default function ExplorePage() {
     fetchCampaigns();
   }, []);
 
-  const filteredCampaigns = filter === 'All' 
-    ? campaigns 
-    : campaigns.filter(c => c.fundingModel === filter);
+  useEffect(() => {
+    const model = searchParams.get('model') as 'All' | 'XFund' | 'XRaise';
+    if (model) {
+      setFilter(model);
+    } else {
+      setFilter('All');
+    }
+    
+    const q = searchParams.get('search');
+    if (q !== null) {
+      setSearchQuery(q);
+    } else {
+      setSearchQuery('');
+    }
+  }, [searchParams]);
+
+  const filteredCampaigns = campaigns.filter(c => {
+    const matchesModel = filter === 'All' || c.fundingModel === filter;
+    const matchesSearch = !searchQuery || 
+      c.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      c.sector.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      c.tagline.toLowerCase().includes(searchQuery.toLowerCase());
+      
+    return matchesModel && matchesSearch;
+  });
 
   return (
     <div className={styles.content}>
@@ -42,7 +70,10 @@ export default function ExplorePage() {
           {['All', 'XFund', 'XRaise'].map((f) => (
             <button 
               key={f}
-              onClick={() => setFilter(f as any)}
+              onClick={() => {
+                setFilter(f as any);
+                if (searchQuery) setSearchQuery(''); // Clear search on tab switch for better UX
+              }}
               style={{
                 padding: '10px 20px',
                 borderRadius: '10px',
@@ -68,7 +99,9 @@ export default function ExplorePage() {
         <div className={styles.startupGrid}>
           {filteredCampaigns.length === 0 ? (
             <div className={styles.emptyMsg}>
-              No campaigns found matching the "{filter}" criteria.
+              {searchQuery 
+                ? `No campaigns found matching "${searchQuery}".` 
+                : `No campaigns found matching the "${filter}" criteria.`}
             </div>
           ) : (
             filteredCampaigns.map((camp: any) => (
@@ -114,5 +147,13 @@ export default function ExplorePage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function ExplorePage() {
+  return (
+    <Suspense fallback={<div className={styles.content}><div className={styles.emptyMsg}>Loading campaigns...</div></div>}>
+      <ExploreContent />
+    </Suspense>
   );
 }
