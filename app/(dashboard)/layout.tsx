@@ -29,7 +29,7 @@ export default function InvestorLayout({
             <path d="M12 2L2 7.5L12 13L22 7.5L12 2Z" fill="#F5A623"/>
             <path d="M2 16.5L12 22L22 16.5V11L12 16.5L2 11V16.5Z" fill="#F5A623"/>
           </svg>
-          XFund
+          XtraFunds
         </div>
         
         <nav className={styles.nav}>

@@ -12,7 +12,7 @@ export default function LandingPage() {
             <path d="M12 2L2 7.5L12 13L22 7.5L12 2Z" fill="#F5A623"/>
             <path d="M2 16.5L12 22L22 16.5V11L12 16.5L2 11V16.5Z" fill="#F5A623"/>
           </svg>
-          XFund
+          XtraFunds
         </div>
         <div className={styles.navLinks}>
           <Link href="/" className={styles.navLink}>Home</Link>
@@ -147,7 +147,7 @@ export default function LandingPage() {
                 <path d="M12 2L2 7.5L12 13L22 7.5L12 2Z" fill="#F5A623"/>
                 <path d="M2 16.5L12 22L22 16.5V11L12 16.5L2 11V16.5Z" fill="#F5A623"/>
               </svg>
-              XFund
+              XtraFunds
             </div>
             <p className={styles.footerLink} style={{maxWidth: '250px', lineHeight: '1.6'}}>Empowering the next generation of startups with intelligent, transparent funding solutions.</p>
           </div>
