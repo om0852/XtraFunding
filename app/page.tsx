@@ -1,8 +1,81 @@
-import React from 'react';
+"use client";
+
+import React, { useState } from 'react';
 import styles from './page.module.css';
 import Link from 'next/link';
 
 export default function LandingPage() {
+  const [activeFeatureModal, setActiveFeatureModal] = useState<string | null>(null);
+
+  const featureDetails: Record<string, { title: string, desc: string, action: string, link: string }> = {
+    'XFund': {
+      title: 'XFund Access',
+      desc: 'Crowdfund your startup or invest in multiple promising campaigns. Milestone-based fund release ensures accountability at every single step of the journey. Instead of releasing the full amount upfront, funds are held securely in a smart escrow and released automatically as the founder achieves verifiable growth milestones.',
+      action: 'Explore Campaigns',
+      link: '/auth'
+    },
+    'XRate': {
+      title: 'XRate AI Scoring',
+      desc: 'AI-powered startup credibility scoring. Get a comprehensive risk, growth, and market analysis report before you invest a single rupee. Our proprietary artificial intelligence evaluates market fit, founder history, team composition, and financial health to give you a definitive score from 1 to 100.',
+      action: 'View AI Reports',
+      link: '/auth'
+    },
+    'XRaise': {
+      title: 'XRaise Negotiations',
+      desc: 'One-on-one private negotiation between investor and founder. Make custom offers, issue counter-offers, and close deals safely entirely on your own terms. Skip the middlemen, negotiate directly on the platform, and generate digitally-signed, legally binding term sheets instantly.',
+      action: 'Start Negotiating',
+      link: '/auth'
+    },
+    'Pricing': {
+      title: 'Transparent Pricing',
+      desc: 'Absolutely no hidden fees. We believe in complete financial transparency. We charge a flat 2% platform success fee on successful fundraises for startups, and a minimal 1% management fee for investors per transaction. All transactions are securely processed, logged, and verified.',
+      action: 'View Pricing Details',
+      link: '#'
+    },
+    'About': {
+      title: 'About XtraFunds',
+      desc: 'We are on a global mission to democratize startup investing. By combining cutting-edge AI analysis with blockchain-level transparency, we make it vastly safer and more accessible for angel investors and syndicates to fund the next generation of game-changing unicorns.',
+      action: 'Read Our Story',
+      link: '#'
+    },
+    'Blog': {
+      title: 'XtraFunds Blog',
+      desc: 'Stay informed and updated with the latest macroeconomic trends in angel investing, rapid startup growth strategies, success stories from our platform, and major feature updates straight from our team of industry experts and analysts.',
+      action: 'Read Latest Articles',
+      link: '#'
+    },
+    'Careers': {
+      title: 'Join Our Team',
+      desc: 'Help us aggressively build the future of decentralized finance. We are constantly looking for passionate software engineers, creative product designers, and brilliant finance professionals to join our remote-first, globally distributed team.',
+      action: 'View Open Positions',
+      link: '#'
+    },
+    'Press': {
+      title: 'Press & Media',
+      desc: 'Download our comprehensive media kit, read our latest press releases regarding funding milestones, and find direct contact information for all media, PR, and journalism inquiries.',
+      action: 'View Media Kit',
+      link: '#'
+    },
+    'Privacy Policy': {
+      title: 'Privacy Policy',
+      desc: 'Your data security and privacy is our absolute top priority. Read exactly how we collect, securely encrypt, use, and protect your personal and financial information in strict compliance with GDPR, DPDP, and international privacy laws.',
+      action: 'Read Privacy Policy',
+      link: '#'
+    },
+    'Terms': {
+      title: 'Terms of Service',
+      desc: 'Review the comprehensive rules, guidelines, and legal agreements for using the XtraFunds platform. This includes detailed investor accreditation requirements, KYC prerequisites, and strict founder obligations.',
+      action: 'Read Terms',
+      link: '#'
+    },
+    'Compliance': {
+      title: 'Regulatory Compliance',
+      desc: 'We operate strictly within the legal bounds of SEBI and other premier financial regulatory bodies. All KYC/AML checks are completely automated, heavily encrypted, and securely verified in real-time through our government-backed third-party partners.',
+      action: 'View Compliance Details',
+      link: '#'
+    }
+  };
+
   return (
     <div className={styles.container}>
       {/* NAVBAR */}
@@ -12,13 +85,13 @@ export default function LandingPage() {
             <path d="M12 2L2 7.5L12 13L22 7.5L12 2Z" fill="#F5A623"/>
             <path d="M2 16.5L12 22L22 16.5V11L12 16.5L2 11V16.5Z" fill="#F5A623"/>
           </svg>
-          XFund
+          XtraFunds
         </div>
         <div className={styles.navLinks}>
-          <Link href="/" className={styles.navLink}>Home</Link>
-          <Link href="/auth" className={styles.navLink}>Explore</Link>
-          <Link href="#" className={styles.navLink}>How it Works</Link>
-          <Link href="#" className={styles.navLink}>About</Link>
+          <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className={styles.navLink} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'inherit' }}>Home</button>
+          <button onClick={() => document.getElementById('explore')?.scrollIntoView({ behavior: 'smooth' })} className={styles.navLink} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'inherit' }}>Explore</button>
+          <button onClick={() => document.getElementById('how-to-use')?.scrollIntoView({ behavior: 'smooth' })} className={styles.navLink} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'inherit' }}>How to Use</button>
+          <button onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })} className={styles.navLink} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'inherit' }}>About</button>
         </div>
         <div className={styles.navActions}>
           <Link href="/auth"><button className={styles.btnLogin}>Login</button></Link>
@@ -27,119 +100,199 @@ export default function LandingPage() {
       </nav>
 
       {/* HERO SECTION */}
-      <section className={styles.hero}>
-        <h1 className={styles.heroHeading}>Invest in Tomorrow's Startups — Transparently</h1>
-        <p className={styles.heroSubheading}>
-          XFund connects verified startups with smart investors through transparent fund tracking, AI-powered ratings, and milestone-based releases.
-        </p>
-        <div className={styles.heroActions}>
-          <Link href="/auth"><button className={styles.btnStartInvesting}>Start Investing</button></Link>
-          <Link href="/auth"><button className={styles.btnListStartup}>List Your Startup</button></Link>
+      <section className={styles.heroWrapper}>
+        <div className={styles.hero}>
+          <div className={styles.heroContent}>
+            <div className={styles.heroBadge}>✨ The Future of Startup Funding</div>
+            <h1 className={styles.heroHeading}>Invest in Tomorrow's Startups — <span className={styles.heroHighlight}>Transparently</span></h1>
+            <p className={styles.heroSubheading}>
+              XFund connects verified startups with smart investors through transparent fund tracking, AI-powered ratings, and milestone-based releases.
+            </p>
+            <div className={styles.heroActions}>
+              <Link href="/auth"><button className={styles.btnStartInvesting}>Start Investing</button></Link>
+              <Link href="/auth"><button className={styles.btnListStartup}>List Your Startup</button></Link>
+            </div>
+            <div className={styles.heroTrustContainer}>
+              <p className={styles.heroTrust}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22ZM10.9999 16.8284L6.05018 11.8787L7.46439 10.4645L10.9999 14L17.3639 7.63604L18.7781 9.05025L10.9999 16.8284Z" fill="#F5A623"/></svg>
+                No hidden fees · Blockchain-verified · SEBI compliant
+              </p>
+            </div>
+          </div>
+          <div className={styles.heroImageContainer}>
+            <div className={styles.heroImageWrapper}>
+              <div className={styles.cssDashboardMockup}>
+                <div className={styles.mockupHeader}>
+                  <div className={styles.mockupDots}>
+                    <span></span><span></span><span></span>
+                  </div>
+                </div>
+                <div className={styles.mockupBody}>
+                  <div className={styles.mockupSidebar}>
+                    <div className={styles.mockupSidebarItem}></div>
+                    <div className={styles.mockupSidebarItem}></div>
+                    <div className={styles.mockupSidebarItem}></div>
+                  </div>
+                  <div className={styles.mockupMain}>
+                    <div className={styles.mockupChart}>
+                      <div className={styles.bar1}></div>
+                      <div className={styles.bar2}></div>
+                      <div className={styles.bar3}></div>
+                      <div className={styles.bar4}></div>
+                      <div className={styles.bar5}></div>
+                    </div>
+                    <div className={styles.mockupGrid}>
+                      <div className={styles.mockupCard}></div>
+                      <div className={styles.mockupCard}></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className={styles.heroImageCard}>
+                <div className={styles.heroImageCardIcon}>📈</div>
+                <div className={styles.heroImageCardText}>
+                  <div className={styles.heroCardStat}><strong>+320%</strong> <span className={styles.heroCardRoi}>ROI</span></div>
+                  <p className={styles.heroCardLabel}>Top performing fund</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <p className={styles.heroTrust}>No hidden fees · Blockchain-verified · SEBI compliant</p>
       </section>
 
       {/* FEATURES SECTION */}
-      <section className={styles.features}>
+      <section id="explore" className={styles.features}>
         <div className={styles.featuresLabel}>PLATFORM FEATURES</div>
         <h2 className={styles.featuresHeading}>Everything you need to invest with confidence</h2>
         
         <div className={styles.featuresGrid}>
           <div className={styles.featureCard}>
-            <div className={`${styles.featureIcon} ${styles.iconCrowd}`}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M16 11C17.6569 11 19 9.65685 19 8C19 6.34315 17.6569 5 16 5C14.3431 5 13 6.34315 13 8C13 9.65685 14.3431 11 16 11Z" fill="currentColor"/>
-                <path d="M8 11C9.65685 11 11 9.65685 11 8C11 6.34315 9.65685 5 8 5C6.34315 5 5 6.34315 5 8C5 9.65685 6.34315 11 8 11Z" fill="currentColor"/>
-                <path d="M12 14C9.33333 14 4 15.3333 4 18V20H20V18C20 15.3333 14.6667 14 12 14Z" fill="currentColor"/>
-              </svg>
+            <div className={styles.featureImageContainer}>
+              <img src="https://images.pexels.com/photos/3182773/pexels-photo-3182773.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Crowdfunding Analytics" className={styles.featureImage} />
             </div>
-            <h3 className={styles.featureTitle}>XFund</h3>
-            <p className={styles.featureDesc}>Crowdfund your startup or invest in multiple campaigns. Milestone-based fund release ensures accountability at every step.</p>
-            <div className={`${styles.featureTag} ${styles.tagBlue}`}>Crowdfunding</div>
+            <div className={styles.featureCardContent}>
+              <div className={`${styles.featureIcon} ${styles.iconCrowd}`}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M16 11C17.6569 11 19 9.65685 19 8C19 6.34315 17.6569 5 16 5C14.3431 5 13 6.34315 13 8C13 9.65685 14.3431 11 16 11Z" fill="currentColor"/>
+                  <path d="M8 11C9.65685 11 11 9.65685 11 8C11 6.34315 9.65685 5 8 5C6.34315 5 5 6.34315 5 8C5 9.65685 6.34315 11 8 11Z" fill="currentColor"/>
+                  <path d="M12 14C9.33333 14 4 15.3333 4 18V20H20V18C20 15.3333 14.6667 14 12 14Z" fill="currentColor"/>
+                </svg>
+              </div>
+              <h3 className={styles.featureTitle}>XFund Access</h3>
+              <p className={styles.featureDesc}>Crowdfund your startup or invest in multiple campaigns. Milestone-based fund release ensures accountability at every step.</p>
+              <div className={`${styles.featureTag} ${styles.tagBlue}`}>Crowdfunding</div>
+            </div>
           </div>
 
           <div className={styles.featureCard}>
-            <div className={`${styles.featureIcon} ${styles.iconStar}`}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor"/>
-              </svg>
+            <div className={styles.featureImageContainer}>
+              <img src="https://images.pexels.com/photos/3183132/pexels-photo-3183132.jpeg?auto=compress&cs=tinysrgb&w=800" alt="AI Scoring Dashboard" className={styles.featureImage} />
             </div>
-            <h3 className={styles.featureTitle}>XRate</h3>
-            <p className={styles.featureDesc}>AI-powered startup credibility scoring. Get a full risk, growth, and market analysis report before you invest a single rupee.</p>
-            <div className={`${styles.featureTag} ${styles.tagGold}`}>AI Scoring</div>
+            <div className={styles.featureCardContent}>
+              <div className={`${styles.featureIcon} ${styles.iconStar}`}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor"/>
+                </svg>
+              </div>
+              <h3 className={styles.featureTitle}>XRate AI Scoring</h3>
+              <p className={styles.featureDesc}>AI-powered startup credibility scoring. Get a full risk, growth, and market analysis report before you invest a single rupee.</p>
+              <div className={`${styles.featureTag} ${styles.tagGold}`}>AI Scoring</div>
+            </div>
           </div>
 
           <div className={styles.featureCard}>
-            <div className={`${styles.featureIcon} ${styles.iconHandshake}`}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M8 10V14C8 16.2091 9.79086 18 12 18C14.2091 18 16 16.2091 16 14V10L12 6L8 10Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M12 14L8 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+            <div className={styles.featureImageContainer}>
+              <img src="https://images.pexels.com/photos/327540/pexels-photo-327540.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Negotiation and Contracts" className={styles.featureImage} />
             </div>
-            <h3 className={styles.featureTitle}>XRaise</h3>
-            <p className={styles.featureDesc}>One-on-one negotiation between investor and founder. Make offers, counter-offers, and close deals on your terms.</p>
-            <div className={`${styles.featureTag} ${styles.tagBlue}`}>Negotiation</div>
+            <div className={styles.featureCardContent}>
+              <div className={`${styles.featureIcon} ${styles.iconHandshake}`}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8 10V14C8 16.2091 9.79086 18 12 18C14.2091 18 16 16.2091 16 14V10L12 6L8 10Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M12 14L8 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <h3 className={styles.featureTitle}>XRaise Negotiations</h3>
+              <p className={styles.featureDesc}>One-on-one negotiation between investor and founder. Make offers, counter-offers, and close deals safely on your terms.</p>
+              <div className={`${styles.featureTag} ${styles.tagBlue}`}>Negotiation</div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* STATS BAR */}
-      <section className={styles.stats}>
-        <div className={styles.statsContainer}>
-          <div className={styles.statItem}>
-            <div className={styles.statNumber}>₹2.4Cr+</div>
-            <div className={styles.statLabel}>Total Invested</div>
-          </div>
-          <div className={styles.statItem}>
-            <div className={styles.statNumber}>142</div>
-            <div className={styles.statLabel}>Startups Listed</div>
-          </div>
-          <div className={styles.statItem}>
-            <div className={styles.statNumberGold}>89%</div>
-            <div className={styles.statLabel}>Milestone Success Rate</div>
-          </div>
-          <div className={styles.statItem}>
-            <div className={styles.statNumber}>1,200+</div>
-            <div className={styles.statLabel}>Active Investors</div>
+      <section className={styles.statsWrapper}>
+        <div className={styles.statsOverlay}>
+          <div className={styles.statsContainer}>
+            <div className={styles.statItem}>
+              <div className={styles.statNumber}>₹2.4Cr+</div>
+              <div className={styles.statLabel}>Total Invested</div>
+            </div>
+            <div className={styles.statItem}>
+              <div className={styles.statNumber}>142</div>
+              <div className={styles.statLabel}>Startups Listed</div>
+            </div>
+            <div className={styles.statItem}>
+              <div className={styles.statNumberGold}>89%</div>
+              <div className={styles.statLabel}>Milestone Success</div>
+            </div>
+            <div className={styles.statItem}>
+              <div className={styles.statNumber}>1,200+</div>
+              <div className={styles.statLabel}>Active Investors</div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* HOW IT WORKS */}
-      <section className={styles.howItWorks}>
-        <h2 className={styles.howHeading}>How XFund works</h2>
-        <div className={styles.tabs}>
-          <button className={`${styles.tab} ${styles.tabActive}`}>For Investors</button>
-          <button className={`${styles.tab} ${styles.tabInactive}`}>For Startups</button>
+      <section id="how-to-use" className={styles.howItWorks}>
+        <div className={styles.howHeader}>
+          <h2 className={styles.howHeading}>How XFund works</h2>
+          <div className={styles.tabs}>
+            <button className={`${styles.tab} ${styles.tabActive}`}>For Investors</button>
+            <button className={`${styles.tab} ${styles.tabInactive}`}>For Startups</button>
+          </div>
         </div>
         
-        <div className={styles.timeline}>
-          <div className={styles.timelineLine}></div>
-          <div className={styles.step}>
-            <div className={styles.stepCircle}>1</div>
-            <h3 className={styles.stepTitle}>Create Account</h3>
-            <p className={styles.stepDesc}>Sign up and complete KYC verification</p>
+        <div className={styles.howContent}>
+          <div className={styles.timelineVertical}>
+            <div className={styles.timelineVerticalLine}></div>
+            <div className={styles.stepVertical}>
+              <div className={styles.stepCircle}>1</div>
+              <div className={styles.stepText}>
+                <h3 className={styles.stepTitle}>Create Account</h3>
+                <p className={styles.stepDesc}>Sign up and complete KYC verification with our bank-grade security system.</p>
+              </div>
+            </div>
+            <div className={styles.stepVertical}>
+              <div className={styles.stepCircle}>2</div>
+              <div className={styles.stepText}>
+                <h3 className={styles.stepTitle}>Explore Startups</h3>
+                <p className={styles.stepDesc}>Browse AI-rated campaigns with full transparency and detailed market analysis reports.</p>
+              </div>
+            </div>
+            <div className={styles.stepVertical}>
+              <div className={styles.stepCircle}>3</div>
+              <div className={styles.stepText}>
+                <h3 className={styles.stepTitle}>Invest Securely</h3>
+                <p className={styles.stepDesc}>Pledge funds safely held in escrow using our verified blockchain architecture.</p>
+              </div>
+            </div>
+            <div className={styles.stepVertical}>
+              <div className={styles.stepCircle}>4</div>
+              <div className={styles.stepText}>
+                <h3 className={styles.stepTitle}>Track Returns</h3>
+                <p className={styles.stepDesc}>Monitor progress and receive automated milestone-based updates right on your dashboard.</p>
+              </div>
+            </div>
           </div>
-          <div className={styles.step}>
-            <div className={styles.stepCircle}>2</div>
-            <h3 className={styles.stepTitle}>Explore Startups</h3>
-            <p className={styles.stepDesc}>Browse AI-rated campaigns with full transparency</p>
-          </div>
-          <div className={styles.step}>
-            <div className={styles.stepCircle}>3</div>
-            <h3 className={styles.stepTitle}>Invest Securely</h3>
-            <p className={styles.stepDesc}>Pledge funds held in escrow until milestones are met</p>
-          </div>
-          <div className={styles.step}>
-            <div className={styles.stepCircle}>4</div>
-            <h3 className={styles.stepTitle}>Track Returns</h3>
-            <p className={styles.stepDesc}>Monitor progress and receive milestone-based updates</p>
+          <div className={styles.howImageContainer}>
+            <img src="https://images.pexels.com/photos/3183197/pexels-photo-3183197.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Analytics Dashboard" className={styles.howImage} />
           </div>
         </div>
       </section>
 
       {/* FOOTER */}
-      <footer className={styles.footer}>
+      <footer id="about" className={styles.footer}>
         <div className={styles.footerGrid}>
           <div className={`${styles.footerCol} ${styles.footerLogoCol}`}>
             <div className={styles.footerLogo}>
@@ -147,32 +300,32 @@ export default function LandingPage() {
                 <path d="M12 2L2 7.5L12 13L22 7.5L12 2Z" fill="#F5A623"/>
                 <path d="M2 16.5L12 22L22 16.5V11L12 16.5L2 11V16.5Z" fill="#F5A623"/>
               </svg>
-              XFund
+              XtraFunds
             </div>
             <p className={styles.footerLink} style={{maxWidth: '250px', lineHeight: '1.6'}}>Empowering the next generation of startups with intelligent, transparent funding solutions.</p>
           </div>
           
           <div className={styles.footerCol}>
             <div className={styles.footerHeading}>Product</div>
-            <a href="#" className={styles.footerLink}>XFund</a>
-            <a href="#" className={styles.footerLink}>XRate</a>
-            <a href="#" className={styles.footerLink}>XRaise</a>
-            <a href="#" className={styles.footerLink}>Pricing</a>
+            <button className={styles.footerLink} onClick={() => setActiveFeatureModal('XFund')} style={{textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', padding: 0}}>XFund</button>
+            <button className={styles.footerLink} onClick={() => setActiveFeatureModal('XRate')} style={{textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', padding: 0}}>XRate</button>
+            <button className={styles.footerLink} onClick={() => setActiveFeatureModal('XRaise')} style={{textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', padding: 0}}>XRaise</button>
+            <button className={styles.footerLink} onClick={() => setActiveFeatureModal('Pricing')} style={{textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', padding: 0}}>Pricing</button>
           </div>
           
           <div className={styles.footerCol}>
             <div className={styles.footerHeading}>Company</div>
-            <a href="#" className={styles.footerLink}>About</a>
-            <a href="#" className={styles.footerLink}>Blog</a>
-            <a href="#" className={styles.footerLink}>Careers</a>
-            <a href="#" className={styles.footerLink}>Press</a>
+            <button className={styles.footerLink} onClick={() => setActiveFeatureModal('About')} style={{textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', padding: 0}}>About</button>
+            <button className={styles.footerLink} onClick={() => setActiveFeatureModal('Blog')} style={{textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', padding: 0}}>Blog</button>
+            <button className={styles.footerLink} onClick={() => setActiveFeatureModal('Careers')} style={{textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', padding: 0}}>Careers</button>
+            <button className={styles.footerLink} onClick={() => setActiveFeatureModal('Press')} style={{textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', padding: 0}}>Press</button>
           </div>
           
           <div className={styles.footerCol}>
             <div className={styles.footerHeading}>Legal</div>
-            <a href="#" className={styles.footerLink}>Privacy Policy</a>
-            <a href="#" className={styles.footerLink}>Terms</a>
-            <a href="#" className={styles.footerLink}>Compliance</a>
+            <button className={styles.footerLink} onClick={() => setActiveFeatureModal('Privacy Policy')} style={{textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', padding: 0}}>Privacy Policy</button>
+            <button className={styles.footerLink} onClick={() => setActiveFeatureModal('Terms')} style={{textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', padding: 0}}>Terms</button>
+            <button className={styles.footerLink} onClick={() => setActiveFeatureModal('Compliance')} style={{textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', padding: 0}}>Compliance</button>
           </div>
           
           <div className={styles.footerCol}>
@@ -197,9 +350,25 @@ export default function LandingPage() {
           </div>
         </div>
         <div className={styles.footerBottom}>
-          © 2025 XFund. All rights reserved.
+          © 2026 XFund. All rights reserved.
         </div>
       </footer>
+
+      {/* FEATURE MODAL */}
+      {activeFeatureModal && featureDetails[activeFeatureModal] && (
+        <div className={styles.modalOverlay} onClick={() => setActiveFeatureModal(null)}>
+          <div className={styles.modalCard} onClick={(e) => e.stopPropagation()}>
+            <button className={styles.modalClose} onClick={() => setActiveFeatureModal(null)}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+            <h3 className={styles.modalTitle}>{featureDetails[activeFeatureModal].title}</h3>
+            <p className={styles.modalDesc}>{featureDetails[activeFeatureModal].desc}</p>
+            <Link href={featureDetails[activeFeatureModal].link} className={styles.modalAction} onClick={() => setActiveFeatureModal(null)}>
+              {featureDetails[activeFeatureModal].action}
+            </Link>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
