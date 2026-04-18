@@ -1,7 +1,9 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 
 export interface IXRateReport extends Document {
-  campaignId: string;
+  startupName: string;
+  industry: string;
+  description: string;
   overallScore: number;
   riskScore: number;
   growthScore: number;
@@ -11,6 +13,7 @@ export interface IXRateReport extends Document {
   riskFactors: string[];
   growthIndicators: string[];
   investmentRecommendations: string;
+  campaignId?: string;
   verifiedDocuments: string[];
   lastUpdated: Date;
   createdAt: Date;
@@ -19,7 +22,9 @@ export interface IXRateReport extends Document {
 
 const XRateReportSchema: Schema = new Schema(
   {
-    campaignId: { type: String, required: true },
+    startupName: { type: String, required: true },
+    industry: { type: String, required: true },
+    description: { type: String, required: true },
     overallScore: { type: Number, required: true, min: 0, max: 100 },
     riskScore: { type: Number, required: true, min: 0, max: 100 },
     growthScore: { type: Number, required: true, min: 0, max: 100 },
@@ -29,6 +34,7 @@ const XRateReportSchema: Schema = new Schema(
     riskFactors: [{ type: String }],
     growthIndicators: [{ type: String }],
     investmentRecommendations: { type: String, required: true },
+    campaignId: { type: String },
     verifiedDocuments: [{ type: String }],
   },
   { timestamps: true }

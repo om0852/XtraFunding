@@ -7,16 +7,12 @@ import styles from './page.module.css';
 export default function XrateFormPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    campaignId: '',
-    overallScore: '',
-    riskScore: '',
-    growthScore: '',
-    teamScore: '',
-    marketScore: '',
-    executiveSummary: '',
-    riskFactors: '',
-    growthIndicators: '',
-    investmentRecommendations: ''
+    startupName: '',
+    industry: '',
+    description: '',
+    fundingGoal: '',
+    keyFeatures: '',
+    campaignId: ''
   });
 
   const [loading, setLoading] = useState(false);
@@ -47,9 +43,8 @@ export default function XrateFormPage() {
         throw new Error(data.error || 'Failed to generate XRate report');
       }
 
-      setSuccess('XRate Report generated! Redirecting to report view...');
+      setSuccess('AI Analysis Complete! XRate Report generated. Redirecting...');
       
-      // Navigate to the report page after a brief delay to show the success message
       setTimeout(() => {
         router.push(`/xrate-report/${data.data._id}`);
       }, 1500);
@@ -64,8 +59,8 @@ export default function XrateFormPage() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Generate Xrate</h1>
-        <p className={styles.subtitle}>Fill in the evaluation metrics to generate a comprehensive XRate Report</p>
+        <h1 className={styles.title}>AI Xrate Generator</h1>
+        <p className={styles.subtitle}>Our Gemini AI will analyze your startup details to generate a comprehensive XRate report and risk analysis.</p>
       </div>
 
       <div className={styles.card}>
@@ -75,160 +70,96 @@ export default function XrateFormPage() {
         <form onSubmit={handleSubmit}>
           
           <div className={styles.section}>
-            <h2 className={styles.sectionTitle}>Campaign Details</h2>
-            <div className={styles.formGroup}>
-              <label className={styles.label} htmlFor="campaignId">Campaign ID</label>
-              <input
-                type="text"
-                id="campaignId"
-                name="campaignId"
-                value={formData.campaignId}
-                onChange={handleChange}
-                className={styles.input}
-                placeholder="Enter associated Campaign ObjectId"
-                required
-              />
-            </div>
-          </div>
-
-          <div className={styles.section}>
-            <h2 className={styles.sectionTitle}>Scoring Metrics (0-100)</h2>
-            <div className={styles.grid}>
-              <div className={styles.formGroup}>
-                <label className={styles.label} htmlFor="overallScore">Overall Score</label>
-                <input
-                  type="number"
-                  id="overallScore"
-                  name="overallScore"
-                  min="0"
-                  max="100"
-                  value={formData.overallScore}
-                  onChange={handleChange}
-                  className={styles.input}
-                  required
-                />
-              </div>
-              
-              <div className={styles.formGroup}>
-                <label className={styles.label} htmlFor="riskScore">Risk Score</label>
-                <input
-                  type="number"
-                  id="riskScore"
-                  name="riskScore"
-                  min="0"
-                  max="100"
-                  value={formData.riskScore}
-                  onChange={handleChange}
-                  className={styles.input}
-                  required
-                />
-              </div>
-
-              <div className={styles.formGroup}>
-                <label className={styles.label} htmlFor="growthScore">Growth Score</label>
-                <input
-                  type="number"
-                  id="growthScore"
-                  name="growthScore"
-                  min="0"
-                  max="100"
-                  value={formData.growthScore}
-                  onChange={handleChange}
-                  className={styles.input}
-                  required
-                />
-              </div>
-
-              <div className={styles.formGroup}>
-                <label className={styles.label} htmlFor="teamScore">Team Score</label>
-                <input
-                  type="number"
-                  id="teamScore"
-                  name="teamScore"
-                  min="0"
-                  max="100"
-                  value={formData.teamScore}
-                  onChange={handleChange}
-                  className={styles.input}
-                  required
-                />
-              </div>
-
-              <div className={styles.formGroup}>
-                <label className={styles.label} htmlFor="marketScore">Market Score</label>
-                <input
-                  type="number"
-                  id="marketScore"
-                  name="marketScore"
-                  min="0"
-                  max="100"
-                  value={formData.marketScore}
-                  onChange={handleChange}
-                  className={styles.input}
-                  required
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className={styles.section}>
-            <h2 className={styles.sectionTitle}>Detailed Analysis</h2>
+            <h2 className={styles.sectionTitle}>Startup Profile</h2>
             
             <div className={styles.formGroup}>
-              <label className={styles.label} htmlFor="executiveSummary">Executive Summary</label>
-              <textarea
-                id="executiveSummary"
-                name="executiveSummary"
-                value={formData.executiveSummary}
+              <label className={styles.label} htmlFor="startupName">Startup Name</label>
+              <input
+                type="text"
+                id="startupName"
+                name="startupName"
+                value={formData.startupName}
                 onChange={handleChange}
-                className={styles.textarea}
-                placeholder="Provide a high-level summary of the analysis..."
+                className={styles.input}
+                placeholder="e.g. NexaGrid AI"
                 required
               />
             </div>
 
             <div className={styles.formGroup}>
-              <label className={styles.label} htmlFor="riskFactors">Risk Factors</label>
-              <textarea
-                id="riskFactors"
-                name="riskFactors"
-                value={formData.riskFactors}
+              <label className={styles.label} htmlFor="industry">Industry / Sector</label>
+              <input
+                type="text"
+                id="industry"
+                name="industry"
+                value={formData.industry}
                 onChange={handleChange}
-                className={styles.textarea}
-                placeholder="Enter each risk factor on a new line..."
-              />
-              <span className={styles.helpText}>Line breaks will separate items into a list.</span>
-            </div>
-
-            <div className={styles.formGroup}>
-              <label className={styles.label} htmlFor="growthIndicators">Growth Indicators</label>
-              <textarea
-                id="growthIndicators"
-                name="growthIndicators"
-                value={formData.growthIndicators}
-                onChange={handleChange}
-                className={styles.textarea}
-                placeholder="Enter each growth indicator on a new line..."
-              />
-              <span className={styles.helpText}>Line breaks will separate items into a list.</span>
-            </div>
-
-            <div className={styles.formGroup}>
-              <label className={styles.label} htmlFor="investmentRecommendations">Investment Recommendations</label>
-              <textarea
-                id="investmentRecommendations"
-                name="investmentRecommendations"
-                value={formData.investmentRecommendations}
-                onChange={handleChange}
-                className={styles.textarea}
-                placeholder="Final verdict and recommendations for investors..."
+                className={styles.input}
+                placeholder="e.g. CleanTech / AI Distribution"
                 required
               />
+            </div>
+          </div>
+
+          <div className={styles.section}>
+            <h2 className={styles.sectionTitle}>Business Details</h2>
+            
+            <div className={styles.formGroup}>
+              <label className={styles.label} htmlFor="description">Elevator Pitch / Description</label>
+              <textarea
+                id="description"
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                className={styles.textarea}
+                placeholder="Describe your startup, problem you solve, and your solution..."
+                required
+              />
+            </div>
+
+            <div className={styles.formGroup}>
+              <label className={styles.label} htmlFor="keyFeatures">Key Features & Success Factors</label>
+              <textarea
+                id="keyFeatures"
+                name="keyFeatures"
+                value={formData.keyFeatures}
+                onChange={handleChange}
+                className={styles.textarea}
+                placeholder="What makes your startup unique? (USP, patents, team strength, etc.)"
+              />
+            </div>
+
+            <div className={styles.grid}>
+              <div className={styles.formGroup}>
+                <label className={styles.label} htmlFor="fundingGoal">Funding Goal ($)</label>
+                <input
+                  type="text"
+                  id="fundingGoal"
+                  name="fundingGoal"
+                  value={formData.fundingGoal}
+                  onChange={handleChange}
+                  className={styles.input}
+                  placeholder="e.g. 500,000"
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className={styles.label} htmlFor="campaignId">Campaign ID (Optional)</label>
+                <input
+                  type="text"
+                  id="campaignId"
+                  name="campaignId"
+                  value={formData.campaignId}
+                  onChange={handleChange}
+                  className={styles.input}
+                  placeholder="Associated Campaign ID"
+                />
+              </div>
             </div>
           </div>
 
           <button type="submit" className={styles.submitBtn} disabled={loading}>
-            {loading ? 'Generating Report...' : 'Generate XRate Report'}
+            {loading ? 'AI analyzing...' : 'Generate XRate with AI'}
           </button>
         </form>
       </div>

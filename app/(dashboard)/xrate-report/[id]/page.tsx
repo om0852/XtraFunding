@@ -7,7 +7,9 @@ import Link from 'next/link';
 
 interface ReportData {
   _id: string;
-  campaignId: string;
+  startupName: string;
+  industry: string;
+  description: string;
   overallScore: number;
   riskScore: number;
   growthScore: number;
@@ -92,7 +94,7 @@ export default function XRateDynamicReportPage() {
       const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
       
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`XRate_Report_${report.campaignId}_${new Date().toISOString().split('T')[0]}.pdf`);
+      pdf.save(`XRate_Report_${report.startupName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`);
       
     } catch (err) {
       console.error('PDF Generation Error:', err);
@@ -134,14 +136,14 @@ export default function XRateDynamicReportPage() {
         {/* HEADER CARD */}
         <div className={styles.headerCard}>
           <div className={styles.headerLeft}>
-            <div className={styles.startupLogo}>{report.campaignId.substring(0, 2).toUpperCase()}</div>
+            <div className={styles.startupLogo}>{report.startupName.substring(0, 2).toUpperCase()}</div>
             <div className={styles.startupInfo}>
-              <h1 className={styles.startupName}>Campaign: {report.campaignId}</h1>
+              <h1 className={styles.startupName}>{report.startupName}</h1>
               <div className={styles.badgesRow}>
-                <span className={styles.badgePill}>Analysis</span>
-                <span className={styles.badgePill}>Generation V1</span>
+                <span className={styles.badgePill}>{report.industry}</span>
+                <span className={styles.badgePill}>AI Generated</span>
               </div>
-              <div className={styles.reportDate}>Report generated on {new Date(report.createdAt).toLocaleDateString()}</div>
+              <div className={styles.reportDate}>Analysis generated on {new Date(report.createdAt).toLocaleDateString()}</div>
             </div>
           </div>
           <div className={styles.headerRight}>
@@ -198,13 +200,13 @@ export default function XRateDynamicReportPage() {
             <div className={styles.barContainer}>
               <div className={styles.barFillBlue} style={{ width: `${report.marketScore}%` }}></div>
             </div>
-            <span className={styles.cardTagBlue}>Large TAM</span>
+            <span className={styles.cardTagBlue}>Market Reach</span>
           </div>
         </div>
 
         {/* FULL ANALYSIS SECTIONS */}
         <div className={styles.analysisSection}>
-          <h2 className={styles.analysisTitle}>Detailed Analysis Report</h2>
+          <h2 className={styles.analysisTitle}>Detailed AI Analysis</h2>
           
           <div className={styles.accordionItem}>
             <div className={styles.accordionHeader} onClick={() => toggleSection(1)}>
