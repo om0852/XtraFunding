@@ -27,16 +27,64 @@ export default function LandingPage() {
       </nav>
 
       {/* HERO SECTION */}
-      <section className={styles.hero}>
-        <h1 className={styles.heroHeading}>Invest in Tomorrow's Startups — Transparently</h1>
-        <p className={styles.heroSubheading}>
-          XFund connects verified startups with smart investors through transparent fund tracking, AI-powered ratings, and milestone-based releases.
-        </p>
-        <div className={styles.heroActions}>
-          <Link href="/auth"><button className={styles.btnStartInvesting}>Start Investing</button></Link>
-          <Link href="/auth"><button className={styles.btnListStartup}>List Your Startup</button></Link>
+      <section className={styles.heroWrapper}>
+        <div className={styles.hero}>
+          <div className={styles.heroContent}>
+            <div className={styles.heroBadge}>✨ The Future of Startup Funding</div>
+            <h1 className={styles.heroHeading}>Invest in Tomorrow's Startups — <span className={styles.heroHighlight}>Transparently</span></h1>
+            <p className={styles.heroSubheading}>
+              XFund connects verified startups with smart investors through transparent fund tracking, AI-powered ratings, and milestone-based releases.
+            </p>
+            <div className={styles.heroActions}>
+              <Link href="/auth"><button className={styles.btnStartInvesting}>Start Investing</button></Link>
+              <Link href="/auth"><button className={styles.btnListStartup}>List Your Startup</button></Link>
+            </div>
+            <div className={styles.heroTrustContainer}>
+              <p className={styles.heroTrust}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22ZM10.9999 16.8284L6.05018 11.8787L7.46439 10.4645L10.9999 14L17.3639 7.63604L18.7781 9.05025L10.9999 16.8284Z" fill="#F5A623"/></svg>
+                No hidden fees · Blockchain-verified · SEBI compliant
+              </p>
+            </div>
+          </div>
+          <div className={styles.heroImageContainer}>
+            <div className={styles.heroImageWrapper}>
+              <div className={styles.cssDashboardMockup}>
+                <div className={styles.mockupHeader}>
+                  <div className={styles.mockupDots}>
+                    <span></span><span></span><span></span>
+                  </div>
+                </div>
+                <div className={styles.mockupBody}>
+                  <div className={styles.mockupSidebar}>
+                    <div className={styles.mockupSidebarItem}></div>
+                    <div className={styles.mockupSidebarItem}></div>
+                    <div className={styles.mockupSidebarItem}></div>
+                  </div>
+                  <div className={styles.mockupMain}>
+                    <div className={styles.mockupChart}>
+                      <div className={styles.bar1}></div>
+                      <div className={styles.bar2}></div>
+                      <div className={styles.bar3}></div>
+                      <div className={styles.bar4}></div>
+                      <div className={styles.bar5}></div>
+                    </div>
+                    <div className={styles.mockupGrid}>
+                      <div className={styles.mockupCard}></div>
+                      <div className={styles.mockupCard}></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className={styles.heroImageCard}>
+                <div className={styles.heroImageCardIcon}>📈</div>
+                <div className={styles.heroImageCardText}>
+                  <div className={styles.heroCardStat}><strong>+320%</strong> <span className={styles.heroCardRoi}>ROI</span></div>
+                  <p className={styles.heroCardLabel}>Top performing fund</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <p className={styles.heroTrust}>No hidden fees · Blockchain-verified · SEBI compliant</p>
       </section>
 
       {/* FEATURES SECTION */}
@@ -46,94 +94,126 @@ export default function LandingPage() {
         
         <div className={styles.featuresGrid}>
           <div className={styles.featureCard}>
-            <div className={`${styles.featureIcon} ${styles.iconCrowd}`}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M16 11C17.6569 11 19 9.65685 19 8C19 6.34315 17.6569 5 16 5C14.3431 5 13 6.34315 13 8C13 9.65685 14.3431 11 16 11Z" fill="currentColor"/>
-                <path d="M8 11C9.65685 11 11 9.65685 11 8C11 6.34315 9.65685 5 8 5C6.34315 5 5 6.34315 5 8C5 9.65685 6.34315 11 8 11Z" fill="currentColor"/>
-                <path d="M12 14C9.33333 14 4 15.3333 4 18V20H20V18C20 15.3333 14.6667 14 12 14Z" fill="currentColor"/>
-              </svg>
+            <div className={styles.featureImageContainer}>
+              <img src="https://images.pexels.com/photos/3182773/pexels-photo-3182773.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Crowdfunding Analytics" className={styles.featureImage} />
             </div>
-            <h3 className={styles.featureTitle}>XFund</h3>
-            <p className={styles.featureDesc}>Crowdfund your startup or invest in multiple campaigns. Milestone-based fund release ensures accountability at every step.</p>
-            <div className={`${styles.featureTag} ${styles.tagBlue}`}>Crowdfunding</div>
+            <div className={styles.featureCardContent}>
+              <div className={`${styles.featureIcon} ${styles.iconCrowd}`}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M16 11C17.6569 11 19 9.65685 19 8C19 6.34315 17.6569 5 16 5C14.3431 5 13 6.34315 13 8C13 9.65685 14.3431 11 16 11Z" fill="currentColor"/>
+                  <path d="M8 11C9.65685 11 11 9.65685 11 8C11 6.34315 9.65685 5 8 5C6.34315 5 5 6.34315 5 8C5 9.65685 6.34315 11 8 11Z" fill="currentColor"/>
+                  <path d="M12 14C9.33333 14 4 15.3333 4 18V20H20V18C20 15.3333 14.6667 14 12 14Z" fill="currentColor"/>
+                </svg>
+              </div>
+              <h3 className={styles.featureTitle}>XFund Access</h3>
+              <p className={styles.featureDesc}>Crowdfund your startup or invest in multiple campaigns. Milestone-based fund release ensures accountability at every step.</p>
+              <div className={`${styles.featureTag} ${styles.tagBlue}`}>Crowdfunding</div>
+            </div>
           </div>
 
           <div className={styles.featureCard}>
-            <div className={`${styles.featureIcon} ${styles.iconStar}`}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor"/>
-              </svg>
+            <div className={styles.featureImageContainer}>
+              <img src="https://images.pexels.com/photos/3183132/pexels-photo-3183132.jpeg?auto=compress&cs=tinysrgb&w=800" alt="AI Scoring Dashboard" className={styles.featureImage} />
             </div>
-            <h3 className={styles.featureTitle}>XRate</h3>
-            <p className={styles.featureDesc}>AI-powered startup credibility scoring. Get a full risk, growth, and market analysis report before you invest a single rupee.</p>
-            <div className={`${styles.featureTag} ${styles.tagGold}`}>AI Scoring</div>
+            <div className={styles.featureCardContent}>
+              <div className={`${styles.featureIcon} ${styles.iconStar}`}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor"/>
+                </svg>
+              </div>
+              <h3 className={styles.featureTitle}>XRate AI Scoring</h3>
+              <p className={styles.featureDesc}>AI-powered startup credibility scoring. Get a full risk, growth, and market analysis report before you invest a single rupee.</p>
+              <div className={`${styles.featureTag} ${styles.tagGold}`}>AI Scoring</div>
+            </div>
           </div>
 
           <div className={styles.featureCard}>
-            <div className={`${styles.featureIcon} ${styles.iconHandshake}`}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M8 10V14C8 16.2091 9.79086 18 12 18C14.2091 18 16 16.2091 16 14V10L12 6L8 10Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M12 14L8 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+            <div className={styles.featureImageContainer}>
+              <img src="https://images.pexels.com/photos/327540/pexels-photo-327540.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Negotiation and Contracts" className={styles.featureImage} />
             </div>
-            <h3 className={styles.featureTitle}>XRaise</h3>
-            <p className={styles.featureDesc}>One-on-one negotiation between investor and founder. Make offers, counter-offers, and close deals on your terms.</p>
-            <div className={`${styles.featureTag} ${styles.tagBlue}`}>Negotiation</div>
+            <div className={styles.featureCardContent}>
+              <div className={`${styles.featureIcon} ${styles.iconHandshake}`}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8 10V14C8 16.2091 9.79086 18 12 18C14.2091 18 16 16.2091 16 14V10L12 6L8 10Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M12 14L8 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <h3 className={styles.featureTitle}>XRaise Negotiations</h3>
+              <p className={styles.featureDesc}>One-on-one negotiation between investor and founder. Make offers, counter-offers, and close deals safely on your terms.</p>
+              <div className={`${styles.featureTag} ${styles.tagBlue}`}>Negotiation</div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* STATS BAR */}
-      <section className={styles.stats}>
-        <div className={styles.statsContainer}>
-          <div className={styles.statItem}>
-            <div className={styles.statNumber}>₹2.4Cr+</div>
-            <div className={styles.statLabel}>Total Invested</div>
-          </div>
-          <div className={styles.statItem}>
-            <div className={styles.statNumber}>142</div>
-            <div className={styles.statLabel}>Startups Listed</div>
-          </div>
-          <div className={styles.statItem}>
-            <div className={styles.statNumberGold}>89%</div>
-            <div className={styles.statLabel}>Milestone Success Rate</div>
-          </div>
-          <div className={styles.statItem}>
-            <div className={styles.statNumber}>1,200+</div>
-            <div className={styles.statLabel}>Active Investors</div>
+      <section className={styles.statsWrapper}>
+        <div className={styles.statsOverlay}>
+          <div className={styles.statsContainer}>
+            <div className={styles.statItem}>
+              <div className={styles.statNumber}>₹2.4Cr+</div>
+              <div className={styles.statLabel}>Total Invested</div>
+            </div>
+            <div className={styles.statItem}>
+              <div className={styles.statNumber}>142</div>
+              <div className={styles.statLabel}>Startups Listed</div>
+            </div>
+            <div className={styles.statItem}>
+              <div className={styles.statNumberGold}>89%</div>
+              <div className={styles.statLabel}>Milestone Success</div>
+            </div>
+            <div className={styles.statItem}>
+              <div className={styles.statNumber}>1,200+</div>
+              <div className={styles.statLabel}>Active Investors</div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* HOW IT WORKS */}
       <section className={styles.howItWorks}>
-        <h2 className={styles.howHeading}>How XFund works</h2>
-        <div className={styles.tabs}>
-          <button className={`${styles.tab} ${styles.tabActive}`}>For Investors</button>
-          <button className={`${styles.tab} ${styles.tabInactive}`}>For Startups</button>
+        <div className={styles.howHeader}>
+          <h2 className={styles.howHeading}>How XFund works</h2>
+          <div className={styles.tabs}>
+            <button className={`${styles.tab} ${styles.tabActive}`}>For Investors</button>
+            <button className={`${styles.tab} ${styles.tabInactive}`}>For Startups</button>
+          </div>
         </div>
         
-        <div className={styles.timeline}>
-          <div className={styles.timelineLine}></div>
-          <div className={styles.step}>
-            <div className={styles.stepCircle}>1</div>
-            <h3 className={styles.stepTitle}>Create Account</h3>
-            <p className={styles.stepDesc}>Sign up and complete KYC verification</p>
+        <div className={styles.howContent}>
+          <div className={styles.timelineVertical}>
+            <div className={styles.timelineVerticalLine}></div>
+            <div className={styles.stepVertical}>
+              <div className={styles.stepCircle}>1</div>
+              <div className={styles.stepText}>
+                <h3 className={styles.stepTitle}>Create Account</h3>
+                <p className={styles.stepDesc}>Sign up and complete KYC verification with our bank-grade security system.</p>
+              </div>
+            </div>
+            <div className={styles.stepVertical}>
+              <div className={styles.stepCircle}>2</div>
+              <div className={styles.stepText}>
+                <h3 className={styles.stepTitle}>Explore Startups</h3>
+                <p className={styles.stepDesc}>Browse AI-rated campaigns with full transparency and detailed market analysis reports.</p>
+              </div>
+            </div>
+            <div className={styles.stepVertical}>
+              <div className={styles.stepCircle}>3</div>
+              <div className={styles.stepText}>
+                <h3 className={styles.stepTitle}>Invest Securely</h3>
+                <p className={styles.stepDesc}>Pledge funds safely held in escrow using our verified blockchain architecture.</p>
+              </div>
+            </div>
+            <div className={styles.stepVertical}>
+              <div className={styles.stepCircle}>4</div>
+              <div className={styles.stepText}>
+                <h3 className={styles.stepTitle}>Track Returns</h3>
+                <p className={styles.stepDesc}>Monitor progress and receive automated milestone-based updates right on your dashboard.</p>
+              </div>
+            </div>
           </div>
-          <div className={styles.step}>
-            <div className={styles.stepCircle}>2</div>
-            <h3 className={styles.stepTitle}>Explore Startups</h3>
-            <p className={styles.stepDesc}>Browse AI-rated campaigns with full transparency</p>
-          </div>
-          <div className={styles.step}>
-            <div className={styles.stepCircle}>3</div>
-            <h3 className={styles.stepTitle}>Invest Securely</h3>
-            <p className={styles.stepDesc}>Pledge funds held in escrow until milestones are met</p>
-          </div>
-          <div className={styles.step}>
-            <div className={styles.stepCircle}>4</div>
-            <h3 className={styles.stepTitle}>Track Returns</h3>
-            <p className={styles.stepDesc}>Monitor progress and receive milestone-based updates</p>
+          <div className={styles.howImageContainer}>
+            <img src="https://images.pexels.com/photos/3183197/pexels-photo-3183197.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Analytics Dashboard" className={styles.howImage} />
           </div>
         </div>
       </section>
@@ -197,7 +277,7 @@ export default function LandingPage() {
           </div>
         </div>
         <div className={styles.footerBottom}>
-          © 2025 XFund. All rights reserved.
+          © 2026 XFund. All rights reserved.
         </div>
       </footer>
     </div>
