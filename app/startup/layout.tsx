@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './layout.module.css';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 export default function StartupLayout({
   children,
@@ -11,6 +11,7 @@ export default function StartupLayout({
   children: React.ReactNode
 }) {
   const router = useRouter();
+  const pathname = usePathname();
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
@@ -62,29 +63,17 @@ export default function StartupLayout({
             My Campaign
           </Link>
           
-          {user?.role === 'STARTUP' && (
-            <>
-              <Link href="/xverify" className={styles.navItem}>
-                <span className={styles.navIcon}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                </span>
-                XVerify Docs
-              </Link>
-              <Link href="/xrate" className={styles.navItem}>
-                <span className={styles.navIcon}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                </span>
-                XRate AI
-              </Link>
-            </>
-          )}
-
-          <Link href="/xrate-report" className={styles.navItem}>
+          <Link href="/xverify" className={`${styles.navItem} ${pathname === '/xverify' ? styles.navItemActive : ''}`}>
             <span className={styles.navIcon}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
             </span>
-            XRate Report
-            <span className={styles.badgeNew} style={{backgroundColor: '#F5A623'}}>New</span>
+            XVerify Docs
+          </Link>
+          <Link href="/xrate" className={`${styles.navItem} ${pathname === '/xrate' ? styles.navItemActive : ''}`}>
+            <span className={styles.navIcon}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            </span>
+            XRate AI
           </Link>
           <Link href="/startup/milestones" className={styles.navItem}>
             <span className={styles.navIcon}>

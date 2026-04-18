@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     await dbConnect();
 
     const prompt = `
-      You are an expert Venture Capital Analyst. Analyze the following startup and provide a detailed XRate Report in JSON format.
+      You are a Senior Venture Capital Analyst at a top-tier firm. Analyze the following startup and provide a premium, institutional-grade XRate Report in JSON format.
       
       Startup Name: ${startupName}
       Industry: ${industry}
@@ -29,20 +29,34 @@ export async function POST(request: Request) {
       Funding Goal: ${fundingGoal || 'Not specified'}
       Key Features/Success Factors: ${keyFeatures || 'Not specified'}
       
-      The JSON response must follow this structure:
+      Your analysis should be critical, insightful, and look beyond the surface. Use the following JSON structure:
       {
         "overallScore": number (0-100),
         "riskScore": number (0-100),
         "growthScore": number (0-100),
         "teamScore": number (0-100),
         "marketScore": number (0-100),
-        "executiveSummary": "string (around 100-150 words)",
+        "executiveSummary": "string (concise overview)",
+        "investmentThesis": "string (1-2 sentence core reason for investing or passing)",
         "riskFactors": ["string", "string", ...],
         "growthIndicators": ["string", "string", ...],
-        "investmentRecommendations": "string (professional advice)"
+        "swot": {
+          "strengths": ["string", "string", ...],
+          "weaknesses": ["string", "string", ...],
+          "opportunities": ["string", "string", ...],
+          "threats": ["string", "string", ...]
+        },
+        "marketAnalysis": {
+          "tam": "string (estimated Total Addressable Market with reasoning)",
+          "competition": ["string (specific competitor names)", ...],
+          "trends": ["string (macro/micro trends)", ...]
+        },
+        "moatAnalysis": "string (analysis of defensibility/IP/network effects)",
+        "milestones": ["string (key KPI or goal for the next 12 months)", ...],
+        "investmentRecommendations": "string (deep strategic advice)"
       }
       
-      Be objective, critical, and insightful.
+      Provide data-driven estimates where possible. If competition is not provided, identify likely incumbents based on the industry.
     `;
 
     const result = await model.generateContent(prompt);
@@ -59,8 +73,13 @@ export async function POST(request: Request) {
       teamScore: aiData.teamScore,
       marketScore: aiData.marketScore,
       executiveSummary: aiData.executiveSummary,
+      investmentThesis: aiData.investmentThesis,
       riskFactors: aiData.riskFactors,
       growthIndicators: aiData.growthIndicators,
+      swot: aiData.swot,
+      marketAnalysis: aiData.marketAnalysis,
+      moatAnalysis: aiData.moatAnalysis,
+      milestones: aiData.milestones,
       investmentRecommendations: aiData.investmentRecommendations,
       campaignId: campaignId || null,
     });
