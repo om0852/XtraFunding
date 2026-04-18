@@ -1,33 +1,57 @@
 "use client"
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './page.module.css';
-
-// Mock data for analytics
-const SECTOR_ALLOCATION = [
-  { name: 'FinTech', value: '₹45,000', percentage: 36, color: '#1B3A6B' },
-  { name: 'AgriTech', value: '₹35,000', percentage: 28, color: '#F5A623' },
-  { name: 'HealthTech', value: '₹25,000', percentage: 20, color: '#10B981' },
-  { name: 'EdTech', value: '₹20,000', percentage: 16, color: '#3B82F6' },
-];
-
-const MONTHLY_PERFORMANCE = [
-  { month: 'Jan', value: 40 },
-  { month: 'Feb', value: 65 },
-  { month: 'Mar', value: 45 },
-  { month: 'Apr', value: 80 },
-  { month: 'May', value: 55 },
-  { month: 'Jun', value: 90 },
-];
-
-const REPORTS = [
-  { id: '1', name: 'Q1 2025 Performance Summary', type: 'PDF', date: 'Apr 01, 2025', status: 'Generated' },
-  { id: '2', name: 'Annual Tax Certificate FY24', type: 'PDF', date: 'Mar 15, 2025', status: 'Verified' },
-  { id: '3', name: 'Portfolio Allocation CSV', type: 'CSV', date: 'Mar 01, 2025', status: 'Ready' },
-  { id: '4', name: 'Monthly Investment Receipt - Feb', type: 'PDF', date: 'Feb 28, 2025', status: 'Generated' },
-];
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer,
+  PieChart, Pie, Cell, Legend
+} from 'recharts';
 
 export default function ReportsPage() {
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchReportsData = async () => {
+      const userId = localStorage.getItem('userId');
+      if (!userId) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/investor/reports?investorId=${userId}`);
+        const result = await res.json();
+        
+        if (result.success) {
+          setData(result.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch reports data', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReportsData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className={styles.container} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <div style={{ color: 'var(--text-secondary)' }}>Loading your reports...</div>
+      </div>
+    );
+  }
+
+  if (!data) {
+    return (
+      <div className={styles.container} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <div style={{ color: 'var(--text-secondary)' }}>No investment data found. Start investing to see your reports!</div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.breadcrumbHeader}>
@@ -37,17 +61,17 @@ export default function ReportsPage() {
       <div className={styles.statsRow}>
         <div className={styles.statCard}>
           <div className={styles.statLabel}>Net Portfolio Worth</div>
-          <div className={styles.statValue}>₹1,34,800</div>
-          <div className={`${styles.statSubtext} ${styles.positive}`}>+12.4% vs last year</div>
+          <div className={styles.statValue}>₹{data.netPortfolioWorth.toLocaleString('en-IN')}</div>
+          <div className={`${styles.statSubtext} ${styles.positive}`}>Live data</div>
         </div>
         <div className={styles.statCard}>
           <div className={styles.statLabel}>Total Realized Yield</div>
-          <div className={styles.statValue}>₹8,400</div>
-          <div className={`${styles.statSubtext} ${styles.positive}`}>+₹1,200 this mo</div>
+          <div className={styles.statValue}>₹{data.totalRealizedYield.toLocaleString('en-IN')}</div>
+          <div className={`${styles.statSubtext} ${styles.positive}`}>Estimated</div>
         </div>
         <div className={styles.statCard}>
           <div className={styles.statLabel}>Estimated Tax (FY25)</div>
-          <div className={styles.statValue}>₹1,650</div>
+          <div className={styles.statValue}>₹{Math.round(data.totalRealizedYield * 0.15).toLocaleString('en-IN')}</div>
           <div className={`${styles.statSubtext} ${styles.negative}`}>Due in 3 months</div>
         </div>
         <div className={styles.statCard}>
@@ -64,21 +88,32 @@ export default function ReportsPage() {
             <div className={styles.cardTitle}>
               Portfolio Performance
               <select style={{ fontSize: '12px', padding: '4px', borderRadius: '4px', border: '1px solid #E5E7EB' }}>
-                <option>Past 6 Months</option>
+                <option>All Time</option>
                 <option>Past Year</option>
               </select>
             </div>
-            <div className={styles.chartContainer}>
-              {MONTHLY_PERFORMANCE.map((item) => (
-                <div key={item.month} className={styles.barWrapper}>
-                  <div 
-                    className={`${styles.bar} ${item.month === 'Jun' ? styles.barActive : ''}`} 
-                    style={{ height: `${item.value}%` }}
-                  ></div>
-                  <span className={styles.barLabel}>{item.month}</span>
-                </div>
-              ))}
-            </div>
+            
+            {data.monthlyPerformance && data.monthlyPerformance.length > 0 ? (
+              <div style={{ height: '300px', width: '100%', marginTop: '20px' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={data.monthlyPerformance} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
+                    <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#6B7280' }} dy={10} />
+                    <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#6B7280' }} tickFormatter={(val) => `₹${val/1000}k`} />
+                    <RechartsTooltip 
+                      cursor={{ fill: '#F3F4F6' }}
+                      contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
+                      formatter={(value: number) => [`₹${value.toLocaleString('en-IN')}`, 'Invested']}
+                    />
+                    <Bar dataKey="value" fill="var(--primary)" radius={[4, 4, 0, 0]} barSize={40} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+               <div style={{ height: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9CA3AF' }}>
+                 No performance data yet.
+               </div>
+            )}
           </div>
 
           <div className={styles.card}>
@@ -99,7 +134,7 @@ export default function ReportsPage() {
                 </tr>
               </thead>
               <tbody>
-                {REPORTS.map((report) => (
+                {data.reports && data.reports.map((report: any) => (
                   <tr key={report.id}>
                     <td className={styles.td}>
                       <div className={styles.reportName}>
@@ -136,25 +171,51 @@ export default function ReportsPage() {
         <div className={styles.rightCol}>
           <div className={styles.card}>
             <div className={styles.cardTitle}>Sector Allocation</div>
-            <div className={styles.allocationRow}>
-              {SECTOR_ALLOCATION.map((item) => (
-                <div key={item.name} className={styles.allocationItem}>
-                  <div className={styles.itemHeader}>
-                    <span className={styles.itemName}>{item.name}</span>
-                    <span className={styles.itemValue}>{item.percentage}%</span>
-                  </div>
-                  <div className={styles.barContainer}>
-                    <div 
-                      className={styles.barFill} 
-                      style={{ width: `${item.percentage}%`, backgroundColor: item.color }}
-                    ></div>
-                  </div>
-                  <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>{item.value}</div>
+            
+            {data.sectorAllocation && data.sectorAllocation.length > 0 ? (
+              <>
+                <div style={{ height: '220px', width: '100%', display: 'flex', justifyContent: 'center' }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={data.sectorAllocation}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={60}
+                        outerRadius={80}
+                        paddingAngle={5}
+                        dataKey="value"
+                      >
+                        {data.sectorAllocation.map((entry: any, index: number) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <RechartsTooltip 
+                        formatter={(value: number) => [`₹${value.toLocaleString('en-IN')}`, 'Amount']}
+                        contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
                 </div>
-              ))}
-            </div>
-            <div style={{ marginTop: '24px', padding: '16px', backgroundColor: '#F9FAFB', borderRadius: '8px', fontSize: '12px', color: 'var(--text-secondary)' }}>
-              <strong>Insight:</strong> Your AgriTech holdings have grown by 15% this quarter, outperforming the sector average.
+                
+                <div className={styles.allocationRow}>
+                  {data.sectorAllocation.map((item: any) => (
+                    <div key={item.name} className={styles.allocationItem} style={{ borderLeft: `4px solid ${item.color}`, paddingLeft: '12px', marginBottom: '16px' }}>
+                      <div className={styles.itemHeader} style={{ marginBottom: '4px' }}>
+                        <span className={styles.itemName} style={{ fontWeight: 600 }}>{item.name}</span>
+                        <span className={styles.itemValue} style={{ fontWeight: 700 }}>{item.percentage}%</span>
+                      </div>
+                      <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>{item.formattedValue}</div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <div style={{ padding: '20px', textAlign: 'center', color: '#9CA3AF' }}>No sector data found.</div>
+            )}
+            
+            <div style={{ marginTop: '16px', padding: '16px', backgroundColor: '#F9FAFB', borderRadius: '8px', fontSize: '12px', color: 'var(--text-secondary)' }}>
+              <strong>Insight:</strong> Your portfolio is currently distributed across {data.sectorAllocation?.length || 0} sectors.
             </div>
           </div>
         </div>
