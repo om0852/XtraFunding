@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import styles from './ComparisonModal.module.css';
 import { useComparison } from '@/context/ComparisonContext';
+import { toast } from 'sonner';
 
 type Step = 'preferences' | 'loading' | 'results';
 
@@ -39,12 +40,12 @@ export default function ComparisonModal() {
         setResults(data.comparison);
         setStep('results');
       } else {
-        alert(data.error || "Failed to generate comparison");
+        toast.error(data.error || "Failed to generate comparison");
         setStep('preferences');
       }
     } catch (err) {
       console.error(err);
-      alert("Something went wrong");
+      toast.error("Something went wrong");
       setStep('preferences');
     }
   };

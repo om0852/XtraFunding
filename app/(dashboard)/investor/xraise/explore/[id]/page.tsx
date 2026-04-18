@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import styles from '@/components/features/Campaign/CampaignContent.module.css';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 export default function XRaiseExplorePage() {
   const { id } = useParams();
@@ -43,7 +44,7 @@ export default function XRaiseExplorePage() {
   const handleStartNegotiation = async () => {
     const userId = localStorage.getItem('userId');
     if (!userId) {
-      alert('Please login to negotiate!');
+      toast.error('Please login to negotiate!');
       return;
     }
 
@@ -71,10 +72,10 @@ export default function XRaiseExplorePage() {
       if (data.success) {
         router.push(`/investor/xraise?id=${data.data._id}`);
       } else {
-        alert(data.error || 'Failed to start negotiation');
+        toast.error(data.error || 'Failed to start negotiation');
       }
     } catch (err) {
-      alert('An error occurred');
+      toast.error('An error occurred');
     } finally {
       setIsInvesting(false);
     }

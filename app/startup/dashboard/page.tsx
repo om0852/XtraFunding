@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import styles from './page.module.css';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 export default function StartupDashboard() {
   const router = useRouter();
@@ -87,13 +88,13 @@ export default function StartupDashboard() {
         const updatedCampaigns = [...campaigns];
         updatedCampaigns[activeCampaignIdx].xrateReportId = selectedReportId;
         setCampaigns(updatedCampaigns);
-        alert('Institutional linkage repaired successfully!');
+        toast.success('Institutional linkage repaired successfully!');
       } else {
-        alert(data.error || 'Failed to repair linkage');
+        toast.error(data.error || 'Failed to repair linkage');
       }
     } catch (err) {
       console.error(err);
-      alert('Something went wrong during repair');
+      toast.error('Something went wrong during repair');
     } finally {
       setRepairing(false);
     }

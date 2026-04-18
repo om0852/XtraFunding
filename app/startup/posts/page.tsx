@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import styles from './page.module.css';
+import { toast } from 'sonner';
 
 export default function StartupPostsManagement() {
   const [posts, setPosts] = useState<any[]>([]);
@@ -33,7 +34,10 @@ export default function StartupPostsManagement() {
   }, []);
 
   const submitComment = async (postId: string, commentContent: string) => {
-    if (!user) return alert('Please login to comment');
+    if (!user) {
+      toast.error('Please login to comment');
+      return;
+    }
     try {
       const res = await fetch(`/api/posts/${postId}/comment`, {
         method: 'POST',

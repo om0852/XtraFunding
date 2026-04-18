@@ -3,6 +3,7 @@
 import React, { useState, useEffect, use } from 'react';
 import styles from './page.module.css';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 export default function StartupProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
@@ -34,7 +35,10 @@ export default function StartupProfilePage({ params }: { params: Promise<{ id: s
   };
 
   const toggleLike = async (postId: string) => {
-    if (!currentUser) return alert('Please login to like');
+    if (!currentUser) {
+      toast.error('Please login to like');
+      return;
+    }
     try {
       setPosts(posts.map(p => {
         if (p._id === postId) {
@@ -59,7 +63,10 @@ export default function StartupProfilePage({ params }: { params: Promise<{ id: s
   };
 
   const submitComment = async (postId: string, commentContent: string) => {
-    if (!currentUser) return alert('Please login to comment');
+    if (!currentUser) {
+      toast.error('Please login to comment');
+      return;
+    }
     try {
       const res = await fetch(`/api/posts/${postId}/comment`, {
         method: 'POST',
