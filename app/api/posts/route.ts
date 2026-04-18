@@ -8,6 +8,9 @@ import { put } from '@vercel/blob';
 export async function GET(req: NextRequest) {
   try {
     await dbConnect();
+    // Force model registration to avoid tree-shaking stripping the unused import
+    User.init();
+    
     // Fetch posts, fully populating the author
     const posts = await Post.find()
       .populate('author', 'name profileMetadata startupDetails role')

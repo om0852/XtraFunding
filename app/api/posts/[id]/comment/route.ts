@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Post from '@/lib/models/Post';
+import User from '@/lib/models/User';
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     await dbConnect();
+    User.init();
     const resolvedParams = await params;
     const body = await req.json();
     const { userId, content } = body;
