@@ -1,8 +1,81 @@
-import React from 'react';
+"use client";
+
+import React, { useState } from 'react';
 import styles from './page.module.css';
 import Link from 'next/link';
 
 export default function LandingPage() {
+  const [activeFeatureModal, setActiveFeatureModal] = useState<string | null>(null);
+
+  const featureDetails: Record<string, { title: string, desc: string, action: string, link: string }> = {
+    'XFund': {
+      title: 'XFund Access',
+      desc: 'Crowdfund your startup or invest in multiple promising campaigns. Milestone-based fund release ensures accountability at every single step of the journey. Instead of releasing the full amount upfront, funds are held securely in a smart escrow and released automatically as the founder achieves verifiable growth milestones.',
+      action: 'Explore Campaigns',
+      link: '/auth'
+    },
+    'XRate': {
+      title: 'XRate AI Scoring',
+      desc: 'AI-powered startup credibility scoring. Get a comprehensive risk, growth, and market analysis report before you invest a single rupee. Our proprietary artificial intelligence evaluates market fit, founder history, team composition, and financial health to give you a definitive score from 1 to 100.',
+      action: 'View AI Reports',
+      link: '/auth'
+    },
+    'XRaise': {
+      title: 'XRaise Negotiations',
+      desc: 'One-on-one private negotiation between investor and founder. Make custom offers, issue counter-offers, and close deals safely entirely on your own terms. Skip the middlemen, negotiate directly on the platform, and generate digitally-signed, legally binding term sheets instantly.',
+      action: 'Start Negotiating',
+      link: '/auth'
+    },
+    'Pricing': {
+      title: 'Transparent Pricing',
+      desc: 'Absolutely no hidden fees. We believe in complete financial transparency. We charge a flat 2% platform success fee on successful fundraises for startups, and a minimal 1% management fee for investors per transaction. All transactions are securely processed, logged, and verified.',
+      action: 'View Pricing Details',
+      link: '#'
+    },
+    'About': {
+      title: 'About XtraFunds',
+      desc: 'We are on a global mission to democratize startup investing. By combining cutting-edge AI analysis with blockchain-level transparency, we make it vastly safer and more accessible for angel investors and syndicates to fund the next generation of game-changing unicorns.',
+      action: 'Read Our Story',
+      link: '#'
+    },
+    'Blog': {
+      title: 'XtraFunds Blog',
+      desc: 'Stay informed and updated with the latest macroeconomic trends in angel investing, rapid startup growth strategies, success stories from our platform, and major feature updates straight from our team of industry experts and analysts.',
+      action: 'Read Latest Articles',
+      link: '#'
+    },
+    'Careers': {
+      title: 'Join Our Team',
+      desc: 'Help us aggressively build the future of decentralized finance. We are constantly looking for passionate software engineers, creative product designers, and brilliant finance professionals to join our remote-first, globally distributed team.',
+      action: 'View Open Positions',
+      link: '#'
+    },
+    'Press': {
+      title: 'Press & Media',
+      desc: 'Download our comprehensive media kit, read our latest press releases regarding funding milestones, and find direct contact information for all media, PR, and journalism inquiries.',
+      action: 'View Media Kit',
+      link: '#'
+    },
+    'Privacy Policy': {
+      title: 'Privacy Policy',
+      desc: 'Your data security and privacy is our absolute top priority. Read exactly how we collect, securely encrypt, use, and protect your personal and financial information in strict compliance with GDPR, DPDP, and international privacy laws.',
+      action: 'Read Privacy Policy',
+      link: '#'
+    },
+    'Terms': {
+      title: 'Terms of Service',
+      desc: 'Review the comprehensive rules, guidelines, and legal agreements for using the XtraFunds platform. This includes detailed investor accreditation requirements, KYC prerequisites, and strict founder obligations.',
+      action: 'Read Terms',
+      link: '#'
+    },
+    'Compliance': {
+      title: 'Regulatory Compliance',
+      desc: 'We operate strictly within the legal bounds of SEBI and other premier financial regulatory bodies. All KYC/AML checks are completely automated, heavily encrypted, and securely verified in real-time through our government-backed third-party partners.',
+      action: 'View Compliance Details',
+      link: '#'
+    }
+  };
+
   return (
     <div className={styles.container}>
       {/* NAVBAR */}
@@ -15,10 +88,10 @@ export default function LandingPage() {
           XtraFunds
         </div>
         <div className={styles.navLinks}>
-          <Link href="/" className={styles.navLink}>Home</Link>
-          <Link href="/auth" className={styles.navLink}>Explore</Link>
-          <Link href="#" className={styles.navLink}>How it Works</Link>
-          <Link href="#" className={styles.navLink}>About</Link>
+          <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className={styles.navLink} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'inherit' }}>Home</button>
+          <button onClick={() => document.getElementById('explore')?.scrollIntoView({ behavior: 'smooth' })} className={styles.navLink} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'inherit' }}>Explore</button>
+          <button onClick={() => document.getElementById('how-to-use')?.scrollIntoView({ behavior: 'smooth' })} className={styles.navLink} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'inherit' }}>How to Use</button>
+          <button onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })} className={styles.navLink} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'inherit' }}>About</button>
         </div>
         <div className={styles.navActions}>
           <Link href="/auth"><button className={styles.btnLogin}>Login</button></Link>
@@ -88,7 +161,7 @@ export default function LandingPage() {
       </section>
 
       {/* FEATURES SECTION */}
-      <section className={styles.features}>
+      <section id="explore" className={styles.features}>
         <div className={styles.featuresLabel}>PLATFORM FEATURES</div>
         <h2 className={styles.featuresHeading}>Everything you need to invest with confidence</h2>
         
@@ -171,7 +244,7 @@ export default function LandingPage() {
       </section>
 
       {/* HOW IT WORKS */}
-      <section className={styles.howItWorks}>
+      <section id="how-to-use" className={styles.howItWorks}>
         <div className={styles.howHeader}>
           <h2 className={styles.howHeading}>How XFund works</h2>
           <div className={styles.tabs}>
@@ -219,7 +292,7 @@ export default function LandingPage() {
       </section>
 
       {/* FOOTER */}
-      <footer className={styles.footer}>
+      <footer id="about" className={styles.footer}>
         <div className={styles.footerGrid}>
           <div className={`${styles.footerCol} ${styles.footerLogoCol}`}>
             <div className={styles.footerLogo}>
@@ -234,25 +307,25 @@ export default function LandingPage() {
           
           <div className={styles.footerCol}>
             <div className={styles.footerHeading}>Product</div>
-            <a href="#" className={styles.footerLink}>XFund</a>
-            <a href="#" className={styles.footerLink}>XRate</a>
-            <a href="#" className={styles.footerLink}>XRaise</a>
-            <a href="#" className={styles.footerLink}>Pricing</a>
+            <button className={styles.footerLink} onClick={() => setActiveFeatureModal('XFund')} style={{textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', padding: 0}}>XFund</button>
+            <button className={styles.footerLink} onClick={() => setActiveFeatureModal('XRate')} style={{textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', padding: 0}}>XRate</button>
+            <button className={styles.footerLink} onClick={() => setActiveFeatureModal('XRaise')} style={{textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', padding: 0}}>XRaise</button>
+            <button className={styles.footerLink} onClick={() => setActiveFeatureModal('Pricing')} style={{textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', padding: 0}}>Pricing</button>
           </div>
           
           <div className={styles.footerCol}>
             <div className={styles.footerHeading}>Company</div>
-            <a href="#" className={styles.footerLink}>About</a>
-            <a href="#" className={styles.footerLink}>Blog</a>
-            <a href="#" className={styles.footerLink}>Careers</a>
-            <a href="#" className={styles.footerLink}>Press</a>
+            <button className={styles.footerLink} onClick={() => setActiveFeatureModal('About')} style={{textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', padding: 0}}>About</button>
+            <button className={styles.footerLink} onClick={() => setActiveFeatureModal('Blog')} style={{textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', padding: 0}}>Blog</button>
+            <button className={styles.footerLink} onClick={() => setActiveFeatureModal('Careers')} style={{textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', padding: 0}}>Careers</button>
+            <button className={styles.footerLink} onClick={() => setActiveFeatureModal('Press')} style={{textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', padding: 0}}>Press</button>
           </div>
           
           <div className={styles.footerCol}>
             <div className={styles.footerHeading}>Legal</div>
-            <a href="#" className={styles.footerLink}>Privacy Policy</a>
-            <a href="#" className={styles.footerLink}>Terms</a>
-            <a href="#" className={styles.footerLink}>Compliance</a>
+            <button className={styles.footerLink} onClick={() => setActiveFeatureModal('Privacy Policy')} style={{textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', padding: 0}}>Privacy Policy</button>
+            <button className={styles.footerLink} onClick={() => setActiveFeatureModal('Terms')} style={{textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', padding: 0}}>Terms</button>
+            <button className={styles.footerLink} onClick={() => setActiveFeatureModal('Compliance')} style={{textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', padding: 0}}>Compliance</button>
           </div>
           
           <div className={styles.footerCol}>
@@ -280,6 +353,22 @@ export default function LandingPage() {
           © 2026 XFund. All rights reserved.
         </div>
       </footer>
+
+      {/* FEATURE MODAL */}
+      {activeFeatureModal && featureDetails[activeFeatureModal] && (
+        <div className={styles.modalOverlay} onClick={() => setActiveFeatureModal(null)}>
+          <div className={styles.modalCard} onClick={(e) => e.stopPropagation()}>
+            <button className={styles.modalClose} onClick={() => setActiveFeatureModal(null)}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+            <h3 className={styles.modalTitle}>{featureDetails[activeFeatureModal].title}</h3>
+            <p className={styles.modalDesc}>{featureDetails[activeFeatureModal].desc}</p>
+            <Link href={featureDetails[activeFeatureModal].link} className={styles.modalAction} onClick={() => setActiveFeatureModal(null)}>
+              {featureDetails[activeFeatureModal].action}
+            </Link>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
