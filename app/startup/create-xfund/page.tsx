@@ -5,6 +5,7 @@ import styles from './page.module.css';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createBlockchainCampaign } from '@/lib/web3';
+import { toast } from 'sonner';
 
 export default function CreateXFundPage() {
   const router = useRouter();
@@ -67,7 +68,7 @@ export default function CreateXFundPage() {
     
     // Final validation
     if (!formData.xrateReportId) {
-      alert("Please select a verified XRate Report to link to this campaign.");
+      toast.error("Please select a verified XRate Report to link to this campaign.");
       return;
     }
 
@@ -117,13 +118,14 @@ export default function CreateXFundPage() {
 
       const data = await res.json();
       if (data.success) {
+        toast.success('Campaign created successfully!');
         router.push('/startup/dashboard');
       } else {
-        alert(data.error || 'Failed to create campaign');
+        toast.error(data.error || 'Failed to create campaign');
       }
     } catch (err) {
       console.error(err);
-      alert('An error occurred');
+      toast.error('An error occurred');
     } finally {
       setLoading(false);
     }

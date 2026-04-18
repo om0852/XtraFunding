@@ -5,6 +5,7 @@ import styles from './page.module.css';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { submitBlockchainInvestment } from '@/lib/web3';
+import { toast } from 'sonner';
 
 export default function XRaisePage() {
   const searchParams = useSearchParams();
@@ -100,12 +101,12 @@ export default function XRaisePage() {
           if (invData.success) setInvestment(invData.data);
         }
 
-        alert(`Successfully ${action === 'COUNTER' ? 'sent counter offer' : action === 'ACCEPT' ? 'accepted deal' : 'rejected offer'}`);
+        toast.success(`Successfully ${action === 'COUNTER' ? 'sent counter offer' : action === 'ACCEPT' ? 'accepted deal' : 'rejected offer'}`);
       } else {
-        alert(data.error || 'Failed to process action');
+        toast.error(data.error || 'Failed to process action');
       }
     } catch (err) {
-      alert('An error occurred');
+      toast.error('An error occurred');
     } finally {
       setIsSubmitting(false);
     }
@@ -119,7 +120,7 @@ export default function XRaisePage() {
       const onChainId = negotiation.campaignId.onChainCampaignId;
       
       if (onChainId === undefined || onChainId === null) {
-        alert("This campaign is not yet synchronized with the blockchain. Please contact the founder.");
+        toast.error("This campaign is not yet synchronized with the blockchain. Please contact the founder.");
         setIsPaying(false);
         return;
       }
@@ -131,7 +132,7 @@ export default function XRaisePage() {
       const web3Res = await submitBlockchainInvestment(onChainId, mockEthAmount);
       
       if (!web3Res.success) {
-        alert("Transaction failed on blockchain: " + web3Res.error);
+        toast.error("Transaction failed on blockchain: " + web3Res.error);
         setIsPaying(false);
         return;
       }
@@ -147,25 +148,27 @@ export default function XRaisePage() {
       const data = await res.json();
       if (data.success) {
         setInvestment(data.data);
-        alert('Payment processed successfully! Funds are now securely held in Escrow on-chain.');
+        toast.success('Payment processed successfully! Funds are now securely held in Escrow on-chain.');
       } else {
-        alert('Database sync failed, but blockchain transaction was successful: ' + web3Res.hash);
+        toast.error('Database sync failed, but blockchain transaction was successful: ' + web3Res.hash);
       }
     } catch (err: any) {
       console.error(err);
-      alert('Payment failed: ' + (err.message || 'Unknown error'));
+      toast.error('Payment failed: ' + (err.message || 'Unknown error'));
     } finally {
       setIsPaying(false);
     }
   };
 
   const handleBlockchainVerify = async () => {
-    // This would trigger the ZKP logic explained in our guide
-    alert("Generating Zero-Knowledge Proof... \nProof generated! \nSending to Smart Contract for verification...");
-    // Mocking a successful on-chain verification
-    setTimeout(() => {
-      alert("Verification Success! Proof anchored on Base L2.");
-    }, 1500);
+    toast.promise(
+      new Promise((resolve) => setTimeout(resolve, 1500)),
+      {
+        loading: 'Generating Zero-Knowledge Proof...',
+        success: 'Verification Success! Proof anchored on Base L2.',
+        error: 'Verification failed',
+      }
+    );
   };
 
   if (loading) return <div className={styles.loading}>Loading Deal Room...</div>;

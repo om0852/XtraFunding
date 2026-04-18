@@ -5,6 +5,7 @@ import styles from '../page.module.css'; // Using the module CSS from parent dir
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { submitBlockchainInvestment } from '@/lib/web3';
+import { toast } from 'sonner';
 
 export default function CampaignDetailPage() {
   const { id } = useParams();
@@ -53,7 +54,7 @@ export default function CampaignDetailPage() {
   const handleStartNegotiation = async () => {
     const userId = localStorage.getItem('userId');
     if (!userId) {
-      alert('Please login to negotiate!');
+      toast.error('Please login to negotiate!');
       return;
     }
 
@@ -80,10 +81,10 @@ export default function CampaignDetailPage() {
       if (data.success) {
         router.push(`/xraise?id=${data.data._id}`);
       } else {
-        alert(data.error || 'Failed to start negotiation');
+        toast.error(data.error || 'Failed to start negotiation');
       }
     } catch (err) {
-      alert('An error occurred');
+      toast.error('An error occurred');
     } finally {
       setIsInvesting(false);
     }
@@ -101,7 +102,7 @@ export default function CampaignDetailPage() {
   const handleInvest = async () => {
     const userId = localStorage.getItem('userId');
     if (!userId) {
-      alert('Please login to invest in this campaign!');
+      toast.error('Please login to invest in this campaign!');
       return;
     }
 
@@ -113,7 +114,7 @@ export default function CampaignDetailPage() {
 
       // Trigger Blockchain Transaction via MetaMask
       if (campaign.onChainCampaignId === undefined || campaign.onChainCampaignId === null) {
-        alert("This campaign is not yet synchronized with the blockchain. Please contact the founder.");
+        toast.error("This campaign is not yet synchronized with the blockchain. Please contact the founder.");
         setIsInvesting(false);
         return;
       }
@@ -121,7 +122,7 @@ export default function CampaignDetailPage() {
       const web3Res = await submitBlockchainInvestment(campaign.onChainCampaignId, mockEthAmount);
       
       if (!web3Res.success) {
-        alert("Transaction failed on blockchain: " + web3Res.error);
+        toast.error("Transaction failed on blockchain: " + web3Res.error);
         setIsInvesting(false);
         return;
       }
@@ -146,13 +147,13 @@ export default function CampaignDetailPage() {
           status: data.campaignStatus
         }));
         setAmount('');
-        alert('Investment successful! Funds are securely locked in the smart contract escrow.');
+        toast.success('Investment successful! Funds are securely locked in the smart contract escrow.');
       } else {
-        alert(data.error || 'Investment database sync failed, but blockchain succeeded. Transaction: ' + web3Res.hash);
+        toast.error(data.error || 'Investment database sync failed, but blockchain succeeded. Transaction: ' + web3Res.hash);
       }
     } catch (err: any) {
       console.error(err);
-      alert('An error occurred: ' + (err.message || 'Unknown error'));
+      toast.error('An error occurred: ' + (err.message || 'Unknown error'));
     } finally {
       setIsInvesting(false);
     }

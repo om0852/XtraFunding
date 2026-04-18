@@ -5,6 +5,7 @@ import styles from '@/components/features/Campaign/CampaignContent.module.css';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { submitBlockchainInvestment } from '@/lib/web3';
+import { toast } from 'sonner';
 
 export default function XFundDetailPage() {
   const { id } = useParams();
@@ -48,7 +49,7 @@ export default function XFundDetailPage() {
   const handleInvest = async () => {
     const userId = localStorage.getItem('userId');
     if (!userId) {
-      alert('Please login to invest!');
+      toast.error('Please login to invest!');
       return;
     }
 
@@ -57,7 +58,7 @@ export default function XFundDetailPage() {
       const mockEthAmount = (numAmount / 250000).toFixed(6);
 
       if (campaign.onChainCampaignId === undefined || campaign.onChainCampaignId === null) {
-        alert("This campaign is not yet synchronized with the blockchain.");
+        toast.error("This campaign is not yet synchronized with the blockchain.");
         setIsInvesting(false);
         return;
       }
@@ -65,7 +66,7 @@ export default function XFundDetailPage() {
       const web3Res = await submitBlockchainInvestment(campaign.onChainCampaignId, mockEthAmount);
       
       if (!web3Res.success) {
-        alert("Transaction failed on blockchain: " + web3Res.error);
+        toast.error("Transaction failed on blockchain: " + web3Res.error);
         setIsInvesting(false);
         return;
       }
@@ -88,10 +89,10 @@ export default function XFundDetailPage() {
           status: data.campaignStatus
         }));
         setAmount('');
-        alert('Investment successful! Funds are securely locked in the smart contract escrow.');
+        toast.success('Investment successful! Funds are securely locked in the smart contract escrow.');
       }
     } catch (err: any) {
-      alert('An error occurred: ' + (err.message || 'Unknown error'));
+      toast.error('An error occurred: ' + (err.message || 'Unknown error'));
     } finally {
       setIsInvesting(false);
     }

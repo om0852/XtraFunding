@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import styles from './page.module.css';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 export default function FeedPage() {
   const router = useRouter();
@@ -46,7 +47,7 @@ export default function FeedPage() {
 
   const handlePost = async () => {
     if (!user) {
-      alert('Please login to share an update!');
+      toast.error('Please login to share an update!');
       return;
     }
     if (!content.trim()) return;
@@ -69,18 +70,21 @@ export default function FeedPage() {
         setContent('');
         setMediaFile(null);
       } else {
-        alert(data.message || 'Failed to create post');
+        toast.error(data.message || 'Failed to create post');
       }
     } catch (err) {
       console.error(err);
-      alert('Network error. Please try again.');
+      toast.error('Network error. Please try again.');
     } finally {
       setIsPosting(false);
     }
   };
 
   const toggleLike = async (postId: string) => {
-    if (!user) return alert('Please login to like');
+    if (!user) {
+      toast.error('Please login to like');
+      return;
+    }
     try {
       setPosts(posts.map(p => {
         if (p._id === postId) {
@@ -105,7 +109,10 @@ export default function FeedPage() {
   };
 
   const submitComment = async (postId: string, commentContent: string) => {
-    if (!user) return alert('Please login to comment');
+    if (!user) {
+      toast.error('Please login to comment');
+      return;
+    }
     try {
       const res = await fetch(`/api/posts/${postId}/comment`, {
         method: 'POST',

@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     // 2. Perform FHE (Additive Homomorphic Encryption)
     let newEncryptedTotal = campaign.encryptedTotalRaised;
     
-    if (campaign.paillierPublicKey) {
+    if (campaign.paillierPublicKey?.n && campaign.paillierPublicKey?.g) {
       const { n, g } = campaign.paillierPublicKey;
       
       // Encrypt this specific investment amount

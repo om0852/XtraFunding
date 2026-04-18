@@ -12,6 +12,8 @@ export const metadata: Metadata = {
   description: "XtraFunds connects verified startups with smart investors through transparent fund tracking, AI-powered ratings, and milestone-based releases.",
 };
 
+import { Toaster } from 'sonner';
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -19,7 +21,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={inter.variable}>
-      <body>{children}</body>
+      <body>
+        <Toaster richColors position="top-right" />
+        {children}
+      </body>
     </html>
   );
 }
