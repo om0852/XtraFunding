@@ -28,6 +28,10 @@ export default function XRaiseContent() {
   const [offerType, setOfferType] = useState('Equity');
   const [terms, setTerms] = useState('');
 
+  // XAgent state
+  const [xagentLoading, setXagentLoading] = useState(false);
+  const [xagentSuggestion, setXagentSuggestion] = useState<any>(null);
+
   useEffect(() => {
     const userId = localStorage.getItem('userId');
     setCurrentUserId(userId);
@@ -70,6 +74,52 @@ export default function XRaiseContent() {
     };
     fetchData();
   }, [negId]);
+
+  const askXAgent = async () => {
+    if (!negotiation || !negId) return;
+    setXagentLoading(true);
+    setXagentSuggestion(null);
+    try {
+      const isInvestor = currentUserId === negotiation.investorId._id;
+      const res = await fetch(`/api/negotiations/${negId}/suggest`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ requestingRole: isInvestor ? 'INVESTOR' : 'STARTUP' }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setXagentSuggestion(data.suggestion);
+      } else {
+        toast.error('XAgent: ' + (data.error || 'Failed to generate suggestion'));
+      }
+    } catch (err) {
+      toast.error('XAgent encountered an error. Please try again.');
+    } finally {
+      setXagentLoading(false);
+    }
+  };
+
+  const applyXAgentSuggestion = () => {
+    if (!xagentSuggestion) return;
+    setOfferAmount(xagentSuggestion.suggestedAmount.toString());
+    setEquityPct(xagentSuggestion.suggestedEquity.toString());
+    setOfferType(xagentSuggestion.suggestedInstrumentType);
+    setTerms(xagentSuggestion.suggestedTerms);
+    toast.success('XAgent suggestion applied to your offer form!');
+  };
+
+  const getHealthColor = (score: number) => {
+    if (score >= 70) return '#10B981';
+    if (score >= 40) return '#F59E0B';
+    return '#EF4444';
+  };
+
+  const getHealthClass = (label: string) => {
+    const l = label?.toLowerCase() || '';
+    if (l.includes('strong')) return styles.healthStrong;
+    if (l.includes('risk') || l.includes('low')) return styles.healthRisk;
+    return styles.healthModerate;
+  };
 
   const handleAction = async (action: 'COUNTER' | 'ACCEPT' | 'REJECT') => {
     if (!negotiation) return;
@@ -341,13 +391,148 @@ export default function XRaiseContent() {
               </div>
               
               {isInvestor && (
-                <div className={styles.zkpVerification} style={{marginTop: '15px'}}>
+                <div className={styles.zkpVerification} style={{marginTop: '15px', display: 'flex', flexDirection: 'column', gap: '8px'}}>
                   <button className={styles.btnSecondarySmall} onClick={handleBlockchainVerify}>
                     Verify Assets via ZK-Proof
                   </button>
                 </div>
               )}
             </div>
+
+            {/* ── XAgent Panel ── */}
+            {!dealClosed && (
+              <div className={styles.xagentPanel}>
+                <div className={styles.xagentHeader}>
+                  <div className={styles.xagentTitleRow}>
+                    <div className={styles.xagentIcon}>🤖</div>
+                    <div>
+                      <div className={styles.xagentTitle}>XAgent</div>
+                      <div className={styles.xagentSubtitle}>AI Negotiation Co-Pilot</div>
+                    </div>
+                  </div>
+                  <div className={styles.xagentBadge}>Beta</div>
+                </div>
+
+                <button
+                  id="xagent-suggest-btn"
+                  className={styles.btnAskXagent}
+                  onClick={askXAgent}
+                  disabled={xagentLoading}
+                >
+                  {xagentLoading ? (
+                    <>
+                      <span>Analyzing...</span>
+                      <div className={styles.thinkingDots}>
+                        <span /><span /><span />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <span>✨</span>
+                      <span>Suggest Best Counter-Offer</span>
+                    </>
+                  )}
+                </button>
+
+                {xagentLoading && (
+                  <div className={styles.xagentLoading}>
+                    <div className={styles.xagentThinkingLabel}>
+                      XAgent is analyzing offer history & XRate data
+                      <div className={styles.thinkingDots}>
+                        <span /><span /><span />
+                      </div>
+                    </div>
+                    <div className={styles.xagentShimmer} style={{ height: '80px' }} />
+                    <div className={styles.xagentShimmer} style={{ height: '48px' }} />
+                    <div className={styles.xagentShimmer} style={{ height: '64px' }} />
+                  </div>
+                )}
+
+                {xagentSuggestion && !xagentLoading && (
+                  <div className={styles.xagentResult}>
+
+                    {/* Suggested Offer Card */}
+                    <div className={styles.xagentSuggestionCard}>
+                      <div className={styles.xagentSuggestionLabel}>Suggested Counter-Offer</div>
+                      <div className={styles.xagentSuggestedAmount}>
+                        ₹{Number(xagentSuggestion.suggestedAmount).toLocaleString('en-IN')}
+                      </div>
+                      <div className={styles.xagentSuggestedEquity}>
+                        for {xagentSuggestion.suggestedEquity}% equity
+                      </div>
+                      <span className={styles.xagentInstrumentBadge}>
+                        {xagentSuggestion.suggestedInstrumentType}
+                      </span>
+                      {xagentSuggestion.suggestedTerms && (
+                        <div className={styles.xagentTermsText}>
+                          &ldquo;{xagentSuggestion.suggestedTerms}&rdquo;
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Deal Health */}
+                    <div className={styles.xagentSuggestionCard}>
+                      <div className={styles.xagentSuggestionLabel}>Deal Health</div>
+                      <div className={styles.xagentHealthRow}>
+                        <span className={styles.xagentHealthLabel}>Score</span>
+                        <div className={styles.xagentHealthBar}>
+                          <div
+                            className={styles.xagentHealthFill}
+                            style={{
+                              width: `${xagentSuggestion.dealHealthScore}%`,
+                              background: getHealthColor(xagentSuggestion.dealHealthScore)
+                            }}
+                          />
+                        </div>
+                        <span className={styles.xagentHealthScore}>
+                          {xagentSuggestion.dealHealthScore}/100
+                        </span>
+                        <span className={`${styles.xagentHealthStatus} ${getHealthClass(xagentSuggestion.dealHealthLabel)}`}>
+                          {xagentSuggestion.dealHealthLabel}
+                        </span>
+                      </div>
+                      {xagentSuggestion.closingProbability && (
+                        <div className={styles.xagentProbability}>
+                          📊 {xagentSuggestion.closingProbability}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Reasoning */}
+                    <div className={styles.xagentReasoning}>
+                      <div className={styles.xagentReasoningLabel}>🧠 Agent Reasoning</div>
+                      {xagentSuggestion.reasoning}
+                    </div>
+
+                    {/* Red Flags */}
+                    {xagentSuggestion.redFlags && xagentSuggestion.redFlags.length > 0 && (
+                      <div className={styles.xagentRedFlags}>
+                        <div className={styles.xagentRedFlagsLabel}>
+                          ⚠️ Red Flags ({xagentSuggestion.redFlags.length})
+                        </div>
+                        {xagentSuggestion.redFlags.map((flag: string, i: number) => (
+                          <div key={i} className={styles.xagentRedFlagItem}>
+                            <div className={styles.xagentRedFlagDot} />
+                            <span>{flag}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Apply Button */}
+                    {isMyTurn && (
+                      <button
+                        id="xagent-apply-btn"
+                        className={styles.btnApplyXagent}
+                        onClick={applyXAgentSuggestion}
+                      >
+                        ✅ Apply to Offer Form
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           <div className={styles.panelRight}>

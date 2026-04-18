@@ -150,7 +150,11 @@ function ExploreContent() {
                     >
                       {selectedDeals.find(s => s.id === camp._id) ? 'Selected' : 'Select'}
                     </button>
-                    <Link href={`/investor/${camp.fundingModel.toLowerCase()}${camp.fundingModel === 'XRaise' ? '/explore' : ''}/${camp._id}`}>
+                    <Link href={
+                      camp.fundingModel === 'XRaise'
+                        ? `/investor/xraise/explore/${camp._id}`
+                        : `/investor/xfund/${camp._id}`
+                    }>
                       <button className={`${styles.btnInvest} ${camp.fundingModel === 'XRaise' ? styles.btnInvestGold : ''}`}>
                         {camp.fundingModel === 'XFund' ? 'Invest' : 'Explore'}
                       </button>

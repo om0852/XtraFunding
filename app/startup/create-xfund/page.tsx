@@ -75,26 +75,30 @@ export default function CreateXFundPage() {
     setLoading(true);
 
     try {
-      let onChainCampaignId;
+      let onChainCampaignId: number | undefined;
       
-      // Calculate duration days based on endDate
-      const end = new Date(formData.endDate);
-      const now = new Date();
-      const diffTime = Math.abs(end.getTime() - now.getTime());
-      const durationDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      
-      // Convert INR goal to mock ETH string
-      const goalAmount = Number(formData.fundingGoal);
-      const mockEthGoal = (goalAmount / 250000).toFixed(6);
+      // Only XFund campaigns need on-chain escrow at creation time.
+      // XRaise campaigns are private negotiations — no escrow until a deal is accepted.
+      if (formData.fundingModel === 'XFund') {
+        // Calculate duration days based on endDate
+        const end = new Date(formData.endDate);
+        const now = new Date();
+        const diffTime = Math.abs(end.getTime() - now.getTime());
+        const durationDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        // Convert INR goal to mock ETH string
+        const goalAmount = Number(formData.fundingGoal);
+        const mockEthGoal = (goalAmount / 250000).toFixed(6);
 
-      // Trigger Web3 MetaMask interaction to create campaign permanently on-chain
-      const web3Res = await createBlockchainCampaign(mockEthGoal, durationDays);
-      
-      if (!web3Res.success) {
-        throw new Error(web3Res.error || "Failed resolving blockchain synchrony");
+        // Trigger Web3 MetaMask interaction to create campaign permanently on-chain
+        const web3Res = await createBlockchainCampaign(mockEthGoal, durationDays);
+        
+        if (!web3Res.success) {
+          throw new Error(web3Res.error || "Failed resolving blockchain synchrony");
+        }
+        
+        onChainCampaignId = web3Res.campaignId;
       }
-      
-      onChainCampaignId = web3Res.campaignId;
 
       const payload = {
         ...formData,
@@ -106,7 +110,7 @@ export default function CreateXFundPage() {
         interestRate: formData.fundingType === 'Debt' ? Number(formData.interestRate) : undefined,
         repaymentMonths: formData.fundingType === 'Debt' ? Number(formData.repaymentMonths) : undefined,
         endDate: new Date(formData.endDate),
-        onChainCampaignId: onChainCampaignId,
+        onChainCampaignId,
         xrateReportId: formData.xrateReportId
       };
 
@@ -118,7 +122,7 @@ export default function CreateXFundPage() {
 
       const data = await res.json();
       if (data.success) {
-        toast.success('Campaign created successfully!');
+        toast.success(`${formData.fundingModel} campaign created successfully!`);
         router.push('/startup/dashboard');
       } else {
         toast.error(data.error || 'Failed to create campaign');

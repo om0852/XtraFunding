@@ -79,7 +79,8 @@ export default function CampaignDetailPage() {
       });
       const data = await res.json();
       if (data.success) {
-        router.push(`/xraise?id=${data.data._id}`);
+        const prefix = window.location.pathname.startsWith('/startup') ? '/startup' : '/investor';
+        router.push(`${prefix}/xraise?id=${data.data._id}`);
       } else {
         toast.error(data.error || 'Failed to start negotiation');
       }
@@ -290,7 +291,7 @@ export default function CampaignDetailPage() {
                         {existingNegotiation ? (
                           <div className={styles.negotiationStatusCard}>
                             <p>You have an active negotiation for this project.</p>
-                            <Link href={`/xraise?id=${existingNegotiation._id}`}>
+                            <Link href={`${window.location.pathname.startsWith('/startup') ? '/startup' : '/investor'}/xraise?id=${existingNegotiation._id}`}>
                               <button className={styles.btnInvest}>View Negotiation Thread</button>
                             </Link>
                           </div>
