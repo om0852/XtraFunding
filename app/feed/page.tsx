@@ -46,7 +46,7 @@ export default function FeedPage() {
 
   const handlePost = async () => {
     if (!user) {
-      router.push('/auth');
+      alert('Please login to share an update!');
       return;
     }
     if (!content.trim()) return;

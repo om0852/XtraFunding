@@ -27,12 +27,10 @@ export default function CreateXFundPage() {
 
   useEffect(() => {
     const storedId = localStorage.getItem('userId');
-    if (!storedId) {
-      router.push('/auth');
-    } else {
+    if (storedId) {
       setUserId(storedId);
     }
-  }, [router]);
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;

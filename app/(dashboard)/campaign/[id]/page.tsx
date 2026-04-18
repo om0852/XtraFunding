@@ -47,7 +47,7 @@ export default function CampaignDetailPage() {
   const handleInvest = async () => {
     const userId = localStorage.getItem('userId');
     if (!userId) {
-      router.push('/auth');
+      alert('Please login to invest in this campaign!');
       return;
     }
 

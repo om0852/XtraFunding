@@ -13,10 +13,7 @@ export default function StartupDashboard() {
   useEffect(() => {
     const fetchCampaign = async () => {
       const userId = localStorage.getItem('userId');
-      if (!userId) {
-        router.push('/auth');
-        return;
-      }
+
 
       try {
         const res = await fetch('/api/campaigns');
