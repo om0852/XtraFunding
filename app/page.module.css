@@ -934,21 +934,107 @@
 }
 
 .modalDesc {
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.6;
   color: #4B5563;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
+}
+
+.modalHighlights {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.modalHighlightItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1B3A6B;
+  background: #F8F9FC;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid #E5E7EB;
+}
+
+.modalHighlightIcon {
+  color: #27C93F;
+  flex-shrink: 0;
+}
+
+.modalFlowchart {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 36px;
+}
+
+.modalFlowTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1B3A6B;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.flowStep {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  position: relative;
+  padding-bottom: 24px;
+}
+
+.flowStep:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 32px;
+  bottom: 0;
+  width: 2px;
+  background: #E5E7EB;
+  z-index: 0;
+}
+
+.flowStepNumber {
+  background: #EBF2FF;
+  color: #1B3A6B;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 800;
+  flex-shrink: 0;
+  border: 2px solid #ffffff;
+  box-shadow: 0 4px 12px rgba(27, 58, 107, 0.1);
+  z-index: 1;
+}
+
+.flowStepText {
+  font-size: 15px;
+  font-weight: 500;
+  color: #374151;
+  line-height: 1.5;
+  padding-top: 5px;
 }
 
 .modalAction {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
   background: #F5A623;
   color: #0A1628;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-weight: 600;
+  padding: 14px 24px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 16px;
   text-decoration: none;
   transition: all 0.2s;
   border: none;
@@ -956,8 +1042,9 @@
 }
 
 .modalAction:hover {
-  filter: brightness(1.1);
+  filter: brightness(1.05);
   transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(245, 166, 35, 0.2);
 }
 
 /* RESPONSIVE DESIGN */

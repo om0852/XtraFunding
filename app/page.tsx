@@ -7,28 +7,48 @@ import Link from 'next/link';
 export default function LandingPage() {
   const [activeFeatureModal, setActiveFeatureModal] = useState<string | null>(null);
 
-  const featureDetails: Record<string, { title: string, desc: string, action: string, link: string }> = {
+  const featureDetails: Record<string, { title: string, desc: string, action: string, link: string, highlights?: string[], flowchart?: { title: string, steps: string[] } }> = {
     'XFund': {
       title: 'XFund Access',
-      desc: 'Crowdfund your startup or invest in multiple promising campaigns. Milestone-based fund release ensures accountability at every single step of the journey. Instead of releasing the full amount upfront, funds are held securely in a smart escrow and released automatically as the founder achieves verifiable growth milestones.',
+      desc: 'XtraFunds is a secure platform that connects investors directly with verified startups. Rather than handing over all capital upfront, your investment is held in a smart escrow account and released in phases—only when the startup successfully completes predefined business milestones.',
+      highlights: ['Milestone-based release', 'Smart Escrow Contracts', 'Zero upfront fees', 'Live Portfolio Tracking'],
+      flowchart: {
+        title: 'How XFund Works',
+        steps: ['You pledge capital to a promising startup campaign', 'Your funds are locked securely in our Smart Escrow', 'The startup hits their predefined growth milestones', 'Capital is automatically released to the founder']
+      },
       action: 'Explore Campaigns',
       link: '/auth'
     },
     'XRate': {
       title: 'XRate AI Scoring',
-      desc: 'AI-powered startup credibility scoring. Get a comprehensive risk, growth, and market analysis report before you invest a single rupee. Our proprietary artificial intelligence evaluates market fit, founder history, team composition, and financial health to give you a definitive score from 1 to 100.',
+      desc: 'Investing in startups is risky, so we built an AI to help you evaluate them. XRate analyzes a startup’s market fit, founder background, and financial health to generate a straightforward credibility score from 1 to 100, helping you invest with complete confidence.',
+      highlights: ['Proprietary AI Algorithm', 'Deep Market Analysis', 'Founder Background Checks', 'Financial Health Score'],
+      flowchart: {
+        title: 'The XRate Process',
+        steps: ['Our AI engine analyzes the startup pitch deck and financials', 'Market data and founder histories are cross-referenced', 'A detailed XRate Score (1-100) and Risk Profile is generated', 'You review the clear, actionable report before investing']
+      },
       action: 'View AI Reports',
       link: '/auth'
     },
     'XRaise': {
       title: 'XRaise Negotiations',
-      desc: 'One-on-one private negotiation between investor and founder. Make custom offers, issue counter-offers, and close deals safely entirely on your own terms. Skip the middlemen, negotiate directly on the platform, and generate digitally-signed, legally binding term sheets instantly.',
+      desc: 'Skip the middlemen. XRaise allows investors and founders to negotiate equity and valuations directly. Make offers, issue counter-offers, and finalize deals instantly with our auto-generated, legally binding term sheets.',
+      highlights: ['Direct 1-on-1 Negotiations', 'Custom Equity Offers', 'Auto-generated Term Sheets', 'No Intermediary Brokers'],
+      flowchart: {
+        title: 'Deal Negotiation Flow',
+        steps: ['You send a custom valuation and equity offer to the founder', 'The founder reviews and issues a counter-offer', 'Both parties agree on the final terms and equity split', 'The platform instantly generates a legally binding Term Sheet']
+      },
       action: 'Start Negotiating',
       link: '/auth'
     },
     'Pricing': {
       title: 'Transparent Pricing',
-      desc: 'Absolutely no hidden fees. We believe in complete financial transparency. We charge a flat 2% platform success fee on successful fundraises for startups, and a minimal 1% management fee for investors per transaction. All transactions are securely processed, logged, and verified.',
+      desc: 'We believe in complete financial transparency with absolutely no hidden fees. We only make money when you succeed. Startups pay a 2% fee on successful fundraises, and investors pay a 1% transaction fee.',
+      highlights: ['Flat 2% Success Fee', '1% Investor Fee', 'Zero Listing Fees', 'Free XRate AI Scans'],
+      flowchart: {
+        title: 'Fee Structure Breakdown',
+        steps: ['Startups create campaigns and list for free', 'Investors pledge capital without upfront charges', 'Upon a successful fundraise, a 2% fee is deducted', 'Net funds are securely transferred to the startup']
+      },
       action: 'View Pricing Details',
       link: '#'
     },
@@ -106,7 +126,7 @@ export default function LandingPage() {
             <div className={styles.heroBadge}>✨ The Future of Startup Funding</div>
             <h1 className={styles.heroHeading}>Invest in Tomorrow's Startups — <span className={styles.heroHighlight}>Transparently</span></h1>
             <p className={styles.heroSubheading}>
-              XFund connects verified startups with smart investors through transparent fund tracking, AI-powered ratings, and milestone-based releases.
+              XtraFunds connects verified startups with smart investors through transparent fund tracking, AI-powered ratings, and milestone-based releases.
             </p>
             <div className={styles.heroActions}>
               <Link href="/auth"><button className={styles.btnStartInvesting}>Start Investing</button></Link>
@@ -246,7 +266,7 @@ export default function LandingPage() {
       {/* HOW IT WORKS */}
       <section id="how-to-use" className={styles.howItWorks}>
         <div className={styles.howHeader}>
-          <h2 className={styles.howHeading}>How XFund works</h2>
+          <h2 className={styles.howHeading}>How XtraFunds works</h2>
           <div className={styles.tabs}>
             <button className={`${styles.tab} ${styles.tabActive}`}>For Investors</button>
             <button className={`${styles.tab} ${styles.tabInactive}`}>For Startups</button>
@@ -350,7 +370,7 @@ export default function LandingPage() {
           </div>
         </div>
         <div className={styles.footerBottom}>
-          © 2026 XFund. All rights reserved.
+          © 2026 XtraFunds. All rights reserved.
         </div>
       </footer>
 
@@ -363,6 +383,30 @@ export default function LandingPage() {
             </button>
             <h3 className={styles.modalTitle}>{featureDetails[activeFeatureModal].title}</h3>
             <p className={styles.modalDesc}>{featureDetails[activeFeatureModal].desc}</p>
+            
+            {featureDetails[activeFeatureModal].highlights && (
+              <div className={styles.modalHighlights}>
+                {featureDetails[activeFeatureModal].highlights.map((highlight, idx) => (
+                  <div key={idx} className={styles.modalHighlightItem}>
+                    <svg className={styles.modalHighlightIcon} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    {highlight}
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            {featureDetails[activeFeatureModal].flowchart && (
+              <div className={styles.modalFlowchart}>
+                <div className={styles.modalFlowTitle}>{featureDetails[activeFeatureModal].flowchart.title}</div>
+                {featureDetails[activeFeatureModal].flowchart.steps.map((step, idx) => (
+                  <div key={`step-${idx}`} className={styles.flowStep}>
+                    <div className={styles.flowStepNumber}>{idx + 1}</div>
+                    <div className={styles.flowStepText}>{step}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+            
             <Link href={featureDetails[activeFeatureModal].link} className={styles.modalAction} onClick={() => setActiveFeatureModal(null)}>
               {featureDetails[activeFeatureModal].action}
             </Link>

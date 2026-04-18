@@ -97,7 +97,7 @@ export default function Dashboard() {
       {/* TRENDING STARTUPS */}
       <div className={styles.sectionWrapper} style={{ backgroundColor: 'transparent', border: 'none', padding: 0 }}>
         <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>Trending on XFund</h2>
+          <h2 className={styles.sectionTitle}>Trending on XtraFunds</h2>
           <Link href="/campaign" className={styles.linkGold}>Browse All</Link>
         </div>
         <div className={styles.startupGrid}>

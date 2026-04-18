@@ -8,8 +8,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "XFund - Invest in Tomorrow's Startups",
-  description: "XFund connects verified startups with smart investors through transparent fund tracking, AI-powered ratings, and milestone-based releases.",
+  title: "XtraFunds - Invest in Tomorrow's Startups",
+  description: "XtraFunds connects verified startups with smart investors through transparent fund tracking, AI-powered ratings, and milestone-based releases.",
 };
 
 export default function RootLayout({

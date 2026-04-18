@@ -106,7 +106,7 @@ export default function AuthPage() {
           <path d="M12 2L2 7.5L12 13L22 7.5L12 2Z" fill="#F5A623"/>
           <path d="M2 16.5L12 22L22 16.5V11L12 16.5L2 11V16.5Z" fill="#F5A623"/>
         </svg>
-        XFund
+        XtraFunds
       </Link>
       
       <div className={styles.leftContent}>
@@ -144,7 +144,7 @@ export default function AuthPage() {
       <div className={styles.rightHalf}>
         {view === 'ROLE_SELECT' && (
           <div className={styles.formCard}>
-            <h1 className={styles.heading}>Welcome to XFund</h1>
+            <h1 className={styles.heading}>Welcome to XtraFunds</h1>
             <p className={styles.subtext}>Choose how you want to continue</p>
             
             <div className={styles.roleContainer}>
