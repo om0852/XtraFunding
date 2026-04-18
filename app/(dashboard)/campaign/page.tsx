@@ -64,7 +64,9 @@ function ExploreContent() {
     <div className={styles.content}>
       <header className={styles.sectionHeader} style={{ marginBottom: '40px', alignItems: 'center' }}>
         <div>
-          <h1 className={styles.greeting} style={{ fontSize: '36px' }}>Discover Opportunities</h1>
+          <h1 className={styles.greeting} style={{ fontSize: '36px' }}>
+            {filter === 'All' ? 'Discover Opportunities' : filter === 'XFund' ? 'Standard XFund' : 'XRaise Deals'}
+          </h1>
           <p className={styles.subtext}>Filter by funding model to find the right deal for your portfolio.</p>
         </div>
         

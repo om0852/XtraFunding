@@ -103,7 +103,7 @@ export default function ReportsPage() {
                     <RechartsTooltip 
                       cursor={{ fill: '#F3F4F6' }}
                       contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
-                      formatter={(value: number) => [`₹${value.toLocaleString('en-IN')}`, 'Invested']}
+                      formatter={(value: any) => [`₹${Number(value).toLocaleString('en-IN')}`, 'Invested']}
                     />
                     <Bar dataKey="value" fill="var(--primary)" radius={[4, 4, 0, 0]} barSize={40} />
                   </BarChart>
@@ -191,8 +191,8 @@ export default function ReportsPage() {
                         ))}
                       </Pie>
                       <RechartsTooltip 
-                        formatter={(value: number) => [`₹${value.toLocaleString('en-IN')}`, 'Amount']}
-                        contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
+                      formatter={(value: any) => [`₹${Number(value).toLocaleString('en-IN')}`, 'Amount']}
+                      contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
                       />
                     </PieChart>
                   </ResponsiveContainer>

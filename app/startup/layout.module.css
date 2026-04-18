@@ -173,9 +173,9 @@
   height: 64px;
   background-color: #ffffff;
   border-bottom: 1px solid #E5E7EB;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr minmax(200px, 420px) 1fr;
   align-items: center;
-  justify-content: space-between;
   padding: 0 32px;
   position: sticky;
   top: 0;
@@ -186,12 +186,65 @@
   font-size: 20px;
   font-weight: 600;
   color: #0D1117;
+  white-space: nowrap;
+  justify-self: start;
+}
+
+.searchContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-self: center;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 10px 16px 10px 44px;
+  border: 1px solid rgba(229, 231, 235, 0.8);
+  border-radius: 100px;
+  background-color: #F8FAFC;
+  font-size: 14px;
+  color: #0F172A;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+}
+
+.searchInput::placeholder {
+  color: #94A3B8;
+}
+
+.searchInput:hover {
+  background-color: #ffffff;
+  border-color: #CBD5E1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.searchInput:focus {
+  background-color: #ffffff;
+  border-color: #6366f1;
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.15);
+}
+
+.searchIcon {
+  position: absolute;
+  left: 16px;
+  color: #94A3B8;
+  width: 18px;
+  height: 18px;
+  transition: color 0.3s ease;
+  pointer-events: none;
+}
+
+.searchInput:focus ~ .searchIcon {
+  color: #6366f1;
 }
 
 .topbarActions {
   display: flex;
   align-items: center;
   gap: 20px;
+  justify-self: end;
 }
 
 .iconBtn {
