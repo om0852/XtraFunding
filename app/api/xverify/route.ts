@@ -8,6 +8,12 @@ export async function POST(request: Request) {
     await dbConnect();
     const formData = await request.formData();
 
+    const fullName = formData.get('fullName') as string;
+    const phone = formData.get('phone') as string;
+    const companyName = formData.get('companyName') as string;
+    const registrationNumber = formData.get('registrationNumber') as string;
+    const walletAddress = formData.get('walletAddress') as string;
+
     const aadharFile = formData.get('aadhar') as File | null;
     const panFile = formData.get('pan') as File | null;
     const licenseFile = formData.get('companyLicense') as File | null;
@@ -26,6 +32,11 @@ export async function POST(request: Request) {
 
     // Save to Database
     const xverifyRecord = await Xverify.create({
+      fullName,
+      phone,
+      companyName,
+      registrationNumber,
+      walletAddress,
       aadharUrl: aadharBlob.url,
       panUrl: panBlob.url,
       companyLicenseUrl: licenseBlob.url,

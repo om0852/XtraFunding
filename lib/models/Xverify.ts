@@ -1,10 +1,15 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IXverify extends Document {
+  fullName: string;
+  phone: string;
+  companyName: string;
+  registrationNumber: string;
+  walletAddress: string;
   aadharUrl: string;
   panUrl: string;
   companyLicenseUrl: string;
-  userId?: mongoose.Types.ObjectId; // Optional relation to User depending on auth
+  userId?: mongoose.Types.ObjectId;
   status: 'pending' | 'verified' | 'rejected';
   createdAt: Date;
   updatedAt: Date;
@@ -12,18 +17,14 @@ export interface IXverify extends Document {
 
 const XverifySchema: Schema = new Schema(
   {
-    aadharUrl: {
-      type: String,
-      required: true,
-    },
-    panUrl: {
-      type: String,
-      required: true,
-    },
-    companyLicenseUrl: {
-      type: String,
-      required: true,
-    },
+    fullName: { type: String, required: true },
+    phone: { type: String, required: true },
+    companyName: { type: String, required: true },
+    registrationNumber: { type: String, required: true },
+    walletAddress: { type: String, required: true },
+    aadharUrl: { type: String, required: true },
+    panUrl: { type: String, required: true },
+    companyLicenseUrl: { type: String, required: true },
     userId: {
       type: Schema.Types.ObjectId,
       ref: 'User',
@@ -40,7 +41,5 @@ const XverifySchema: Schema = new Schema(
   }
 );
 
-// Prevent mongoose from compiling the model multiple times in dev mode
 const Xverify = mongoose.models.Xverify || mongoose.model<IXverify>('Xverify', XverifySchema);
-
 export default Xverify;

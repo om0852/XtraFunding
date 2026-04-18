@@ -48,6 +48,7 @@ export default function InvestorLayout({
   else if (pathname.includes('/investor/watchlist')) pageTitle = "Watchlist";
   else if (pathname.includes('/investor/reports')) pageTitle = "Reports";
   else if (pathname.includes('/investor/settings')) pageTitle = "Settings";
+  else if (pathname.includes('/xverify')) pageTitle = "";
 
   return (
     <div className={styles.layoutContainer}>
