@@ -1,0 +1,488 @@
+.content {
+  padding: 32px;
+}
+
+.heading {
+  font-size: 24px;
+  font-weight: 600;
+  color: #0D1117;
+  margin-bottom: 8px;
+}
+
+.subtext {
+  font-size: 14px;
+  color: #6B7280;
+  margin-bottom: 24px;
+}
+
+.subtextTag {
+  background: #F3F4F6;
+  color: #4B5563;
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-right: 8px;
+  display: inline-block;
+}
+
+/* CAMPAIGN HEALTH CARD */
+.campaignCard {
+  background: #ffffff;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.campaignLeft {
+  flex: 1;
+  padding-right: 48px;
+}
+
+.fundingLabel {
+  color: #6B7280;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.fundingAmount {
+  font-size: 36px;
+  font-weight: 700;
+  color: #1B3A6B;
+}
+
+.fundingGoal {
+  font-size: 14px;
+  color: #6B7280;
+  margin-bottom: 20px;
+}
+
+.progressBarContainerLarge {
+  height: 16px;
+  background: #E5E7EB;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.progressBarFillLarge {
+  height: 100%;
+  background: #1B3A6B;
+  border-radius: 8px;
+}
+
+.statsRow {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.statItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.statBlue { color: #1B3A6B; }
+.statGray { color: #6B7280; }
+.statAmber { color: #F59E0B; }
+
+.statDivider {
+  width: 1px;
+  height: 16px;
+  background: #E5E7EB;
+}
+
+.campaignRight {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.countdownCircle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 8px solid #F5A623;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.countdownValue {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0D1117;
+  line-height: 1.2;
+}
+
+.countdownLabel {
+  font-size: 13px;
+  color: #6B7280;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+/* TWO COLUMNS */
+.gridTwoCol {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.colLeft {
+  flex: 0 0 60%;
+}
+
+.colRight {
+  flex: 0 0 calc(40% - 24px);
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 24px;
+  height: 100%;
+}
+
+.cardTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0D1117;
+  margin-bottom: 24px;
+}
+
+/* TRACKER */
+.stepper {
+  display: flex;
+  flex-direction: column;
+}
+
+.step {
+  display: flex;
+  gap: 16px;
+  position: relative;
+  padding-bottom: 24px;
+}
+
+.step:last-child {
+  padding-bottom: 0;
+}
+
+.stepIndicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stepLine {
+  width: 2px;
+  flex: 1;
+  background: #E5E7EB;
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+
+.step:last-child .stepLine {
+  display: none;
+}
+
+.circleGreen {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #10B981;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circleGold {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #F5A623;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dotGold {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #F5A623;
+}
+
+.circleGray {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #E5E7EB;
+  background: #F8F9FC;
+}
+
+.stepContent {
+  flex: 1;
+  padding-top: 2px;
+}
+
+.stepHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 4px;
+}
+
+.stepTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: #0D1117;
+}
+
+.stepDate {
+  font-size: 13px;
+  color: #6B7280;
+  margin-bottom: 8px;
+}
+
+.badgeGreen {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10B981;
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badgeAmber {
+  background: rgba(245, 158, 11, 0.1);
+  color: #F59E0B;
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badgeGray {
+  background: #F3F4F6;
+  color: #6B7280;
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.linkBlue {
+  color: #3B82F6;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.linkBlue:hover {
+  text-decoration: underline;
+}
+
+.btnGoldSmall {
+  background: #F5A623;
+  color: #0A1628;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* XRATE SCORE CARD */
+.gaugeContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.gaugeCircle {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 12px solid #E5E7EB;
+  border-top-color: #F5A623;
+  border-right-color: #F5A623;
+  border-bottom-color: #F5A623;
+  transform: rotate(-45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gaugeInner {
+  transform: rotate(45deg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.scoreValue {
+  font-size: 36px;
+  font-weight: 700;
+  color: #1B3A6B;
+  line-height: 1;
+}
+
+.scoreLabel {
+  font-size: 12px;
+  color: #6B7280;
+  margin-top: 4px;
+}
+
+.ratingBadge {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10B981;
+  padding: 6px 16px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: -12px;
+  position: relative;
+  background-color: #D1FAE5;
+}
+
+.metricRows {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.metricRow {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.metricHeader {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.metricName {
+  color: #4B5563;
+}
+
+.metricStatus {
+  color: #0D1117;
+  font-weight: 600;
+}
+
+.metricBarContainer {
+  height: 6px;
+  background: #E5E7EB;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.btnOutlined {
+  width: 100%;
+  border: 1px solid #1B3A6B;
+  background: transparent;
+  color: #1B3A6B;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btnOutlined:hover {
+  background: #EBF2FF;
+}
+
+/* OFFERS TABLE */
+.tableWrapper {
+  background: #ffffff;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.tableTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0D1117;
+  margin-bottom: 20px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.th {
+  text-align: left;
+  padding: 12px 16px;
+  color: #6B7280;
+  font-size: 13px;
+  font-weight: 500;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.td {
+  padding: 16px;
+  border-bottom: 1px solid #F3F4F6;
+  font-size: 14px;
+  color: #0D1117;
+  vertical-align: middle;
+}
+
+.tr:last-child .td {
+  border-bottom: none;
+}
+
+.investorName {
+  font-weight: 600;
+  color: #1B3A6B;
+}
+
+.btnReview {
+  background: #F5A623;
+  color: #0A1628;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btnThread {
+  background: transparent;
+  color: #1B3A6B;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btnThread:hover {
+  background: #F8F9FC;
+}
