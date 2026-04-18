@@ -9,9 +9,12 @@ export async function PATCH(
   try {
     await dbConnect();
     const { id } = await params;
-    const { status } = await req.json();
+    const { status, blockchainTxHash } = await req.json();
 
-    const investment = await Investment.findByIdAndUpdate(id, { status }, { new: true });
+    const investment = await Investment.findByIdAndUpdate(id, { 
+      status, 
+      blockchainTxHash 
+    }, { new: true });
 
     if (!investment) {
       return NextResponse.json({ error: 'Investment not found' }, { status: 404 });

@@ -19,6 +19,7 @@
 .metricsGrid {
   display: flex;
   gap: 20px;
+  flex-wrap: wrap;
 }
 
 .metricCard {
@@ -212,16 +213,22 @@
 
 /* TRENDING STARTUPS */
 .startupGrid {
-  display: flex;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
 }
 
 .startupCard {
-  flex: 1;
   background: #ffffff;
   border: 1px solid #E5E7EB;
   border-radius: 12px;
-  padding: 20px;
+  padding: 24px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.startupCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05);
 }
 
 .cardTop {

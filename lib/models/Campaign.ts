@@ -20,6 +20,7 @@ export interface ICampaign extends Document {
   endDate: Date;
   location: string;
   imageUrl?: string;
+  onChainCampaignId?: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -63,6 +64,7 @@ const CampaignSchema: Schema = new Schema(
     endDate: { type: Date, required: true },
     location: { type: String, required: true },
     imageUrl: { type: String },
+    onChainCampaignId: { type: Number },
   },
   { timestamps: true }
 );

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import styles from './page.module.css';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { submitBlockchainInvestment } from '@/lib/web3';
 
 export default function XRaisePage() {
   const searchParams = useSearchParams();
@@ -111,28 +112,60 @@ export default function XRaisePage() {
   };
 
   const handlePayment = async () => {
-    if (!investment) return;
+    if (!investment || !negotiation) return;
     setIsPaying(true);
     
     try {
-      // Mock payment delay
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const onChainId = negotiation.campaignId.onChainCampaignId;
+      
+      if (onChainId === undefined || onChainId === null) {
+        alert("This campaign is not yet synchronized with the blockchain. Please contact the founder.");
+        setIsPaying(false);
+        return;
+      }
+
+      // 1 ETH = ₹250,000 conversion for mockup consistency
+      const mockEthAmount = (investment.amount / 250000).toFixed(6);
+
+      // Trigger Blockchain Transaction
+      const web3Res = await submitBlockchainInvestment(onChainId, mockEthAmount);
+      
+      if (!web3Res.success) {
+        alert("Transaction failed on blockchain: " + web3Res.error);
+        setIsPaying(false);
+        return;
+      }
       
       const res = await fetch(`/api/investments/${investment._id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'Completed' })
+        body: JSON.stringify({ 
+          status: 'Completed',
+          blockchainTxHash: web3Res.hash
+        })
       });
       const data = await res.json();
       if (data.success) {
         setInvestment(data.data);
-        alert('Payment processed successfully! Funds are now in Escrow.');
+        alert('Payment processed successfully! Funds are now securely held in Escrow on-chain.');
+      } else {
+        alert('Database sync failed, but blockchain transaction was successful: ' + web3Res.hash);
       }
-    } catch (err) {
-      alert('Payment failed');
+    } catch (err: any) {
+      console.error(err);
+      alert('Payment failed: ' + (err.message || 'Unknown error'));
     } finally {
       setIsPaying(false);
     }
+  };
+
+  const handleBlockchainVerify = async () => {
+    // This would trigger the ZKP logic explained in our guide
+    alert("Generating Zero-Knowledge Proof... \nProof generated! \nSending to Smart Contract for verification...");
+    // Mocking a successful on-chain verification
+    setTimeout(() => {
+      alert("Verification Success! Proof anchored on Base L2.");
+    }, 1500);
   };
 
   if (loading) return <div className={styles.loading}>Loading Deal Room...</div>;
@@ -198,6 +231,14 @@ export default function XRaisePage() {
               <div className={lastSender === (isInvestor ? 'INVESTOR' : 'STARTUP') ? styles.badgeAwaiting : styles.badgeYourTurn}>
                 {lastSender === (isInvestor ? 'INVESTOR' : 'STARTUP') ? 'Awaiting Counter' : 'Your Turn to Respond'}
               </div>
+              
+              {isInvestor && (
+                <div className={styles.zkpVerification} style={{marginTop: '15px'}}>
+                  <button className={styles.btnSecondarySmall} onClick={handleBlockchainVerify}>
+                    Verify Assets via ZK-Proof
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 

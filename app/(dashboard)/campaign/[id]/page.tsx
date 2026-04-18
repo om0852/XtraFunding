@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import styles from '../page.module.css'; // Using the module CSS from parent directory
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
+import { submitBlockchainInvestment } from '@/lib/web3';
 
 export default function CampaignDetailPage() {
   const { id } = useParams();
@@ -106,13 +107,34 @@ export default function CampaignDetailPage() {
 
     setIsInvesting(true);
     try {
+      // Because native UI deals with INR and the contract expects ETH, we'll do a mock conversion.
+      // E.g., 1 ETH = ₹250,000 for representation.
+      const mockEthAmount = (numAmount / 250000).toFixed(6);
+
+      // Trigger Blockchain Transaction via MetaMask
+      if (campaign.onChainCampaignId === undefined || campaign.onChainCampaignId === null) {
+        alert("This campaign is not yet synchronized with the blockchain. Please contact the founder.");
+        setIsInvesting(false);
+        return;
+      }
+
+      const web3Res = await submitBlockchainInvestment(campaign.onChainCampaignId, mockEthAmount);
+      
+      if (!web3Res.success) {
+        alert("Transaction failed on blockchain: " + web3Res.error);
+        setIsInvesting(false);
+        return;
+      }
+
+      // If blockchain succeeds, sync with off-chain database
       const res = await fetch('/api/investments', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           investorId: userId,
           campaignId: id,
-          amount: numAmount
+          amount: numAmount,
+          txHash: web3Res.hash // Save the blockchain reference
         })
       });
       const data = await res.json();
@@ -124,12 +146,13 @@ export default function CampaignDetailPage() {
           status: data.campaignStatus
         }));
         setAmount('');
-        alert('Investment successful! Funds are held in escrow until goal is met.');
+        alert('Investment successful! Funds are securely locked in the smart contract escrow.');
       } else {
-        alert(data.error || 'Investment failed');
+        alert(data.error || 'Investment database sync failed, but blockchain succeeded. Transaction: ' + web3Res.hash);
       }
-    } catch (err) {
-      alert('An error occurred');
+    } catch (err: any) {
+      console.error(err);
+      alert('An error occurred: ' + (err.message || 'Unknown error'));
     } finally {
       setIsInvesting(false);
     }
@@ -154,6 +177,11 @@ export default function CampaignDetailPage() {
                 <span className={styles.badgePill}>{campaign.stage}</span>
                 <span className={styles.badgePill}>{campaign.location}</span>
                 <span className={styles.badgePillGold}>{campaign.fundingType} Model</span>
+                {campaign.onChainCampaignId !== undefined && (
+                  <span className={styles.badgePill} style={{ background: '#ecfdf5', color: '#059669', borderColor: '#10b981' }}>
+                    🔗 On-Chain ID: {campaign.onChainCampaignId}
+                  </span>
+                )}
               </div>
             </div>
           </div>
@@ -245,8 +273,14 @@ export default function CampaignDetailPage() {
                             className={styles.btnInvest} 
                             disabled={isError || numAmount === 0 || isInvesting}
                             onClick={handleInvest}
+                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                           >
-                            {isInvesting ? 'Processing...' : 'Invest Now'}
+                            {isInvesting ? 'Processing Tx...' : (
+                              <>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4" /><path d="M3 5v14a2 2 0 0 0 2 2h16v-5" /><path d="M18 12a2 2 0 0 0 0 4h4v-4Z" /></svg>
+                                Invest with MetaMask
+                              </>
+                            )}
                           </button>
                         </div>
                       </>

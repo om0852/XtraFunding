@@ -7,7 +7,8 @@ import { useRouter } from 'next/navigation';
 
 export default function StartupDashboard() {
   const router = useRouter();
-  const [campaign, setCampaign] = useState<any>(null);
+  const [campaigns, setCampaigns] = useState<any[]>([]);
+  const [activeCampaignIdx, setActiveCampaignIdx] = useState(0);
   const [negotiations, setNegotiations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -23,16 +24,11 @@ export default function StartupDashboard() {
         const res = await fetch('/api/campaigns');
         const data = await res.json();
         if (data.success) {
-          const userCampaign = data.campaigns.find((c: any) => c.founderId === userId);
-          setCampaign(userCampaign);
+          const userCampaigns = data.campaigns.filter((c: any) => c.founderId === userId);
+          setCampaigns(userCampaigns);
 
-          if (userCampaign && userCampaign.fundingModel === 'XRaise') {
-            const negRes = await fetch(`/api/negotiations?campaignId=${userCampaign._id}`);
-            const negData = await negRes.json();
-            if (negData.success) {
-              setNegotiations(negData.data);
-            }
-          }
+          // We'll just fetch negotiations for the *currently active* campaign if it's XRaise.
+          // To be perfectly robust, we can fetch all, but for now let's just fetch for the first one, or we can use an effect below.
         }
       } catch (err) {
         console.error('Failed to fetch dashboard data', err);
@@ -44,18 +40,60 @@ export default function StartupDashboard() {
     fetchDashboardData();
   }, [router]);
 
+  const campaign = campaigns[activeCampaignIdx];
+
+  // Fetch negotiations when the active campaign changes and it's an XRaise
+  useEffect(() => {
+    if (campaign && campaign.fundingModel === 'XRaise') {
+      fetch(`/api/negotiations?campaignId=${campaign._id}`)
+        .then(res => res.json())
+        .then(negData => {
+          if (negData.success) {
+            setNegotiations(negData.data);
+          } else {
+            setNegotiations([]);
+          }
+        })
+        .catch(err => console.error(err));
+    } else {
+      setNegotiations([]);
+    }
+  }, [campaign]);
+
   if (loading) return <div className={styles.loading}>Loading Dashboard...</div>;
 
   return (
     <main className={styles.content}>
       <div className={styles.headerRow}>
         <h1 className={styles.heading}>Campaign Overview</h1>
-        {!campaign && (
-          <Link href="/startup/create-xfund">
-            <button className={styles.btnCreate}>+ New Campaign</button>
-          </Link>
-        )}
+        <Link href="/startup/create-xfund">
+          <button className={styles.btnCreate}>+ New Campaign</button>
+        </Link>
       </div>
+
+      {campaigns.length > 1 && (
+        <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', overflowX: 'auto', paddingBottom: '8px' }}>
+          {campaigns.map((camp, idx) => (
+            <button 
+              key={camp._id}
+              onClick={() => setActiveCampaignIdx(idx)}
+              style={{
+                padding: '8px 16px',
+                borderRadius: '20px',
+                border: '1px solid #e2e8f0',
+                backgroundColor: activeCampaignIdx === idx ? '#1e293b' : '#ffffff',
+                color: activeCampaignIdx === idx ? '#ffffff' : '#475569',
+                cursor: 'pointer',
+                fontWeight: activeCampaignIdx === idx ? '600' : '500',
+                whiteSpace: 'nowrap',
+                transition: 'all 0.2s'
+              }}
+            >
+              {camp.title}
+            </button>
+          ))}
+        </div>
+      )}
 
       {!campaign ? (
         <div className={styles.emptyState}>

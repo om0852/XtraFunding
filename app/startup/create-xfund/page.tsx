@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './page.module.css';
 import { useRouter } from 'next/navigation';
+import { createBlockchainCampaign } from '@/lib/web3';
 
 export default function CreateXFundPage() {
   const router = useRouter();
@@ -43,6 +44,27 @@ export default function CreateXFundPage() {
     setLoading(true);
 
     try {
+      let onChainCampaignId;
+      
+      // Calculate duration days based on endDate
+      const end = new Date(formData.endDate);
+      const now = new Date();
+      const diffTime = Math.abs(end.getTime() - now.getTime());
+      const durationDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      
+      // Convert INR goal to mock ETH string
+      const goalAmount = Number(formData.fundingGoal);
+      const mockEthGoal = (goalAmount / 250000).toFixed(6);
+
+      // Trigger Web3 MetaMask interaction to create campaign permanently on-chain
+      const web3Res = await createBlockchainCampaign(mockEthGoal, durationDays);
+      
+      if (!web3Res.success) {
+        throw new Error(web3Res.error || "Failed resolving blockchain synchrony");
+      }
+      
+      onChainCampaignId = web3Res.campaignId;
+
       const payload = {
         ...formData,
         founderId: userId,
@@ -52,7 +74,8 @@ export default function CreateXFundPage() {
         equityOffered: formData.fundingType === 'Equity' ? Number(formData.equityOffered) : undefined,
         interestRate: formData.fundingType === 'Debt' ? Number(formData.interestRate) : undefined,
         repaymentMonths: formData.fundingType === 'Debt' ? Number(formData.repaymentMonths) : undefined,
-        endDate: new Date(formData.endDate)
+        endDate: new Date(formData.endDate),
+        onChainCampaignId: onChainCampaignId
       };
 
       const res = await fetch('/api/campaigns', {
@@ -284,8 +307,13 @@ export default function CreateXFundPage() {
 
           <div className={styles.actions}>
             <button type="button" className={styles.btnSecondary} onClick={() => router.back()}>Cancel</button>
-            <button type="submit" className={styles.btnPrimary} disabled={loading}>
-              {loading ? 'Creating...' : 'Launch XFund'}
+            <button type="submit" className={styles.btnPrimary} disabled={loading} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              {loading ? 'Broadcasting to Ethereum...' : (
+                <>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4" /><path d="M3 5v14a2 2 0 0 0 2 2h16v-5" /><path d="M18 12a2 2 0 0 0 0 4h4v-4Z" /></svg>
+                  Launch XFund
+                </>
+              )}
             </button>
           </div>
 
