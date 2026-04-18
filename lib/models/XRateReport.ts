@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 
 export interface IXRateReport extends Document {
-  campaignId: mongoose.Types.ObjectId;
+  campaignId: string;
   overallScore: number;
   riskScore: number;
   growthScore: number;
@@ -19,7 +19,7 @@ export interface IXRateReport extends Document {
 
 const XRateReportSchema: Schema = new Schema(
   {
-    campaignId: { type: Schema.Types.ObjectId, ref: 'Campaign', required: true },
+    campaignId: { type: String, required: true },
     overallScore: { type: Number, required: true, min: 0, max: 100 },
     riskScore: { type: Number, required: true, min: 0, max: 100 },
     growthScore: { type: Number, required: true, min: 0, max: 100 },
@@ -34,6 +34,9 @@ const XRateReportSchema: Schema = new Schema(
   { timestamps: true }
 );
 
-const XRateReport: Model<IXRateReport> = mongoose.models.XRateReport || mongoose.model<IXRateReport>('XRateReport', XRateReportSchema);
+if (mongoose.models.XRateReport) {
+  delete (mongoose as any).models.XRateReport;
+}
+const XRateReport: Model<IXRateReport> = mongoose.model<IXRateReport>('XRateReport', XRateReportSchema);
 
 export default XRateReport;

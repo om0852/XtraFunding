@@ -17,7 +17,7 @@ export default function LandingPage() {
         steps: ['You pledge capital to a promising startup campaign', 'Your funds are locked securely in our Smart Escrow', 'The startup hits their predefined growth milestones', 'Capital is automatically released to the founder']
       },
       action: 'Explore Campaigns',
-      link: '/auth'
+      link: '/campaign'
     },
     'XRate': {
       title: 'XRate AI Scoring',
@@ -28,7 +28,7 @@ export default function LandingPage() {
         steps: ['Our AI engine analyzes the startup pitch deck and financials', 'Market data and founder histories are cross-referenced', 'A detailed XRate Score (1-100) and Risk Profile is generated', 'You review the clear, actionable report before investing']
       },
       action: 'View AI Reports',
-      link: '/auth'
+      link: '/xrate'
     },
     'XRaise': {
       title: 'XRaise Negotiations',
@@ -39,7 +39,7 @@ export default function LandingPage() {
         steps: ['You send a custom valuation and equity offer to the founder', 'The founder reviews and issues a counter-offer', 'Both parties agree on the final terms and equity split', 'The platform instantly generates a legally binding Term Sheet']
       },
       action: 'Start Negotiating',
-      link: '/auth'
+      link: '/xraise'
     },
     'Pricing': {
       title: 'Transparent Pricing',
@@ -129,8 +129,8 @@ export default function LandingPage() {
               XtraFunds connects verified startups with smart investors through transparent fund tracking, AI-powered ratings, and milestone-based releases.
             </p>
             <div className={styles.heroActions}>
-              <Link href="/auth"><button className={styles.btnStartInvesting}>Start Investing</button></Link>
-              <Link href="/auth"><button className={styles.btnListStartup}>List Your Startup</button></Link>
+              <Link href="/campaign"><button className={styles.btnStartInvesting}>Start Investing</button></Link>
+              <Link href="/xverify"><button className={styles.btnListStartup}>List Your Startup</button></Link>
             </div>
             <div className={styles.heroTrustContainer}>
               <p className={styles.heroTrust}>

@@ -17,23 +17,19 @@ export default function InvestorLayout({
 
   useEffect(() => {
     const userId = localStorage.getItem('userId');
-    if (!userId) {
-      router.push('/auth');
-      return;
+    if (userId) {
+      fetch(`/api/users/${userId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            setUser(data.data);
+          } else {
+            localStorage.removeItem('userId');
+          }
+        })
+        .catch(err => console.error("Error fetching user data:", err));
     }
-    
-    fetch(`/api/users/${userId}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          setUser(data.data);
-        } else {
-          localStorage.removeItem('userId');
-          router.push('/auth');
-        }
-      })
-      .catch(err => console.error("Error fetching user data:", err));
-  }, [router]);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('userId');
