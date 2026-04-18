@@ -3,10 +3,12 @@
 import React, { useEffect, useState } from 'react';
 import styles from './page.module.css';
 import Link from 'next/link';
+import { useComparison } from '@/context/ComparisonContext';
 
 export default function Dashboard() {
   const [campaigns, setCampaigns] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const { selectedDeals, addDeal, removeDeal } = useComparison();
 
   useEffect(() => {
     const fetchCampaigns = async () => {
@@ -70,7 +72,18 @@ export default function Dashboard() {
                 <div key={camp._id} className={styles.startupCard}>
                   <div className={styles.cardTop}>
                     <div className={styles.startupName}>{camp.title}</div>
-                    <div className={styles.typeBadgeSmall} style={{ backgroundColor: '#F0F9FF', color: '#0369A1' }}>XFund</div>
+                    <div style={{ display: 'flex', gap: '6px' }}>
+                      {camp.xrateReportId ? (
+                        <div className={styles.xrateBadge} title="Institutional XRate Linked">
+                          📄 <span>XRate</span>
+                        </div>
+                      ) : (
+                        <div className={styles.xrateBadgeNone} title="No Report Linked">
+                          ⚠️ <span>Unverified</span>
+                        </div>
+                      )}
+                      <div className={styles.typeBadgeSmall} style={{ backgroundColor: '#F0F9FF', color: '#0369A1' }}>XFund</div>
+                    </div>
                   </div>
                   <div className={styles.sectorTag}>{camp.sector} · {camp.location}</div>
                   
@@ -85,9 +98,21 @@ export default function Dashboard() {
                   
                   <div className={styles.cardBottom}>
                     <span className={styles.minText}>Min ₹{camp.minimumInvestment.toLocaleString()}</span>
-                    <Link href={`/investor/xfund/${camp._id}`}>
-                      <button className={styles.btnInvest}>Invest Now</button>
-                    </Link>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <button 
+                        className={styles.btnSelect}
+                        onClick={() => {
+                          const isSelected = selectedDeals.find(s => s.id === camp._id);
+                          if (isSelected) removeDeal(camp._id);
+                          else addDeal({ id: camp._id, name: camp.title });
+                        }}
+                      >
+                        {selectedDeals.find(s => s.id === camp._id) ? 'Selected' : 'Select'}
+                      </button>
+                      <Link href={`/investor/xfund/${camp._id}`}>
+                        <button className={styles.btnInvest}>Invest</button>
+                      </Link>
+                    </div>
                   </div>
                 </div>
               ))
@@ -117,7 +142,18 @@ export default function Dashboard() {
                 <div key={camp._id} className={styles.startupCard} style={{ borderColor: '#F5A623', background: 'linear-gradient(to bottom right, #ffffff, #FFFDF9)' }}>
                   <div className={styles.cardTop}>
                     <div className={styles.startupName}>{camp.title}</div>
-                    <div className={styles.typeBadgeSmall} style={{ backgroundColor: '#FEF3C7', color: '#B45309' }}>XRaise</div>
+                    <div style={{ display: 'flex', gap: '6px' }}>
+                      {camp.xrateReportId ? (
+                        <div className={styles.xrateBadge} title="Institutional XRate Linked">
+                          📄 <span>XRate</span>
+                        </div>
+                      ) : (
+                        <div className={styles.xrateBadgeNone} title="No Report Linked">
+                          ⚠️ <span>Unverified</span>
+                        </div>
+                      )}
+                      <div className={styles.typeBadgeSmall} style={{ backgroundColor: '#FEF3C7', color: '#B45309' }}>XRaise</div>
+                    </div>
                   </div>
                   <div className={styles.sectorTag}>{camp.sector} · {camp.location}</div>
                   
@@ -127,11 +163,23 @@ export default function Dashboard() {
                   
                   <div className={styles.cardBottom}>
                     <span className={styles.minText}>Target ₹{camp.fundingGoal.toLocaleString()}</span>
-                    <Link href={`/investor/xraise/explore/${camp._id}`}>
-                      <button className={`${styles.btnInvest} ${styles.btnInvestGold}`}>
-                        Explore Deal
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <button 
+                        className={styles.btnSelectGold}
+                        onClick={() => {
+                          const isSelected = selectedDeals.find(s => s.id === camp._id);
+                          if (isSelected) removeDeal(camp._id);
+                          else addDeal({ id: camp._id, name: camp.title });
+                        }}
+                      >
+                        {selectedDeals.find(s => s.id === camp._id) ? 'Selected' : 'Select'}
                       </button>
-                    </Link>
+                      <Link href={`/investor/xraise/explore/${camp._id}`}>
+                        <button className={`${styles.btnInvest} ${styles.btnInvestGold}`}>
+                          Explore
+                        </button>
+                      </Link>
+                    </div>
                   </div>
                 </div>
               ))

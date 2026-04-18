@@ -28,6 +28,7 @@ export interface IXRateReport extends Document {
   milestones: string[];
   investmentRecommendations: string;
   campaignId?: string;
+  ownerId?: string;
   verifiedDocuments: string[];
   lastUpdated: Date;
   createdAt: Date;
@@ -63,6 +64,7 @@ const XRateReportSchema: Schema = new Schema(
     milestones: [{ type: String }],
     investmentRecommendations: { type: String, required: true },
     campaignId: { type: String },
+    ownerId: { type: Schema.Types.ObjectId, ref: 'User' },
     verifiedDocuments: [{ type: String }],
   },
   { timestamps: true }

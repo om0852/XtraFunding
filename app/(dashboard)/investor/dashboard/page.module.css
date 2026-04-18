@@ -150,12 +150,37 @@
 }
 
 .typeBadgeSmall {
+  letter-spacing: 0.05em;
+}
+
+.xrateBadge {
+  background: #EFF6FF;
+  color: #2563EB;
   font-size: 11px;
   font-weight: 800;
   padding: 4px 10px;
   border-radius: 6px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid #DBEAFE;
+}
+
+.xrateBadgeNone {
+  background: #FEF2F2;
+  color: #EF4444;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid #FEE2E2;
 }
 
 .sectorTag {
@@ -243,7 +268,32 @@
 }
 
 .btnInvestGold:hover {
-  background: #D97706;
+  background: #B45309;
+}
+
+.btnSelect, .btnSelectGold {
+  background: white;
+  border: 1px solid #E2E8F0;
+  color: #64748B;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btnSelect:hover {
+  border-color: #0369A1;
+  color: #0369A1;
+  background: #F0F9FF;
+}
+
+.btnSelectGold:hover {
+  border-color: #F5A623;
+  color: #D97706;
+  background: #FFFBEB;
 }
 
 /* EMPTY STATE */

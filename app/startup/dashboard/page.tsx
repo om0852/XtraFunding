@@ -11,6 +11,9 @@ export default function StartupDashboard() {
   const [activeCampaignIdx, setActiveCampaignIdx] = useState(0);
   const [negotiations, setNegotiations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [reports, setReports] = useState<any[]>([]);
+  const [selectedReportId, setSelectedReportId] = useState('');
+  const [repairing, setRepairing] = useState(false);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -27,8 +30,12 @@ export default function StartupDashboard() {
           const userCampaigns = data.campaigns.filter((c: any) => c.founderId === userId);
           setCampaigns(userCampaigns);
 
-          // We'll just fetch negotiations for the *currently active* campaign if it's XRaise.
-          // To be perfectly robust, we can fetch all, but for now let's just fetch for the first one, or we can use an effect below.
+          // Fetch user's XRate reports for potential linkage repair
+          const reportRes = await fetch(`/api/xrate?ownerId=${userId}`);
+          const reportData = await reportRes.json();
+          if (reportData.success) {
+            setReports(reportData.reports);
+          }
         }
       } catch (err) {
         console.error('Failed to fetch dashboard data', err);
@@ -59,6 +66,38 @@ export default function StartupDashboard() {
       setNegotiations([]);
     }
   }, [campaign]);
+
+  const handleRepairLinkage = async () => {
+    if (!campaign || !selectedReportId) return;
+    setRepairing(true);
+    
+    try {
+      const res = await fetch(`/api/campaigns/${campaign._id}/link`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          xrateReportId: selectedReportId,
+          founderId: localStorage.getItem('userId')
+        })
+      });
+      
+      const data = await res.json();
+      if (data.success) {
+        // Refresh campaign data
+        const updatedCampaigns = [...campaigns];
+        updatedCampaigns[activeCampaignIdx].xrateReportId = selectedReportId;
+        setCampaigns(updatedCampaigns);
+        alert('Institutional linkage repaired successfully!');
+      } else {
+        alert(data.error || 'Failed to repair linkage');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Something went wrong during repair');
+    } finally {
+      setRepairing(false);
+    }
+  };
 
   if (loading) return <div className={styles.loading}>Loading Dashboard...</div>;
 
@@ -112,6 +151,34 @@ export default function StartupDashboard() {
             <span className={styles.subtextTag}>{campaign.stage}</span>
             <span className={styles.subtextTagGold}>{campaign.fundingModel === 'XRaise' ? 'XRaise (Auction)' : 'XFund (Crowd)'}</span>
           </div>
+
+          {!campaign.xrateReportId && (
+            <div className={styles.repairNotice}>
+              <div className={styles.repairInfo}>
+                <h4>⚠️ Missing Institutional Analysis</h4>
+                <p>Investors cannot compare this deal without a linked XRate report. Link one from your list below.</p>
+              </div>
+              <div className={styles.repairActions}>
+                <select 
+                  className={styles.repairSelect}
+                  value={selectedReportId}
+                  onChange={(e) => setSelectedReportId(e.target.value)}
+                >
+                  <option value="">Select verified report...</option>
+                  {reports.map(r => (
+                    <option key={r._id} value={r._id}>{r.startupName} (Score: {r.overallScore})</option>
+                  ))}
+                </select>
+                <button 
+                  className={styles.btnRepair}
+                  onClick={handleRepairLinkage}
+                  disabled={repairing || !selectedReportId}
+                >
+                  {repairing ? 'Linking...' : 'Link Analysis'}
+                </button>
+              </div>
+            </div>
+          )}
 
           {campaign.fundingModel === 'XFund' ? (
             <div className={styles.campaignCard}>

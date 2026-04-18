@@ -5,6 +5,7 @@ import styles from './XRaiseContent.module.css';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { submitBlockchainInvestment } from '@/lib/web3';
+import { useComparison } from '@/context/ComparisonContext';
 
 export default function XRaiseContent() {
   const searchParams = useSearchParams();
@@ -18,6 +19,7 @@ export default function XRaiseContent() {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
+  const { selectedDeals, addDeal, removeDeal } = useComparison();
 
   // Form states
   const [offerAmount, setOfferAmount] = useState('');
@@ -226,6 +228,22 @@ export default function XRaiseContent() {
                   </div>
 
                   <div className={styles.negCardFooter}>
+                    <div style={{ display: 'flex', gap: '8px', zIndex: 10 }}>
+                      {isInvestorMode && (
+                        <button 
+                          className={styles.btnSelectSmall}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            const isSelected = selectedDeals.find(s => s.id === neg.campaignId?._id);
+                            if (isSelected) removeDeal(neg.campaignId?._id);
+                            else addDeal({ id: neg.campaignId?._id, name: neg.campaignId?.title });
+                          }}
+                        >
+                          {selectedDeals.find(s => s.id === neg.campaignId?._id) ? 'Selected' : 'Select'}
+                        </button>
+                      )}
+                    </div>
                     <div className={styles.investorDetail}>
                       {isInvestorMode ? `Founder: Startup` : `Investor: ${neg.investorId?.name}`}
                     </div>

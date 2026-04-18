@@ -134,8 +134,122 @@
 }
 
 .btnPrimary:disabled {
-  background: #cbd5e1;
+  opacity: 0.7;
   cursor: not-allowed;
+}
+
+.reportLoader {
+  background: rgba(14, 165, 233, 0.05);
+  border: 1px dashed #0EA5E9;
+  color: #0369A1;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.noReportsBox {
+  background: #FFFBEB;
+  border: 1px solid #FCD34D;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.noReportsBox p {
+  color: #92400E;
+  font-size: 13px;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.btnSecondarySmall {
+  background: white;
+  border: 1px solid #D97706;
+  color: #D97706;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btnLink {
+  background: transparent;
+  border: none;
+  color: #0EA5E9;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  transition: opacity 0.2s;
+}
+
+.btnLink:hover {
+  opacity: 0.7;
+}
+
+.submitWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.warningText {
+  color: #F87171;
+  font-size: 11px;
+  font-weight: 500;
+  background: #FEF2F2;
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid #FEE2E2;
+}
+
+.btnPrimarySmall {
+  background: #0EA5E9;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btnPrimarySmall:hover {
+  background: #0284C7;
+}
+
+.legacyFinder {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #FCD34D;
+}
+
+.smallLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: #92400E;
+  display: block;
+}
+
+.inputSmall {
+  flex: 1;
+  background: white;
+  border: 1px solid #F6AD55;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  outline: none;
+}
+
+.inputSmall:focus {
+  border-color: #DD6B20;
+  box-shadow: 0 0 0 2px rgba(221, 107, 32, 0.1);
 }
 
 .error {

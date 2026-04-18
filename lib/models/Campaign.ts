@@ -19,9 +19,11 @@ export interface ICampaign extends Document {
   disbursed: boolean;
   endDate: Date;
   location: string;
+  imageUrl?: string;
   onChainCampaignId?: number;
   paillierPublicKey?: { n: string; g: string };
   encryptedTotalRaised?: string; // Tally of encrypted contributions
+  xrateReportId?: mongoose.Types.ObjectId; // Linked XRate report ID (Schema v2)
   createdAt: Date;
   updatedAt: Date;
 }
@@ -71,6 +73,7 @@ const CampaignSchema: Schema = new Schema(
       g: { type: String }
     },
     encryptedTotalRaised: { type: String, default: '0' },
+    xrateReportId: { type: Schema.Types.ObjectId, ref: 'XRateReport' },
   },
   { timestamps: true }
 );

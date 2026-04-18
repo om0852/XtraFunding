@@ -9,10 +9,43 @@ const model = genAI.getGenerativeModel({
   generationConfig: { responseMimeType: "application/json" }
 });
 
+export async function GET(request: Request) {
+  try {
+    await dbConnect();
+    const { searchParams } = new URL(request.url);
+    const ownerId = searchParams.get('ownerId');
+    const startupName = searchParams.get('startupName');
+
+    if (ownerId && startupName) {
+      // Auto-migrate legacy reports that match the name but have no owner
+      await XRateReport.updateMany(
+        { startupName: { $regex: new RegExp(`^${startupName}$`, 'i') }, ownerId: { $exists: false } },
+        { ownerId: ownerId }
+      );
+    }
+
+    // Return reports owned by the user OR reports that have no owner (unclaimed/legacy)
+    const query = ownerId 
+      ? { $or: [
+          { ownerId }, 
+          { ownerId: null },
+          { ownerId: { $exists: false } }
+        ]} 
+      : {};
+      
+    const reports = await XRateReport.find(query).sort({ createdAt: -1 });
+
+    return NextResponse.json({ success: true, reports });
+  } catch (error: any) {
+    console.error('Fetch reports error:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { startupName, industry, description, fundingGoal, keyFeatures, campaignId } = body;
+    const { startupName, industry, description, fundingGoal, keyFeatures, campaignId, ownerId } = body;
 
     if (!startupName || !industry || !description) {
       return NextResponse.json({ error: 'Missing required startup details' }, { status: 400 });
@@ -82,6 +115,7 @@ export async function POST(request: Request) {
       milestones: aiData.milestones,
       investmentRecommendations: aiData.investmentRecommendations,
       campaignId: campaignId || null,
+      ownerId: ownerId || null
     });
 
     return NextResponse.json({ success: true, data: newReport }, { status: 201 });

@@ -3,6 +3,7 @@
 import React from 'react';
 import styles from './page.module.css';
 import Link from 'next/link';
+import { useComparison } from '@/context/ComparisonContext';
 
 // Mock data for watchlist startups
 const WATCHLIST_STARTUPS = [
@@ -51,6 +52,7 @@ const WATCHLIST_STARTUPS = [
 ];
 
 export default function WatchlistPage() {
+  const { selectedDeals, addDeal, removeDeal } = useComparison();
   return (
     <div className={styles.container}>
       <div className={styles.breadcrumbHeader}>
@@ -120,8 +122,18 @@ export default function WatchlistPage() {
             </div>
 
             <div className={styles.cardFooter}>
+              <button 
+                className={styles.btnSelect}
+                onClick={() => {
+                  const isSelected = selectedDeals.find(s => s.id === startup.id);
+                  if (isSelected) removeDeal(startup.id);
+                  else addDeal({ id: startup.id, name: startup.name });
+                }}
+              >
+                {selectedDeals.find(s => s.id === startup.id) ? 'Selected' : 'Select'}
+              </button>
               <Link href="/campaign" className={styles.btnView}>
-                View Campaign
+                View
               </Link>
               <button className={styles.btnRemove} title="Remove from Watchlist">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

@@ -3,12 +3,15 @@
 import React, { useState, useEffect } from 'react';
 import styles from './page.module.css';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { createBlockchainCampaign } from '@/lib/web3';
 
 export default function CreateXFundPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
+  const [reports, setReports] = useState<any[]>([]);
+  const [reportsLoading, setReportsLoading] = useState(true);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -24,13 +27,33 @@ export default function CreateXFundPage() {
     fundingType: 'Equity' as 'Equity' | 'Debt',
     equityOffered: '',
     interestRate: '',
-    repaymentMonths: ''
+    repaymentMonths: '',
+    xrateReportId: ''
   });
+
+  const fetchReports = (id: string) => {
+    setReportsLoading(true);
+    fetch(`/api/xrate?ownerId=${id}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setReports(data.reports);
+        }
+        setReportsLoading(false);
+      })
+      .catch(err => {
+        console.error('Error fetching reports:', err);
+        setReportsLoading(false);
+      });
+  };
 
   useEffect(() => {
     const storedId = localStorage.getItem('userId');
     if (storedId) {
       setUserId(storedId);
+      fetchReports(storedId);
+    } else {
+      setReportsLoading(false);
     }
   }, []);
 
@@ -41,6 +64,13 @@ export default function CreateXFundPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Final validation
+    if (!formData.xrateReportId) {
+      alert("Please select a verified XRate Report to link to this campaign.");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -75,7 +105,8 @@ export default function CreateXFundPage() {
         interestRate: formData.fundingType === 'Debt' ? Number(formData.interestRate) : undefined,
         repaymentMonths: formData.fundingType === 'Debt' ? Number(formData.repaymentMonths) : undefined,
         endDate: new Date(formData.endDate),
-        onChainCampaignId: onChainCampaignId
+        onChainCampaignId: onChainCampaignId,
+        xrateReportId: formData.xrateReportId
       };
 
       const res = await fetch('/api/campaigns', {
@@ -107,7 +138,7 @@ export default function CreateXFundPage() {
         </div>
 
         <form onSubmit={handleSubmit} className={styles.formGrid}>
-          
+
           <div className={`${styles.inputGroup} ${styles.fieldFull}`}>
             <label className={styles.label}>Campaign Title</label>
             <input 
@@ -118,6 +149,47 @@ export default function CreateXFundPage() {
               value={formData.title}
               onChange={handleChange}
             />
+          </div>
+          
+          <div className={`${styles.inputGroup} ${styles.fieldFull}`}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <label className={styles.label}>Link Institutional XRate Report</label>
+              <button 
+                type="button" 
+                className={styles.btnLink} 
+                onClick={() => userId && fetchReports(userId)}
+                style={{ fontSize: '11px' }}
+              >
+                ↻ Refresh List
+              </button>
+            </div>
+            {reportsLoading ? (
+              <div className={styles.reportLoader}>Scanning for reports...</div>
+            ) : reports.length === 0 ? (
+              <div className={styles.noReportsBox}>
+                <p>No verified institutional analyses found. Every funding campaign requires a linked XRate report to be visible to investors.</p>
+                <div style={{ marginTop: '12px' }}>
+                  <Link href="/startup/xrate">
+                    <button type="button" className={styles.btnPrimarySmall}>Generate XRate Report Now</button>
+                  </Link>
+                </div>
+              </div>
+            ) : (
+              <select 
+                name="xrateReportId"
+                className={styles.input} 
+                required 
+                value={formData.xrateReportId}
+                onChange={handleChange}
+              >
+                <option value="">Select a verified report...</option>
+                {reports.map((r: any) => (
+                  <option key={r._id} value={r._id}>
+                    {r.startupName} - {new Date(r.createdAt).toLocaleDateString()} (Score: {r.overallScore})
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
 
           <div className={styles.inputGroup}>
@@ -307,14 +379,22 @@ export default function CreateXFundPage() {
 
           <div className={styles.actions}>
             <button type="button" className={styles.btnSecondary} onClick={() => router.back()}>Cancel</button>
-            <button type="submit" className={styles.btnPrimary} disabled={loading} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              {loading ? 'Broadcasting to Ethereum...' : (
-                <>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4" /><path d="M3 5v14a2 2 0 0 0 2 2h16v-5" /><path d="M18 12a2 2 0 0 0 0 4h4v-4Z" /></svg>
-                  Launch XFund
-                </>
-              )}
-            </button>
+            <div className={styles.submitWrapper}>
+              {!formData.xrateReportId && reports.length > 0 && <span className={styles.warningText}>Selection required</span>}
+              <button 
+                type="submit" 
+                className={styles.btnPrimary} 
+                disabled={loading || !formData.xrateReportId} 
+                style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+              >
+                {loading ? 'Broadcasting to Ethereum...' : (
+                  <>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4" /><path d="M3 5v14a2 2 0 0 0 2 2h16v-5" /><path d="M18 12a2 2 0 0 0 0 4h4v-4Z" /></svg>
+                    Launch XFund
+                  </>
+                )}
+              </button>
+            </div>
           </div>
 
         </form>

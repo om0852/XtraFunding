@@ -17,12 +17,6 @@ export interface IUser extends Document {
     sector?: string;
     location?: string;
   };
-  investorDetails?: {
-    expertise?: string;
-    network?: string;
-    personality?: string;
-    investmentFocus?: string;
-  };
   createdAt: Date;
   updatedAt: Date;
 }
@@ -44,12 +38,6 @@ const UserSchema: Schema = new Schema(
       registrationType: { type: String },
       sector: { type: String },
       location: { type: String },
-    },
-    investorDetails: {
-      expertise: { type: String },
-      network: { type: String },
-      personality: { type: String },
-      investmentFocus: { type: String },
     },
   },
   { timestamps: true }

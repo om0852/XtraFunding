@@ -93,10 +93,11 @@ export default function XRateContent() {
     setLoading(true);
 
     try {
+      const ownerId = localStorage.getItem('userId');
       const response = await fetch('/api/xrate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, ownerId }),
       });
 
       const data = await response.json();

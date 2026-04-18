@@ -4,6 +4,7 @@ import React, { useState, useEffect, Suspense } from 'react';
 import styles from '@/app/(dashboard)/investor/dashboard/page.module.css';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { useComparison } from '@/context/ComparisonContext';
 
 function ExploreContent() {
   const searchParams = useSearchParams();
@@ -14,6 +15,7 @@ function ExploreContent() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'All' | 'XFund' | 'XRaise'>(initialModel);
   const [searchQuery, setSearchQuery] = useState(initialSearch);
+  const { selectedDeals, addDeal, removeDeal } = useComparison();
 
   useEffect(() => {
     const fetchCampaigns = async () => {
@@ -135,11 +137,23 @@ function ExploreContent() {
                   <span className={styles.minText}>
                     {camp.fundingModel === 'XFund' ? `Min ₹${camp.minimumInvestment.toLocaleString()}` : `Target ₹${camp.fundingGoal.toLocaleString()}`}
                   </span>
-                  <Link href={`/investor/${camp.fundingModel.toLowerCase()}${camp.fundingModel === 'XRaise' ? '/explore' : ''}/${camp._id}`}>
-                    <button className={`${styles.btnInvest} ${camp.fundingModel === 'XRaise' ? styles.btnInvestGold : ''}`}>
-                      {camp.fundingModel === 'XFund' ? 'Invest Now' : 'Explore Deal'}
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button 
+                      className={camp.fundingModel === 'XRaise' ? styles.btnSelectGold : styles.btnSelect}
+                      onClick={() => {
+                        const isSelected = selectedDeals.find(s => s.id === camp._id);
+                        if (isSelected) removeDeal(camp._id);
+                        else addDeal({ id: camp._id, name: camp.title });
+                      }}
+                    >
+                      {selectedDeals.find(s => s.id === camp._id) ? 'Selected' : 'Select'}
                     </button>
-                  </Link>
+                    <Link href={`/investor/${camp.fundingModel.toLowerCase()}${camp.fundingModel === 'XRaise' ? '/explore' : ''}/${camp._id}`}>
+                      <button className={`${styles.btnInvest} ${camp.fundingModel === 'XRaise' ? styles.btnInvestGold : ''}`}>
+                        {camp.fundingModel === 'XFund' ? 'Invest' : 'Explore'}
+                      </button>
+                    </Link>
+                  </div>
                 </div>
               </div>
             ))

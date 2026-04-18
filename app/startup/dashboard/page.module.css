@@ -597,3 +597,64 @@
 .btnThread:hover {
   background: #F8F9FC;
 }
+
+.repairNotice {
+  background: #FFFBEB;
+  border: 1px solid #FEF3C7;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.repairInfo h4 {
+  margin: 0;
+  color: #92400E;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.repairInfo p {
+  margin: 4px 0 0;
+  color: #B45309;
+  font-size: 13px;
+}
+
+.repairActions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.repairSelect {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #FCD34D;
+  background: white;
+  font-size: 13px;
+  font-weight: 500;
+  outline: none;
+}
+
+.btnRepair {
+  background: #D97706;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btnRepair:hover {
+  background: #B45309;
+}
+
+.btnRepair:disabled {
+  background: #FDE68A;
+  cursor: not-allowed;
+}
