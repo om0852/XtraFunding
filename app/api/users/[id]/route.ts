@@ -30,7 +30,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     const { id } = await params;
     const body = await req.json();
 
-    const user = await User.findByIdAndUpdate(id, { $set: body }, { new: true }).select('-password');
+    const user = await User.findByIdAndUpdate(id, { $set: body }, { returnDocument: 'after' }).select('-password');
     if (!user) {
       return NextResponse.json({ success: false, message: 'User not found' }, { status: 404 });
     }

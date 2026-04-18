@@ -101,7 +101,7 @@ contract XFundingEscrow {
 
         if (c.totalDisbursed >= c.totalRaised) {
             c.fundsDisbursed = true;
-            c.status = CampaignStatus.Closed;
+            c.staPtus = CampaignStatus.Closed;
         }
 
         // FIX: Use call instead of transfer (transfer has 2300 gas limit issues)

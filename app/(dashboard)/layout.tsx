@@ -33,14 +33,22 @@ export default function InvestorLayout({
         .then(res => res.json())
         .then(data => {
           if (data.success) {
-            setUser(data.data.user);
+            const userData = data.data.user;
+            setUser(userData);
+            
+            // Mandatory profile setup redirect for investors
+            if (userData.role === 'INVESTOR' && 
+                (!userData.investorDetails || !userData.investorDetails.expertise) && 
+                !pathname.includes('/investor/profile-setup')) {
+              router.push('/investor/profile-setup');
+            }
           } else {
             localStorage.removeItem('userId');
           }
         })
         .catch(err => console.error("Error fetching user data:", err));
     }
-  }, []);
+  }, [pathname, router]);
 
   useEffect(() => {
     if (user?._id) {
