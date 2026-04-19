@@ -104,7 +104,13 @@ Respond ONLY with this JSON structure (no markdown, no explanation outside JSON)
     `.trim();
 
     const result = await model.generateContent(prompt);
-    const responseText = result.response.text();
+    let responseText = result.response.text();
+    
+    // Clean up potential markdown code blocks if the model ignores the mime type setting
+    if (responseText.includes('```')) {
+      responseText = responseText.replace(/```json|```/g, '').trim();
+    }
+    
     const suggestion = JSON.parse(responseText);
 
     return NextResponse.json({ success: true, suggestion });

@@ -113,7 +113,13 @@ export async function POST(request: Request) {
     `;
 
     const result = await model.generateContent(prompt);
-    const responseText = result.response.text();
+    let responseText = result.response.text();
+    
+    // Clean up potential markdown code blocks
+    if (responseText.includes('```')) {
+      responseText = responseText.replace(/```json|```/g, '').trim();
+    }
+    
     const aiData = JSON.parse(responseText);
 
     return NextResponse.json({ success: true, comparison: aiData.comparison });

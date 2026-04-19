@@ -1001,6 +1001,17 @@ select.textInput {
   to { opacity: 1; transform: translateY(0); }
 }
 
+.xagentPanel {
+  background: linear-gradient(135deg, #0a1628 0%, #1c355e 100%);
+  border: 1px solid rgba(245, 166, 35, 0.2);
+  border-radius: 20px;
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+  animation: xagentSlideIn 0.5s ease-out;
+}
+
 .xagentPanel::before {
   content: '';
   position: absolute;
@@ -1028,13 +1039,13 @@ select.textInput {
 .xagentIcon {
   width: 40px;
   height: 40px;
-  background: linear-gradient(135deg, #7C3AED, #4F46E5);
+  background: linear-gradient(135deg, #F5A623, #F97316);
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 20px;
-  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+  box-shadow: 0 4px 12px rgba(245, 166, 35, 0.4);
   flex-shrink: 0;
 }
 
@@ -1047,15 +1058,15 @@ select.textInput {
 
 .xagentSubtitle {
   font-size: 12px;
-  color: rgba(167, 139, 250, 0.8);
+  color: rgba(245, 166, 35, 0.8);
   font-weight: 500;
   margin-top: 2px;
 }
 
 .xagentBadge {
-  background: rgba(139, 92, 246, 0.2);
-  border: 1px solid rgba(139, 92, 246, 0.4);
-  color: #A78BFA;
+  background: rgba(245, 166, 35, 0.1);
+  border: 1px solid rgba(245, 166, 35, 0.3);
+  color: #F5A623;
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 1px;
@@ -1067,7 +1078,7 @@ select.textInput {
 
 .btnAskXagent {
   width: 100%;
-  background: linear-gradient(135deg, #7C3AED, #4F46E5);
+  background: linear-gradient(135deg, #F5A623, #F97316);
   color: #ffffff;
   border: none;
   border-radius: 12px;
@@ -1080,7 +1091,7 @@ select.textInput {
   justify-content: center;
   gap: 10px;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.35);
+  box-shadow: 0 4px 16px rgba(245, 166, 35, 0.35);
   letter-spacing: -0.2px;
 }
 
@@ -1122,7 +1133,7 @@ select.textInput {
 
 .xagentThinkingLabel {
   font-size: 13px;
-  color: rgba(167, 139, 250, 0.9);
+  color: rgba(245, 166, 35, 0.9);
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -1138,7 +1149,7 @@ select.textInput {
 .thinkingDots span {
   width: 5px;
   height: 5px;
-  background: #A78BFA;
+  background: #F5A623;
   border-radius: 50%;
   animation: dotBounce 1.2s infinite;
 }
@@ -1160,10 +1171,11 @@ select.textInput {
 }
 
 .xagentSuggestionCard {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(139, 92, 246, 0.25);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(245, 166, 35, 0.2);
   border-radius: 14px;
   padding: 20px;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
 }
 
 .xagentSuggestionLabel {
@@ -1171,7 +1183,7 @@ select.textInput {
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
-  color: rgba(167, 139, 250, 0.7);
+  color: rgba(245, 166, 35, 0.7);
   margin-bottom: 10px;
 }
 
@@ -1187,15 +1199,15 @@ select.textInput {
 .xagentSuggestedEquity {
   font-size: 15px;
   font-weight: 600;
-  color: #A78BFA;
+  color: #F5A623;
   margin-bottom: 12px;
 }
 
 .xagentInstrumentBadge {
   display: inline-block;
-  background: rgba(167, 139, 250, 0.15);
-  border: 1px solid rgba(167, 139, 250, 0.3);
-  color: #C4B5FD;
+  background: rgba(245, 166, 35, 0.1);
+  border: 1px solid rgba(245, 166, 35, 0.3);
+  color: #FFD77A;
   font-size: 11px;
   font-weight: 700;
   padding: 4px 10px;
@@ -1222,7 +1234,7 @@ select.textInput {
 
 .xagentHealthLabel {
   font-size: 12px;
-  color: rgba(167, 139, 250, 0.7);
+  color: rgba(245, 166, 35, 0.7);
   font-weight: 600;
   white-space: nowrap;
 }
@@ -1276,7 +1288,7 @@ select.textInput {
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
-  color: rgba(167, 139, 250, 0.6);
+  color: rgba(245, 166, 35, 0.6);
   margin-bottom: 8px;
 }
 
@@ -1284,7 +1296,7 @@ select.textInput {
 .xagentProbability {
   font-size: 12px;
   font-weight: 600;
-  color: rgba(167, 139, 250, 0.75);
+  color: rgba(245, 166, 35, 0.75);
   text-align: center;
   padding: 8px 0 2px;
 }
@@ -1332,8 +1344,8 @@ select.textInput {
 /* APPLY BUTTON */
 .btnApplyXagent {
   width: 100%;
-  background: linear-gradient(135deg, rgba(124, 58, 237, 0.9), rgba(79, 70, 229, 0.9));
-  border: 1px solid rgba(139, 92, 246, 0.5);
+  background: linear-gradient(135deg, #F5A623, #D97706);
+  border: 1px solid rgba(245, 166, 35, 0.3);
   color: #ffffff;
   border-radius: 12px;
   padding: 13px 20px;
@@ -1345,12 +1357,12 @@ select.textInput {
   justify-content: center;
   gap: 8px;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.25);
+  box-shadow: 0 4px 16px rgba(245, 166, 35, 0.25);
 }
 
 .btnApplyXagent:hover {
-  background: linear-gradient(135deg, #7C3AED, #4F46E5);
-  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.45);
+  background: linear-gradient(135deg, #FFB83D, #F5A623);
+  box-shadow: 0 6px 20px rgba(245, 166, 35, 0.45);
   transform: translateY(-1px);
 }
 
