@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { Suspense, useState, useEffect } from 'react';
 import styles from './layout.module.css';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -8,7 +8,8 @@ import { ComparisonProvider } from '@/context/ComparisonContext';
 import ComparisonBar from '@/components/ComparisonBar/ComparisonBar';
 import ComparisonModal from '@/components/ComparisonModal/ComparisonModal';
 
-export default function InvestorLayout({
+// Inner component holds all useSearchParams() logic so it can be Suspense-wrapped
+function InvestorLayoutInner({
   children,
 }: {
   children: React.ReactNode
@@ -254,5 +255,19 @@ export default function InvestorLayout({
         </ComparisonProvider>
       </div>
     </div>
+  );
+}
+
+// Outer shell — just wraps InvestorLayoutInner in Suspense so that
+// useSearchParams() inside it is always within a Suspense boundary.
+export default function InvestorLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <Suspense fallback={null}>
+      <InvestorLayoutInner>{children}</InvestorLayoutInner>
+    </Suspense>
   );
 }

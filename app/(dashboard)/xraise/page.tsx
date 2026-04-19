@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { Suspense, useState, useEffect } from 'react';
 import styles from './page.module.css';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { submitBlockchainInvestment } from '@/lib/web3';
 import { toast } from 'sonner';
 
-export default function XRaisePage() {
+function XRaiseInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const negId = searchParams.get('id');
@@ -348,5 +348,13 @@ export default function XRaisePage() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function XRaisePage() {
+  return (
+    <Suspense fallback={null}>
+      <XRaiseInner />
+    </Suspense>
   );
 }

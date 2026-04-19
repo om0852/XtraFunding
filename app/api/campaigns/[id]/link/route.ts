@@ -5,11 +5,11 @@ import XRateReport from '@/lib/models/XRateReport';
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { xrateReportId, founderId } = await request.json();
-    const campaignId = params.id;
+    const { id: campaignId } = await params;
 
     if (!xrateReportId) {
       return NextResponse.json({ error: 'XRate Report ID is required' }, { status: 400 });
