@@ -740,3 +740,144 @@
   font-weight: 600;
   text-decoration: none;
 }
+
+/* ── RESPONSIVE — Tablet ───────────────────── */
+@media (max-width: 1024px) {
+  .mainContent {
+    padding: 32px 20px;
+  }
+
+  .headerCard {
+    flex-direction: column;
+    gap: 24px;
+    align-items: flex-start;
+  }
+
+  .headerRight {
+    border-left: none;
+    padding-left: 0;
+    border-top: 1px solid #E5E7EB;
+    padding-top: 16px;
+    align-items: flex-start;
+    width: 100%;
+    flex-direction: row;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .gridTwoCol {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .colLeft {
+    flex: 1 1 auto;
+  }
+
+  .colRight {
+    flex: 1 1 auto;
+  }
+
+  .stickySidebar {
+    position: static;
+  }
+}
+
+/* ── RESPONSIVE — Mobile ───────────────────── */
+@media (max-width: 768px) {
+  .mainContent {
+    padding: 24px 16px;
+  }
+
+  .headerCard {
+    padding: 20px;
+    border-radius: 12px;
+  }
+
+  .headerLeft {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .logoCircle {
+    width: 56px;
+    height: 56px;
+    font-size: 18px;
+  }
+
+  .companyName {
+    font-size: 22px;
+  }
+
+  .tagline {
+    font-size: 14px;
+  }
+
+  .badgesRow {
+    flex-wrap: wrap;
+  }
+
+  .card {
+    padding: 20px;
+    border-radius: 12px;
+  }
+
+  .teamGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .tabsContainer {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .tabsContainer::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tab {
+    padding: 10px 16px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .timelineWrapper {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .timelineTrack {
+    display: none;
+  }
+
+  .milestoneCard {
+    flex-direction: row;
+    text-align: left;
+    width: 100%;
+    gap: 12px;
+  }
+
+  .investCard {
+    padding: 20px;
+  }
+
+  .investRaised {
+    font-size: 24px;
+  }
+
+  .quickPills {
+    flex-wrap: wrap;
+  }
+
+  .investStats {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .navbar {
+    padding: 0 16px;
+  }
+}
+

@@ -10,9 +10,19 @@
   --white: #ffffff;
   --border: #E5E7EB;
   
+  /* Unified Dark Navy System */
+  --dark-navy: #0A1628;
+  --navy: #1B3A6B;
+  --navy-light: #0f1f3d;
+  --gold: #F5A623;
+  --gold-dark: #D97706;
+  --soft-blue: #EBF2FF;
+  --soft-gold: #FFF8EC;
+  
   /* Text */
   --text-primary: #0D1117;
   --text-secondary: #6B7280;
+  --text-tertiary: #9CA3AF;
   
   /* Status Colors */
   --success: #10B981;

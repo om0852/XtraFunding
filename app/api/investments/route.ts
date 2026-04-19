@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Investment from '@/lib/models/Investment';
@@ -41,27 +42,35 @@ export async function POST(req: Request) {
     const investment = await Investment.create({
       investorId,
       campaignId,
-      amount,
+      amount: Number(amount),
       status: 'Completed' 
     });
 
     // 4. Update the campaign's amountRaised (public) and encrypted total (private audit)
-    campaign.amountRaised += amount;
-    campaign.encryptedTotalRaised = newEncryptedTotal;
+    // Using findByIdAndUpdate with $inc for atomicity and to prevent stale overwrites
+    const updatedCampaign = await Campaign.findByIdAndUpdate(
+      campaignId,
+      { 
+        $inc: { amountRaised: Number(amount) },
+        $set: { 
+          encryptedTotalRaised: newEncryptedTotal,
+          // 5. Update status if target met
+          status: (campaign.amountRaised + Number(amount) >= campaign.fundingGoal) ? 'Funded' : campaign.status
+        }
+      },
+      { new: true }
+    );
 
-    // 5. Check if target met
-    if (campaign.amountRaised >= campaign.fundingGoal) {
-      campaign.status = 'Funded';
+    if (!updatedCampaign) {
+      return NextResponse.json({ error: 'Failed to update campaign' }, { status: 500 });
     }
-
-    await campaign.save();
 
     return NextResponse.json({ 
       success: true, 
       data: investment,
-      campaignStatus: campaign.status,
-      amountRaised: campaign.amountRaised,
-      fheVerificationTag: newEncryptedTotal // Provide the new tag for transparency
+      campaignStatus: updatedCampaign.status,
+      amountRaised: updatedCampaign.amountRaised,
+      fheVerificationTag: newEncryptedTotal
     });
 
   } catch (error: any) {
