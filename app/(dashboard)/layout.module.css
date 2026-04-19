@@ -230,11 +230,11 @@
 /* ── TOP BAR — Light Glass ─────────────────── */
 .topbar {
   height: 64px;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(229, 231, 235, 0.5);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+  background: #ffffff;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom: 1px solid #E5E7EB;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
   display: grid;
   grid-template-columns: 1fr minmax(200px, 420px) 1fr;
   align-items: center;

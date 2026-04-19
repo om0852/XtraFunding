@@ -265,10 +265,10 @@
 /* ── TOPBAR ────────────────────────────────── */
 .topbar {
   height: 64px;
-  background: rgba(255, 255, 255, 0.97);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(229, 231, 235, 0.8);
+  background: #ffffff;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom: 1px solid #E5E7EB;
   display: grid;
   grid-template-columns: 1fr minmax(200px, 380px) 1fr;
   align-items: center;
