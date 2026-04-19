@@ -485,6 +485,35 @@
   box-shadow: 0 2px 8px rgba(245, 166, 35, 0.2);
 }
 
+.btnSignIn {
+  width: 100%;
+  background: transparent;
+  color: #1B3A6B;
+  border: 2px solid #1B3A6B;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btnSignIn:hover {
+  background: #1B3A6B;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(27, 58, 107, 0.25);
+}
+
+.btnSignIn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 8px rgba(27, 58, 107, 0.2);
+}
+
 /* DIVIDER */
 .divider {
   display: flex;
